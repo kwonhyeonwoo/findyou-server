@@ -19,4 +19,12 @@ export class UserRepository extends Repository<User> {
     async findByEmail(email: string): Promise<User | null> {
         return await this.repository.findOne({ where: { email } });
     }
+
+    async findByNickName(nickName:string){
+        return await this.repository.findOne({where:{nickName}})
+    }
+
+    async findByPhone(phone:string){
+        return this.repository.findOne({where:{phone}})
+    }
 }
