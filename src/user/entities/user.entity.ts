@@ -44,4 +44,7 @@ export class User {
 
     @Column()
     agreeMarketingOptional: boolean;
+
+    @Column()
+    refreshToken:string;
 }
