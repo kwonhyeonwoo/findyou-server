@@ -19,4 +19,22 @@ export class UserRepository extends Repository<User> {
     async findByEmail(email: string): Promise<User | null> {
         return await this.repository.findOne({ where: { email } });
     }
+
+    async findByNickName(nickName:string){
+        return await this.repository.findOne({where:{nickName}})
+    }
+
+    async findByPhone(phone:string){
+        return this.repository.findOne({where:{phone}})
+    }
+
+    async findByUser(id:string){
+        return this.repository.findOne({where:{id}});
+    }
+    async updateRefreshToken(userId: string, hashedRefreshToken: string | null): Promise<void> {
+        // 상속받았기 때문에 바로 this.update를 쓸 수 있어!
+        await this.update(userId, {
+          refreshToken: hashedRefreshToken,
+        });
+      }
 }
