@@ -25,9 +25,6 @@ export class User {
     phone: string;
 
     @Column()
-    verify: string;
-
-    @Column()
     region: string;
 
     @Column()
@@ -45,6 +42,6 @@ export class User {
     @Column()
     agreeMarketingOptional: boolean;
 
-    @Column()
-    refreshToken:string;
+    @Column({ nullable: true })
+    refreshToken: string | null;
 }
