@@ -20,8 +20,6 @@ export class CreateUserDto {
     @IsString()
     phone: string;
 
-    @IsString()
-    verify: string;
 
     @IsString()
     region: string;

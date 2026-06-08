@@ -21,9 +21,6 @@ export class CreateAuthDto {
     phone: string;
 
     @IsString()
-    verify: string;
-
-    @IsString()
     region: string;
 
     @IsString()

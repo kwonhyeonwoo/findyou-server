@@ -5,36 +5,35 @@ import { CreateUserDto } from "./dto/create-user.dto";
 
 @Injectable()
 export class UserRepository extends Repository<User> {
-    private readonly repository: Repository<User>;
-
     constructor(private readonly dataSource: DataSource) {
+        // 부모인 Repository 클래스에 엔티티와 매니저를 넘겨줍니다.
         super(User, dataSource.createEntityManager());
     }
 
     async createUser(createUserDto: CreateUserDto): Promise<User> {
-        const newUser = this.repository.create(createUserDto);
-        return await this.repository.save(newUser);
+        const newUser = this.create(createUserDto);
+        return await this.save(newUser);
     }
 
     async findByEmail(email: string): Promise<User | null> {
-        return await this.repository.findOne({ where: { email } });
+        return await this.findOne({ where: { email } });
     }
 
-    async findByNickName(nickName:string){
-        return await this.repository.findOne({where:{nickName}})
+    async findByNickName(nickName: string) {
+        return await this.findOne({ where: { nickName } })
     }
 
-    async findByPhone(phone:string){
-        return this.repository.findOne({where:{phone}})
+    async findByPhone(phone: string) {
+        return this.findOne({ where: { phone } })
     }
 
-    async findByUser(id:string){
-        return this.repository.findOne({where:{id}});
+    async findByUser(id: string) {
+        return this.findOne({ where: { id } });
     }
     async updateRefreshToken(userId: string, hashedRefreshToken: string | null): Promise<void> {
         // 상속받았기 때문에 바로 this.update를 쓸 수 있어!
         await this.update(userId, {
-          refreshToken: hashedRefreshToken,
+            refreshToken: hashedRefreshToken,
         });
-      }
+    }
 }

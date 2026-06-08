@@ -1,4 +1,4 @@
-import {  Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './user.repository';
@@ -7,21 +7,21 @@ import * as bcrypt from 'bcrypt';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) { }
   async createUser(
-    createUserDto:CreateUserDto
-  ){
+    createUserDto: CreateUserDto
+  ) {
     return this.userRepository.createUser(createUserDto);
   }
-  async findByEmail(email:string){
+  async findByEmail(email: string) {
     const existEmail = await this.userRepository.findByEmail(email);
     return existEmail
   };
 
-  async findByNickName(nickName:string){
-    const existNickName = await this.userRepository.findByNickName(nickName)  
+  async findByNickName(nickName: string) {
+    const existNickName = await this.userRepository.findByNickName(nickName)
     return existNickName
   };
 
-  async findByPhone(phone:string){
+  async findByPhone(phone: string) {
     const existPhone = await this.userRepository.findByPhone(phone)
     return existPhone
   };
