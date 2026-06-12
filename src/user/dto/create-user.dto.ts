@@ -1,4 +1,4 @@
-import { IsBoolean, IsEmail, IsEnum, IsString } from "class-validator";
+import { IsBoolean, IsEmail, IsEnum, IsNumber, IsString } from "class-validator";
 import { IUserRole } from "../interfaces/user-role";
 
 export class CreateUserDto {
@@ -22,7 +22,13 @@ export class CreateUserDto {
 
 
     @IsString()
-    region: string;
+    address: string;
+
+    @IsNumber()
+    lat: number;
+
+    @IsNumber()
+    lng: number;
 
     @IsString()
     password: string;

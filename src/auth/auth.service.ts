@@ -38,8 +38,6 @@ export class AuthService {
   async login(loginDto: LoginAuthDto) {
     const { email, password } = loginDto;
     const user = await this.userService.findByEmail(email);
-    console.log('service user',user)
-    // 💡 [순서 교정] 유저가 존재하는지부터 먼저 체크해야 에러(NullPointerException)가 안 터집니다!
     if (!user) {
       throw new BadRequestException('존재하지 않는 이메일입니다.');
     }

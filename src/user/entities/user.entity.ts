@@ -25,7 +25,13 @@ export class User {
     phone: string;
 
     @Column()
-    region: string;
+    address: string;
+
+    @Column({ type: 'double precision' })
+    lat: number;
+
+    @Column({ type: 'double precision' })
+    lng: number;
 
     @Column()
     password: string;
