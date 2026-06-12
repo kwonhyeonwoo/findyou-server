@@ -14,9 +14,19 @@ export class AuthController {
   ) { }
 
   @Post('signup')
-  create(@Body() body: CreateAuthDto) {
-    console.log('signup body', body);
-    return this.authService.create(body);
+  async create(@Body() body: CreateAuthDto) {
+    const newUser = await this.authService.create(body);
+    if (!newUser) {
+      return {
+        success: false,
+        message: '회원가입에 실패하였습니다.',
+      }
+    }
+    return {
+      success: true,
+      message: '회원가입이 완료되었습니다.',
+      data: newUser,
+    }
   }
 
   // 1. 🔑 로그인 (Sign-in)

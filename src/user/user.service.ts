@@ -13,7 +13,7 @@ export class UserService {
   }
   async findByEmail(email: string) {
     const existEmail = await this.userRepository.findByEmail(email);
-    return existEmail
+    return existEmail;
   };
 
   async findByNickName(nickName: string) {
