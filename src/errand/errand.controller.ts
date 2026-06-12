@@ -26,13 +26,24 @@ export class ErrandController {
       }),
     }),
   )
-  create(
+  async create(
     @Body() createErrandDto: CreateErrandDto,
     @UploadedFiles() files: Express.Multer.File[],
 ) {
     console.log('body',files)
     const imagePaths = files.map(file => `/uploads/${file.filename}`);
-    return this.errandService.create(createErrandDto,imagePaths);
+    const newErrand =  await this.errandService.create(createErrandDto,imagePaths);
+    if(!newErrand){
+      return{
+        success:false,
+        message:"게시글 업로드 실패!"
+      }
+    };
+
+    return{
+      success:true,
+      message:"심부름 등록 완료!"
+    }
   }
 
   @Get()

@@ -15,7 +15,6 @@ export class AuthController {
 
   @Post('signup')
   async create(@Body() body: CreateAuthDto) {
-    console.log('signup body', body);
     const newUser = await this.authService.create(body);
     if (!newUser) {
       return {
@@ -26,7 +25,6 @@ export class AuthController {
     return {
       success: true,
       message: '회원가입이 완료되었습니다.',
-      data: newUser,
     }
   }
 
@@ -54,7 +52,10 @@ export class AuthController {
     });
 
     // 프론트엔드 바디에는 성공 메시지만 깔끔하게 반환합니다.
-    return { success: true };
+    return { 
+      success: true,
+      message:"로그인을 하였습니다."
+    };
   }
 
   // 2. 🔄 토큰 재발급 (Refresh)

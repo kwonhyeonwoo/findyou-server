@@ -12,7 +12,6 @@ export class ErrandRepository extends Repository<Errand> {
     }
     
     async createErrand(createErrandBody: CreateErrandDto): Promise<Errand> {
-        console.log('re create',createErrandBody)
         const newUser = this.create(createErrandBody);
         return await this.save(newUser);
     }

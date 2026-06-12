@@ -17,11 +17,17 @@ export class Errand {
     @Column()
     description:string;
 
+    @Column({ type: 'double precision' })
+    lat: number;
+
+    @Column({ type: 'double precision' })
+    lng: number;
+
     @Column()
     price:string;
 
-    @Column('text', { array: true,  })
-    images: string[];
+    @Column('text', { array: true, nullable: true }) 
+    images: string[] | null;
 
     @Column()
     openLink:string;

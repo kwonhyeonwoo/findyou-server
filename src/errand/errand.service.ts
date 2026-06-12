@@ -8,10 +8,10 @@ export class ErrandService {
   constructor(
     private readonly errandRepository:ErrandRepository
   ){}
-  create(createErrandDto: CreateErrandDto,imagePaths:string[]) {
+  create(createErrandDto: CreateErrandDto,imagePaths?:string[]) {
       const newErrand = {
         ...createErrandDto,
-        imagePaths
+        images:imagePaths ? imagePaths : []
       }
       console.log('first',newErrand)
     return this.errandRepository.createErrand(newErrand)
