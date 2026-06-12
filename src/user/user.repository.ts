@@ -9,7 +9,7 @@ export class UserRepository extends Repository<User> {
         // 부모인 Repository 클래스에 엔티티와 매니저를 넘겨줍니다.
         super(User, dataSource.createEntityManager());
     }
-
+    
     async createUser(createUserDto: CreateUserDto): Promise<User> {
         const newUser = this.create(createUserDto);
         return await this.save(newUser);
