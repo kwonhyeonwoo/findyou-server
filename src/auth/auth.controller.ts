@@ -22,7 +22,6 @@ export class AuthController {
   // 1. 🔑 로그인 (Sign-in)
   @Post('signin')
   async login(@Body() body: LoginAuthDto, @Res({ passthrough: true }) res: Response) {
-    console.log(body);
     const { accessToken, refreshToken } = await this.authService.login(body);
 
     const isProd = process.env.NODE_ENV === 'production';

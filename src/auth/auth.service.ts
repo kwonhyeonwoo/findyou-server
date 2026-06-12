@@ -5,7 +5,7 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { IUserRole } from 'src/user/interfaces/user-role';
+import { IUserRole } from '../user/interfaces/user-role';
 
 @Injectable()
 export class AuthService {
@@ -38,7 +38,7 @@ export class AuthService {
   async login(loginDto: LoginAuthDto) {
     const { email, password } = loginDto;
     const user = await this.userService.findByEmail(email);
-
+    console.log('service user',user)
     // 💡 [순서 교정] 유저가 존재하는지부터 먼저 체크해야 에러(NullPointerException)가 안 터집니다!
     if (!user) {
       throw new BadRequestException('존재하지 않는 이메일입니다.');

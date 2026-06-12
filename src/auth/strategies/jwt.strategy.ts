@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { Request } from 'express'; // 💡 Express의 Request 타입을 가져옵니다.
-import { IUserRole } from 'src/user/interfaces/user-role';
+import { IUserRole } from '../../user/interfaces/user-role';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -27,7 +27,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   async validate(payload: { sub: string, email: string, type: IUserRole }) {
     // 💡 토큰 검증이 성공하면 유저 식별 데이터를 리턴 ➡️ 컨트롤러의 req.user로 들어갑니다.
-    console.log('payoload', payload)
     return { userId: payload.sub, email: payload.email, type: payload.type };
   }
 }
