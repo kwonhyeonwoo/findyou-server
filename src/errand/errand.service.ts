@@ -6,19 +6,19 @@ import { ErrandRepository } from './errand.repository';
 @Injectable()
 export class ErrandService {
   constructor(
-    private readonly errandRepository:ErrandRepository
-  ){}
-  create(createErrandDto: CreateErrandDto,imagePaths?:string[]) {
-      const newErrand = {
-        ...createErrandDto,
-        images:imagePaths ? imagePaths : []
-      }
-      console.log('first',newErrand)
+    private readonly errandRepository: ErrandRepository
+  ) { }
+  create(createErrandDto: CreateErrandDto, imagePaths?: string[]) {
+    const newErrand = {
+      ...createErrandDto,
+      images: imagePaths ? imagePaths : []
+    }
+    console.log('first', newErrand)
     return this.errandRepository.createErrand(newErrand)
   }
 
-  findAll() {
-    return `This action returns all errand`;
+  findAll(limit?: number) {
+    return this.errandRepository.findAll(limit);
   }
 
   findOne(id: number) {

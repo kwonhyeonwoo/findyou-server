@@ -52,9 +52,9 @@ export class AuthController {
     });
 
     // 프론트엔드 바디에는 성공 메시지만 깔끔하게 반환합니다.
-    return { 
+    return {
       success: true,
-      message:"로그인을 하였습니다."
+      message: "로그인을 하였습니다.",
     };
   }
 

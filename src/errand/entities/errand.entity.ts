@@ -1,21 +1,27 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/user/entities/user.entity";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { ErrandStatus } from "../interface/errand.interface";
 
 @Entity('errand')
 export class Errand {
     @PrimaryGeneratedColumn('uuid')
-    id:string;
+    id: string;
+
+
+    @Column({ type: 'enum', enum: ErrandStatus, default: ErrandStatus.matching })
+    status: ErrandStatus;
 
     @Column()
-    title:string;
+    title: string;
 
     @Column()
-    category:string;
+    category: string;
 
     @Column()
-    address:string;
+    address: string;
 
     @Column()
-    description:string;
+    description: string;
 
     @Column({ type: 'double precision' })
     lat: number;
@@ -24,11 +30,18 @@ export class Errand {
     lng: number;
 
     @Column()
-    price:string;
+    price: string;
 
-    @Column('text', { array: true, nullable: true }) 
+    @Column('text', { array: true, nullable: true })
     images: string[] | null;
 
     @Column()
-    openLink:string;
+    openLink: string;
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @ManyToOne(() => User, (user) => user.errands, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'userId' })
+    user: User;
 }

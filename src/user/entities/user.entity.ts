@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { IUserRole } from "../interfaces/user-role";
+import { Errand } from "src/errand/entities/errand.entity";
 
 @Entity('user')
 export class User {
@@ -28,10 +29,10 @@ export class User {
     address: string;
 
     @Column({ type: 'double precision' })
-    lat: number;
+    lat: number; // 위도
 
     @Column({ type: 'double precision' })
-    lng: number;
+    lng: number; // 경도
 
     @Column()
     password: string;
@@ -50,4 +51,7 @@ export class User {
 
     @Column({ nullable: true })
     refreshToken: string | null;
+
+    @OneToMany(() => Errand, (errand) => errand.user)
+    errands: Errand[];
 }

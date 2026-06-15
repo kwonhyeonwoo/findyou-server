@@ -10,10 +10,20 @@ export class ErrandRepository extends Repository<Errand> {
         // 부모인 Repository 클래스에 엔티티와 매니저를 넘겨줍니다.
         super(Errand, dataSource.createEntityManager());
     }
-    
+
     async createErrand(createErrandBody: CreateErrandDto): Promise<Errand> {
         const newUser = this.create(createErrandBody);
         return await this.save(newUser);
+    }
+
+    async findAll(limit?: number) {
+        const errands = await this.find({
+            take: limit,
+            order: {
+                createdAt: "DESC"
+            }
+        });
+        return errands;
     }
 
 }
