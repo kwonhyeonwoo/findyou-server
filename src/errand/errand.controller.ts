@@ -30,7 +30,6 @@ export class ErrandController {
     @Body() createErrandDto: CreateErrandDto,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
-    console.log('body', files)
     const imagePaths = files.map(file => `/uploads/${file.filename}`);
     const newErrand = await this.errandService.create(createErrandDto, imagePaths);
     if (!newErrand) {
@@ -48,7 +47,7 @@ export class ErrandController {
 
   @Get()
   findAll(
-    @Query('limit') limit?: number
+    @Query('limit') limit?: string
   ) {
     return this.errandService.findAll(limit);
   }

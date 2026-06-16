@@ -15,6 +15,7 @@ export class AuthController {
 
   @Post('signup')
   async create(@Body() body: CreateAuthDto) {
+    console.log('first')
     const newUser = await this.authService.create(body);
     if (!newUser) {
       return {

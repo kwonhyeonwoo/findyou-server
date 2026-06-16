@@ -1,6 +1,6 @@
-import { User } from "src/user/entities/user.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ErrandStatus } from "../interface/errand.interface";
+import { User } from "../../user/entities/user.entity";
 
 @Entity('errand')
 export class Errand {
@@ -19,6 +19,9 @@ export class Errand {
 
     @Column()
     address: string;
+
+    @Column()
+    address_dong:string;
 
     @Column()
     description: string;

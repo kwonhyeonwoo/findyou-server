@@ -16,13 +16,15 @@ export class ErrandRepository extends Repository<Errand> {
         return await this.save(newUser);
     }
 
-    async findAll(limit?: number) {
+    async findAll(limit?: string) {
+        const takeValue = limit ? +limit : undefined;
         const errands = await this.find({
-            take: limit,
+            take: takeValue, 
             order: {
                 createdAt: "DESC"
             }
         });
+        
         return errands;
     }
 

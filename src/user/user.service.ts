@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './user.repository';
@@ -37,6 +37,9 @@ export class UserService {
   }
 
   async findOne(id: string) {
+    if(!id){
+      throw new NotFoundException("회원을 찾을 수 없습니다.")
+    }
     return this.userRepository.findByUser(id);
   }
 

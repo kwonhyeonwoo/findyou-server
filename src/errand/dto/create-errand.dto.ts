@@ -21,6 +21,10 @@ export class CreateErrandDto {
 
     @IsString()
     @IsNotEmpty()
+    address_dong:string;
+
+    @IsString()
+    @IsNotEmpty()
     description:string;
 
     @IsNumber()

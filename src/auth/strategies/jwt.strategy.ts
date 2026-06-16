@@ -25,8 +25,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  async validate(payload: { sub: string, email: string, type: IUserRole }) {
+  async validate(payload: { sub: string, email: string, type: IUserRole,}) {
     // 💡 토큰 검증이 성공하면 유저 식별 데이터를 리턴 ➡️ 컨트롤러의 req.user로 들어갑니다.
-    return { userId: payload.sub, email: payload.email, type: payload.type };
+    return { 
+      userId: payload.sub, 
+      email: payload.email, 
+      type: payload.type, 
+    };
   }
 }

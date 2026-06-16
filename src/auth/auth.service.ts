@@ -28,6 +28,7 @@ export class AuthService {
     if (existPhone) throw new BadRequestException('이미 등록된 휴대폰 번호입니다.');
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log('first',createAuthDto)
     return this.userService.createUser({
       ...createAuthDto,
       password: hashedPassword,

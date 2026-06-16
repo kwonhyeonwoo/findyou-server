@@ -13,11 +13,10 @@ export class ErrandService {
       ...createErrandDto,
       images: imagePaths ? imagePaths : []
     }
-    console.log('first', newErrand)
     return this.errandRepository.createErrand(newErrand)
   }
 
-  findAll(limit?: number) {
+  findAll(limit?: string) {
     return this.errandRepository.findAll(limit);
   }
 

@@ -24,6 +24,9 @@ export class CreateUserDto {
     @IsString()
     address: string;
 
+    @IsString()
+    address_dong:string;
+
     @IsNumber()
     lat: number;
 

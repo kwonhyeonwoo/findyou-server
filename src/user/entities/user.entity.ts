@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { IUserRole } from "../interfaces/user-role";
-import { Errand } from "src/errand/entities/errand.entity";
+import { Errand } from "../../errand/entities/errand.entity";
 
 @Entity('user')
 export class User {
@@ -27,6 +27,9 @@ export class User {
 
     @Column()
     address: string;
+
+    @Column()
+    address_dong:string;
 
     @Column({ type: 'double precision' })
     lat: number; // 위도

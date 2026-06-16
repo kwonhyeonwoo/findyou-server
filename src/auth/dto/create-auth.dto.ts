@@ -22,6 +22,9 @@ export class CreateAuthDto {
 
     @IsString()
     address: string;
+    
+    @IsString()
+    address_dong:string;
 
     @IsNumber()
     lat: number;
