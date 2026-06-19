@@ -4,28 +4,28 @@ import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-valid
 export class CreateErrandDto {
     @IsString()
     @IsNotEmpty()
-    title:string;
+    title: string;
 
     @IsString()
     @IsNotEmpty()
-    category:string;
+    category: string;
 
     @IsArray()
     @IsString({ each: true })
-    @IsOptional() 
+    @IsOptional()
     images?: string[];
 
     @IsString()
     @IsNotEmpty()
-    address:string;
+    address: string;
 
     @IsString()
     @IsNotEmpty()
-    address_dong:string;
+    address_dong: string;
 
     @IsString()
     @IsNotEmpty()
-    description:string;
+    description: string;
 
     @IsNumber()
     @Type(() => Number)
@@ -34,12 +34,12 @@ export class CreateErrandDto {
     @IsNumber()
     @Type(() => Number)
     lng: number;
-    
-    @IsString()
-    @IsNotEmpty()
-    price:string;
 
     @IsString()
     @IsNotEmpty()
-    openLink:string;
+    price: string;
+
+    @IsString()
+    @IsNotEmpty()
+    openLink: string;
 }

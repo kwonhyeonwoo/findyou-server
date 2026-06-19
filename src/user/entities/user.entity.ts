@@ -29,7 +29,7 @@ export class User {
     address: string;
 
     @Column()
-    address_dong:string;
+    address_dong: string;
 
     @Column({ type: 'double precision' })
     lat: number; // 위도

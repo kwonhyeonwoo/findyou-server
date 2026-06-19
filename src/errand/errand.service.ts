@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateErrandDto } from './dto/create-errand.dto';
 import { UpdateErrandDto } from './dto/update-errand.dto';
 import { ErrandRepository } from './errand.repository';
@@ -16,14 +16,22 @@ export class ErrandService {
     return this.errandRepository.createErrand(newErrand)
   }
 
-  findAll(limit?: string) {
-    return this.errandRepository.findAll(limit);
+  findAll({
+    limit,
+    keyword,
+    category,
+  }: {
+    limit?: string;
+    keyword?: string;
+    category?: string;
+  }) {
+    return this.errandRepository.findAll({ limit, keyword, category });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} errand`;
+  findOne(id: string) {
+    if (!id) throw new NotFoundException("존재하지 않는 게시글입니다.");
+    return this.errandRepository.findErrandById(id);
   }
-
   update(id: number, updateErrandDto: UpdateErrandDto) {
     return `This action updates a #${id} errand`;
   }

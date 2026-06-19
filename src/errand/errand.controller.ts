@@ -47,14 +47,16 @@ export class ErrandController {
 
   @Get()
   findAll(
-    @Query('limit') limit?: string
+    @Query('limit') limit?: string,
+    @Query('keyword') keyword?: string,
+    @Query('category') category?: string,
   ) {
-    return this.errandService.findAll(limit);
+    return this.errandService.findAll({ limit, keyword, category });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.errandService.findOne(+id);
+    return this.errandService.findOne(id);
   }
 
   @Patch(':id')

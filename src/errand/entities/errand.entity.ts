@@ -21,7 +21,7 @@ export class Errand {
     address: string;
 
     @Column()
-    address_dong:string;
+    address_dong: string;
 
     @Column()
     description: string;
@@ -45,6 +45,6 @@ export class Errand {
     createdAt: Date;
 
     @ManyToOne(() => User, (user) => user.errands, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'userId' })
+    @JoinColumn({ name: 'id' })
     user: User;
 }

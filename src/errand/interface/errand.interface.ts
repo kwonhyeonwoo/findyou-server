@@ -1,3 +1,10 @@
+export enum ErrandCategory {
+    all = "all",
+    delivery = "delivery",
+    food = "food",
+    shopping = "shopping",
+    etc = "etc",
+}
 
 export enum ErrandStatus {
     matching = "matching", // 모집중
