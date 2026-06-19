@@ -2,24 +2,23 @@ import { Injectable } from "@nestjs/common";
 import { DataSource, FindOptionsWhere, ILike, Repository } from "typeorm";
 import { Errand } from "./entities/errand.entity";
 import { CreateErrandDto } from "./dto/create-errand.dto";
-import { ErrandCategory } from "./interface/errand.interface";
-import { User } from "src/user/entities/user.entity";
+import { User } from "../user/entities/user.entity";
 
 
 @Injectable()
 export class ErrandRepository extends Repository<Errand> {
-    constructor(private readonly dataSource: DataSource) {
-        // 부모인 Repository 클래스에 엔티티와 매니저를 넘겨줍니다.
+    constructor(
+        private readonly dataSource: DataSource,
+    ) {
         super(Errand, dataSource.createEntityManager());
     }
 
-    async createErrand(createErrandBody: CreateErrandDto, userId: string): Promise<Errand> {
-        const newErrand = this.create(createErrandBody);
-        newErrand.user = { id: userId } as User;
-
-        return await this.save(newErrand);
+    async createErrand(body: Errand): Promise<Errand> {
+        return this.create(body);
     }
-
+    async saveErrand(body:CreateErrandDto):Promise<Errand>{
+        return this.save(body);
+    }
     async findAll({
         limit,
         keyword,

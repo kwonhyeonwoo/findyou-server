@@ -2,18 +2,35 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateErrandDto } from './dto/create-errand.dto';
 import { UpdateErrandDto } from './dto/update-errand.dto';
 import { ErrandRepository } from './errand.repository';
+import { Errand } from './entities/errand.entity';
+import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class ErrandService {
   constructor(
-    private readonly errandRepository: ErrandRepository
+    private readonly errandRepository: ErrandRepository,
+    private readonly userRepository:UserRepository,
   ) { }
-  create(createErrandDto: CreateErrandDto, imagePaths?: string[]) {
+  async create(
+    {
+      createErrandDto, 
+      imagePaths, 
+      userId
+    }:{
+      createErrandDto:CreateErrandDto,
+      imagePaths?:string[],
+      userId:string;
+    }
+  ) {
+    const user = await this.userRepository.findByUser(userId);
+    if(!user) throw new NotFoundException('회원을 찾을 수 없습니다.');
     const newErrand = {
       ...createErrandDto,
-      images: imagePaths ? imagePaths : []
-    }
-    return this.errandRepository.createErrand(newErrand)
+      images:imagePaths,
+      user,
+    };
+    const createErrand = await this.errandRepository.create(newErrand);
+    return this.errandRepository.saveErrand(createErrand)
   }
 
   findAll({

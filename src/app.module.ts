@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ErrandModule } from './errand/errand.module';
+import { User } from './user/entities/user.entity';
+import { Errand } from './errand/entities/errand.entity';
 
 @Module({
   imports: [
@@ -17,7 +19,7 @@ import { ErrandModule } from './errand/errand.module';
       username: process.env.DB_USERNAME, // DB 사용자 이름
       password: process.env.DB_PASSWORD, // DB 비밀번호
       database: process.env.DB_NAME, // DB 이름
-      entities: [__dirname + '/**/*.entity{.ts,.js}'], // 엔티티 경로
+      entities: [User,Errand], // 엔티티 경로
       synchronize: process.env.DB_SYNCHRONIZE === 'true', // 스키마 자동 동기화 (운영 환경에서는 false 권장)
       logging: process.env.DB_LOGGING === 'true', // SQL 쿼리 콘솔 출력
     }),

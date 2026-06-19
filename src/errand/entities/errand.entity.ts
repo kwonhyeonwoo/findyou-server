@@ -44,7 +44,8 @@ export class Errand {
     @CreateDateColumn()
     createdAt: Date;
 
+
     @ManyToOne(() => User, (user) => user.errands, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'id' })
+    @JoinColumn({ name: 'userId' })
     user: User;
 }
