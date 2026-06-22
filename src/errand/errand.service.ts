@@ -9,24 +9,24 @@ import { UserRepository } from '../user/user.repository';
 export class ErrandService {
   constructor(
     private readonly errandRepository: ErrandRepository,
-    private readonly userRepository:UserRepository,
+    private readonly userRepository: UserRepository,
   ) { }
   async create(
     {
-      createErrandDto, 
-      imagePaths, 
+      createErrandDto,
+      imagePaths,
       userId
-    }:{
-      createErrandDto:CreateErrandDto,
-      imagePaths?:string[],
-      userId:string;
+    }: {
+      createErrandDto: CreateErrandDto,
+      imagePaths?: string[],
+      userId: string;
     }
   ) {
     const user = await this.userRepository.findByUser(userId);
-    if(!user) throw new NotFoundException('회원을 찾을 수 없습니다.');
+    if (!user) throw new NotFoundException('회원을 찾을 수 없습니다.');
     const newErrand = {
       ...createErrandDto,
-      images:imagePaths,
+      images: imagePaths,
       user,
     };
     const createErrand = await this.errandRepository.create(newErrand);

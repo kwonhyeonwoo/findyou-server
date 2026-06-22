@@ -6,8 +6,6 @@ import { User } from "../../user/entities/user.entity";
 export class Errand {
     @PrimaryGeneratedColumn('uuid')
     id: string;
-
-
     @Column({ type: 'enum', enum: ErrandStatus, default: ErrandStatus.matching })
     status: ErrandStatus;
 
