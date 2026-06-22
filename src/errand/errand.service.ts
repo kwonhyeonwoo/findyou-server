@@ -29,8 +29,7 @@ export class ErrandService {
       images: imagePaths,
       user,
     };
-    const createErrand = await this.errandRepository.create(newErrand);
-    return this.errandRepository.saveErrand(createErrand)
+    return await this.errandRepository.createErrand(newErrand as Errand);
   }
 
   findAll({
