@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../user/entities/user.entity";
 import { Errand } from "../../errand/entities/errand.entity";
 
-@Entity()
+@Entity('errand-application')
 export class ErrandApplication {
     @PrimaryGeneratedColumn('uuid')
     id:string;

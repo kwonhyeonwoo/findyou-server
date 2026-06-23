@@ -1,5 +1,4 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { IUserRole } from "../interfaces/user-role";
 import { Errand } from "../../errand/entities/errand.entity";
 import { ErrandApplication } from "../../errand-application/entities/errand-application.entity";
 
@@ -7,9 +6,6 @@ import { ErrandApplication } from "../../errand-application/entities/errand-appl
 export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
-
-    @Column({ type: 'enum', enum: IUserRole })
-    type: IUserRole;
 
     @Column()
     division: "kakao" | "naver" | "email";

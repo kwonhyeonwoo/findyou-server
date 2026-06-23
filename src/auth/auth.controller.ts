@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Res, Req, UseGuards, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response, Request } from 'express';
-import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -14,8 +14,7 @@ export class AuthController {
   ) { }
 
   @Post('signup')
-  async create(@Body() body: CreateAuthDto) {
-    console.log('first')
+  async create(@Body() body: CreateUserDto) {
     const newUser = await this.authService.create(body);
     if (!newUser) {
       return {

@@ -1,11 +1,9 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { IUserRole } from '../user/interfaces/user-role';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +13,7 @@ export class AuthService {
   ) { }
 
   // 1. ✨ 회원가입
-  async create(createAuthDto: CreateAuthDto) {
+  async create(createAuthDto: CreateUserDto) {
     const { email, nickName, phone, password } = createAuthDto;
     const [existEmail, existNickName, existPhone] = await Promise.all([
       this.userService.findByEmail(email),
@@ -28,7 +26,6 @@ export class AuthService {
     if (existPhone) throw new BadRequestException('이미 등록된 휴대폰 번호입니다.');
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('first',createAuthDto)
     return this.userService.createUser({
       ...createAuthDto,
       password: hashedPassword,
@@ -50,7 +47,7 @@ export class AuthService {
     }
 
     // 💡 토큰 구워내기
-    const accessToken = this.generateAccessToken(user.id, user.email, user.type);
+    const accessToken = this.generateAccessToken(user.id, user.email);
     const refreshToken = this.generateRefreshToken(user.id);
 
     // DB에 암호화된 리프레시 토큰 저장하기 (이 함수 안에서 비밀번호처럼 bcrypt.hash 돌려서 저장하셔야 안전합니다!)
@@ -72,15 +69,15 @@ export class AuthService {
       throw new UnauthorizedException('유효하지 않은 영수증입니다.');
     }
 
-    const newAccessToken = this.generateAccessToken(user.id, user.email, user.type);
+    const newAccessToken = this.generateAccessToken(user.id, user.email,);
     return { accessToken: newAccessToken };
   }
 
   // 💡 [매우 중요] 가드(JwtStrategy)가 'MY_REFRESH_SECRET_KEY'를 쓰고 있으므로 
   // 발급할 때 비밀번호 열쇠도 일단 동일하게 맞춰줍니다. (나중에 환경변수 배포 시 분리하는 걸 추천합니다)
-  generateAccessToken(userId: string, email: string, type: IUserRole): string {
+  generateAccessToken(userId: string, email: string, ): string {
     return this.jwtService.sign(
-      { email, sub: userId, type: type },
+      { email, sub: userId, },
       { secret: 'MY_REFRESH_SECRET_KEY', expiresIn: '10m' } // 👈 아까 401 범인이었던 열쇠 일치시킴!
     );
   }

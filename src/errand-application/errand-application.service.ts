@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateErrandApplicationDto } from './dto/create-errand-application.dto';
 import { UpdateErrandApplicationDto } from './dto/update-errand-application.dto';
 import { ErrandApplicationRepository } from './errand-application.repository';
 
