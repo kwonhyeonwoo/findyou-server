@@ -14,11 +14,10 @@ export class ErrandRepository extends Repository<Errand> {
     }
 
     async createErrand(body: Errand): Promise<Errand> {
-        return this.create(body);
+        const newErrand = await this.create(body);
+        return await this.save(newErrand);
     }
-    async saveErrand(body:CreateErrandDto):Promise<Errand>{
-        return this.save(body);
-    }
+
     async findAll({
         limit,
         keyword,

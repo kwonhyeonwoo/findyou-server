@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ErrandStatus } from "../interface/errand.interface";
 import { User } from "../../user/entities/user.entity";
+import { ErrandApplication } from "../../errand-application/entities/errand-application.entity";
 
 @Entity('errand')
 export class Errand {
@@ -46,4 +47,7 @@ export class Errand {
     @ManyToOne(() => User, (user) => user.errands, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'userId' })
     user: User;
+
+    @OneToMany(()=> ErrandApplication, (application)=>application.errand,{onDelete:"CASCADE"})
+    applications:ErrandApplication[];
 }
