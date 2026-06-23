@@ -10,6 +10,7 @@ import { User } from './user/entities/user.entity';
 import { Errand } from './errand/entities/errand.entity';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { ErrandApplicationModule } from './errand-application/errand-application.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { join } from 'path';
     UserModule,
     AuthModule,
     ErrandModule,
+    ErrandApplicationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

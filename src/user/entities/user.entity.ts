@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { IUserRole } from "../interfaces/user-role";
 import { Errand } from "../../errand/entities/errand.entity";
+import { ErrandApplication } from "../../errand-application/entities/errand-application.entity";
 
 @Entity('user')
 export class User {
@@ -57,4 +58,9 @@ export class User {
 
     @OneToMany(() => Errand, (errand) => errand.user)
     errands: Errand[];
+
+    // 내가 수행 한 심부름 
+    @OneToMany(()=>ErrandApplication,(application)=>application.helper)
+    applications:ErrandApplication[]
+
 }

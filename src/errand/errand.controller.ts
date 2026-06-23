@@ -32,7 +32,6 @@ export class ErrandController {
     @UploadedFiles() files: Express.Multer.File[],
     @User('userId') userId: any,
   ) {
-    console.log('useruser', userId);
     const imagePaths = files.map(file => `/uploads/errand/${file.filename}`);
     const newErrand = await this.errandService.create({ createErrandDto, imagePaths, userId });
     if (!newErrand) {
