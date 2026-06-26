@@ -1,10 +1,6 @@
 import { IsBoolean, IsEmail, IsEnum, IsNumber, IsString } from "class-validator";
-import { IUserRole } from "../interfaces/user-role";
 
 export class CreateUserDto {
-    @IsEnum(IUserRole)
-    type: IUserRole;
-
     @IsString()
     division: 'kakao' | 'naver' | 'email'
 

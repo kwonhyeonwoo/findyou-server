@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Res, Req, UseGuards, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response, Request } from 'express';
-import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -14,8 +14,7 @@ export class AuthController {
   ) { }
 
   @Post('signup')
-  async create(@Body() body: CreateAuthDto) {
-    console.log('first')
+  async create(@Body() body: CreateUserDto) {
     const newUser = await this.authService.create(body);
     if (!newUser) {
       return {
@@ -72,12 +71,10 @@ export class AuthController {
       // 리프레시 토큰 검증
       const payload = this.jwtService.verify(refreshToken, { secret: 'MY_REFRESH_SECRET_KEY' });
 
-      // 서비스에서 새로운 Access Token 받아오기
       const { accessToken } = await this.authService.refresh(refreshToken, payload.sub);
 
       const isProd = process.env.NODE_ENV === 'production';
 
-      // 💡 [수정] signin과 똑같은 'accessToken' 쿠키 명칭으로 다시 구워줍니다.
       response.cookie('accessToken', accessToken, {
         httpOnly: false,
         secure: isProd,

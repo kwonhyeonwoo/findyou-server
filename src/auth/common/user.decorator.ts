@@ -1,7 +1,7 @@
 // src/common/decorators/user.decorator.ts
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-export const User = createParamDecorator((data: string, ctx: ExecutionContext) => {
+export const GetUser = createParamDecorator((data: string, ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest();
   const user = request.user; // 💡 Passport가 토큰 풀어서 넣어준 유저 객체
 

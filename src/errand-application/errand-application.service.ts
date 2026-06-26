@@ -1,5 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateErrandApplicationDto } from './dto/create-errand-application.dto';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateErrandApplicationDto } from './dto/update-errand-application.dto';
 import { ErrandApplicationRepository } from './errand-application.repository';
 
@@ -9,7 +8,10 @@ export class ErrandApplicationService {
     private readonly applicationRepository:ErrandApplicationRepository,
   ){}
   async create(helperId:string, errandId:string) {
-    if(errandId) throw new NotFoundException("신청 심부름이 없습니다.")
+    console.log('ddd?')
+    if(!errandId) throw new NotFoundException("신청 심부름이 없습니다.")
+    const isExist = await this.applicationRepository.checkExistApplication(helperId,errandId);
+    if(isExist) throw new ConflictException('이미 지원한 심부름 입니다.')
     return await this.applicationRepository.createApplication(helperId,errandId);
   }
 
