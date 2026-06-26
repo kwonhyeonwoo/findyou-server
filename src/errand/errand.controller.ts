@@ -48,8 +48,11 @@ export class ErrandController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get("")
-  async getMyErrands(){}
+  @Get("my")
+  async getMyErrands(@GetUser('userId') userId: any) {
+    console.log('userid', userId)
+    return this.errandService.getMyErrands(userId);
+  }
 
   @Get()
   findAll(

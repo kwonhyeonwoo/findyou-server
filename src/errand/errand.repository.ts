@@ -56,4 +56,11 @@ export class ErrandRepository extends Repository<Errand> {
         });
         return errand;
     }
+
+    async findMyErrands(userId: string) {
+        const errands = await this.find({
+            where: { user: { id: userId } },
+        });
+        return errands;
+    }
 }
