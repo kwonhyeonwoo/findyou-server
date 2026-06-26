@@ -54,7 +54,6 @@ export class ErrandRepository extends Repository<Errand> {
                 user: true,
             },
         });
-        console.log('errand', errand);
         return errand;
     }
 }

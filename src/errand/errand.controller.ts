@@ -6,7 +6,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '../auth/common/user.decorator';
+import { GetUser } from '../auth/common/user.decorator';
 
 @Controller('errand')
 export class ErrandController {
@@ -30,7 +30,7 @@ export class ErrandController {
   async create(
     @Body() createErrandDto: CreateErrandDto,
     @UploadedFiles() files: Express.Multer.File[],
-    @User('userId') userId: any,
+    @GetUser('userId') userId: any,
   ) {
     const imagePaths = files.map(file => `/uploads/errand/${file.filename}`);
     const newErrand = await this.errandService.create({ createErrandDto, imagePaths, userId });

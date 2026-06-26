@@ -71,12 +71,10 @@ export class AuthController {
       // 리프레시 토큰 검증
       const payload = this.jwtService.verify(refreshToken, { secret: 'MY_REFRESH_SECRET_KEY' });
 
-      // 서비스에서 새로운 Access Token 받아오기
       const { accessToken } = await this.authService.refresh(refreshToken, payload.sub);
 
       const isProd = process.env.NODE_ENV === 'production';
 
-      // 💡 [수정] signin과 똑같은 'accessToken' 쿠키 명칭으로 다시 구워줍니다.
       response.cookie('accessToken', accessToken, {
         httpOnly: false,
         secure: isProd,

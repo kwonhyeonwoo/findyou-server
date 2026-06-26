@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { DataSource, Repository } from "typeorm";
 import { ErrandApplication } from "./entities/errand-application.entity";
 
@@ -8,13 +8,21 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication>{
         super(ErrandApplication, dataSource.createEntityManager())
     }
 
-    async createApplication(helper:string, errand:string){
+    async createApplication(helperId:string, errandId:string){
         const newApplication = this.create({ 
-            helper: { id: helper }, 
-            errand: { id: errand }, 
+            helper: { id: helperId }, 
+            errand: { id: errandId }, 
         });
         
         return this.save(newApplication);
     }
 
+    async checkExistApplication(helperId:string, errandId:string){
+        return await this.findOne({
+            where:{
+                helper:{id:helperId},
+                errand:{id:errandId},
+            }
+        })
+    }
 }

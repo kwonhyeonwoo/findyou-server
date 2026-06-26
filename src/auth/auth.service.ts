@@ -32,7 +32,6 @@ export class AuthService {
     });
   }
 
-  // 2. 🔑 로그인
   async login(loginDto: LoginAuthDto) {
     const { email, password } = loginDto;
     const user = await this.userService.findByEmail(email);
@@ -46,7 +45,6 @@ export class AuthService {
       throw new UnauthorizedException('비밀번호가 올바르지 않습니다.');
     }
 
-    // 💡 토큰 구워내기
     const accessToken = this.generateAccessToken(user.id, user.email);
     const refreshToken = this.generateRefreshToken(user.id);
 
