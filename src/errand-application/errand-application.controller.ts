@@ -23,6 +23,8 @@ export class ErrandApplicationController {
     }
   }
 
+
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll() {
     return this.errandApplicationService.findAll();

@@ -40,6 +40,9 @@ export class ErrandRepository extends Repository<Errand> {
         const errands = await this.find({
             take: takeValue,
             where: whereCondition,
+            relations: {
+                applications: true,
+            },
             order: {
                 createdAt: "DESC"
             }
