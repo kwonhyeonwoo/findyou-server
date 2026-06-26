@@ -47,6 +47,10 @@ export class ErrandController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get("")
+  async getMyErrands(){}
+
   @Get()
   findAll(
     @Query('limit') limit?: string,
