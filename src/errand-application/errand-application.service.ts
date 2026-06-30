@@ -17,7 +17,7 @@ export class ErrandApplicationService {
 
   async getMyApplications(helperId: string) {
     if (!helperId) throw new NotFoundException("사용자를 찾을 수 없습니다.")
-    return await this.applicationRepository.getMyApplications(helperId);
+    return await this.applicationRepository.myApplications(helperId);
   }
   async findAll() {
     // return await this.applicationRepository.myApplications()
