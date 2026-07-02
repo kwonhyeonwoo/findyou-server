@@ -40,6 +40,9 @@ export class ErrandRepository extends Repository<Errand> {
         const errands = await this.find({
             take: takeValue,
             where: whereCondition,
+            relations: {
+                applications: true,
+            },
             order: {
                 createdAt: "DESC"
             }
@@ -55,5 +58,12 @@ export class ErrandRepository extends Repository<Errand> {
             },
         });
         return errand;
+    }
+
+    async findMyErrands(userId: string) {
+        const errands = await this.find({
+            where: { user: { id: userId } },
+        });
+        return errands;
     }
 }

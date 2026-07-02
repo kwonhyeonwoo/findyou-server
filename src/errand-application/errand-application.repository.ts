@@ -25,4 +25,16 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication>{
             }
         })
     }
+
+    async myApplications(helperId:string){
+        return await this.find({
+            where:{
+                helper:{id:helperId}
+            },
+            relations:{
+                errand:true,
+                helper:true,
+            }
+        })
+    }
 }

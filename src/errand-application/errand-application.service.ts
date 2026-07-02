@@ -5,18 +5,22 @@ import { ErrandApplicationRepository } from './errand-application.repository';
 @Injectable()
 export class ErrandApplicationService {
   constructor(
-    private readonly applicationRepository:ErrandApplicationRepository,
-  ){}
-  async create(helperId:string, errandId:string) {
-    console.log('ddd?')
-    if(!errandId) throw new NotFoundException("신청 심부름이 없습니다.")
-    const isExist = await this.applicationRepository.checkExistApplication(helperId,errandId);
-    if(isExist) throw new ConflictException('이미 지원한 심부름 입니다.')
-    return await this.applicationRepository.createApplication(helperId,errandId);
+    private readonly applicationRepository: ErrandApplicationRepository,
+  ) { }
+  async create(helperId: string, errandId: string) {
+    if (!errandId) throw new NotFoundException("신청 심부름이 없습니다.")
+    const isExist = await this.applicationRepository.checkExistApplication(helperId, errandId);
+    if (isExist) throw new ConflictException('이미 지원한 심부름 입니다.')
+    return await this.applicationRepository.createApplication(helperId, errandId);
   }
 
-  findAll() {
-    return `This action returns all errandApplication`;
+
+  async getMyApplications(helperId: string) {
+    if (!helperId) throw new NotFoundException("사용자를 찾을 수 없습니다.")
+    return await this.applicationRepository.myApplications(helperId);
+  }
+  async findAll() {
+    // return await this.applicationRepository.myApplications()
   }
 
   findOne(id: number) {
