@@ -29,7 +29,7 @@ export class ErrandApplicationController {
   @Get('my')
   async getMyApplications(@GetUser('userId') userId: string) {
     console.log('userId', userId)
-    return this.errandApplicationService.getMyApplications(userId);
+    return await this.errandApplicationService.getMyApplications(userId);
   }
 
 
@@ -40,6 +40,10 @@ export class ErrandApplicationController {
     @Body() body: UpdateApplicationStatusDto,
   ) {
     await this.errandApplicationService.updateStatus(id, body);
+    return {
+      success:true,
+      message:"지원자를 수락하였습니다."
+    }
   }
 
 

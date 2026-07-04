@@ -58,8 +58,13 @@ export class ErrandRepository extends Repository<Errand> {
         return errand;
     }
 
-    async findMyErrands() {
+    async findMyErrands(userId:string) {
         const errands = await this.find({
+            where:{
+                user:{
+                    id:userId
+                }
+            },
             relations: {
                 applications: {
                     helper: true,
