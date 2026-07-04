@@ -7,6 +7,9 @@ export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column({ nullable: true })
+    profile: string;
+
     @Column()
     division: "kakao" | "naver" | "email";
 
@@ -56,7 +59,7 @@ export class User {
     errands: Errand[];
 
     // 내가 수행 한 심부름 
-    @OneToMany(()=>ErrandApplication,(application)=>application.helper)
-    applications:ErrandApplication[]
+    @OneToMany(() => ErrandApplication, (application) => application.helper)
+    applications: ErrandApplication[]
 
 }
