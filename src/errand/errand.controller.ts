@@ -50,10 +50,10 @@ export class ErrandController {
   @UseGuards(AuthGuard('jwt'))
   @Get("my")
   async getMyErrands(@GetUser('userId') userId:string) {
-
     const errands =  await this.errandService.getMyErrands(userId);
     return errands
   }
+
 
   @Get()
   findAll(
@@ -63,7 +63,8 @@ export class ErrandController {
   ) {
     return this.errandService.findAll({ limit, keyword, category });
   }
-
+  
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.errandService.findOne(id);

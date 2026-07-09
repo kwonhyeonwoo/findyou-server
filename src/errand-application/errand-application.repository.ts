@@ -2,8 +2,8 @@ import { ConflictException, Injectable, InternalServerErrorException, NotFoundEx
 import { DataSource, Repository } from "typeorm";
 import { ErrandApplication } from "./entities/errand-application.entity";
 import { UpdateApplicationStatusDto } from "./dto/update-application-status.dto";
-import { Errand } from "src/errand/entities/errand.entity";
-import { ErrandStatus } from "src/errand/interface/errand.interface";
+import { Errand } from "../errand/entities/errand.entity";
+import { ErrandStatus } from "../errand/interface/errand.interface";
 
 @Injectable()
 export class ErrandApplicationRepository extends Repository<ErrandApplication> {
@@ -96,7 +96,7 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
             if (error instanceof NotFoundException) {
                 throw error;
             }
-            throw new InternalServerErrorException('트랜잭션 처리 중 오류가 발생했습니다.', error.message);
+            throw new InternalServerErrorException('트랜잭션 처리 중 오류가 발생했습니다.', error);
 
         } finally {
             // 성공하든 실패하든 QueryRunner 연결 해제 (메모리 누수 방지)

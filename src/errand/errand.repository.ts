@@ -52,7 +52,9 @@ export class ErrandRepository extends Repository<Errand> {
         const errand = await this.findOne({
             where: { id },
             relations: {
-                user: true,
+                applications: {
+                    helper:true,
+                },
             },
         });
         return errand;
