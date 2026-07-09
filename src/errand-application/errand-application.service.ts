@@ -1,17 +1,18 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateErrandApplicationDto } from './dto/update-errand-application.dto';
 import { ErrandApplicationRepository } from './errand-application.repository';
+import { UpdateApplicationStatusDto } from './dto/update-application-status.dto';
 
 @Injectable()
 export class ErrandApplicationService {
   constructor(
     private readonly applicationRepository: ErrandApplicationRepository,
   ) { }
-  async create(helperId: string, errandId: string) {
+  async create(helperId: string, errandId: string, message: string) {
     if (!errandId) throw new NotFoundException("신청 심부름이 없습니다.")
     const isExist = await this.applicationRepository.checkExistApplication(helperId, errandId);
     if (isExist) throw new ConflictException('이미 지원한 심부름 입니다.')
-    return await this.applicationRepository.createApplication(helperId, errandId);
+    return await this.applicationRepository.createApplication(helperId, errandId, message);
   }
 
 
@@ -19,6 +20,14 @@ export class ErrandApplicationService {
     if (!helperId) throw new NotFoundException("사용자를 찾을 수 없습니다.")
     return await this.applicationRepository.myApplications(helperId);
   }
+
+  async updateStatus(id: string, status: UpdateApplicationStatusDto) {
+    // id는 심부름내역의 고유 id
+    // id가 없으면 에러, 있으면 updateStatus로 줌,
+    // 여기에서 errand에 접근해서 진행중으로 변경해주면 됨.
+    return await this.applicationRepository.updateStatus(id, status);
+  }
+
   async findAll() {
     // return await this.applicationRepository.myApplications()
   }

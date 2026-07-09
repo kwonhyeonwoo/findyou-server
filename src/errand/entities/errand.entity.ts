@@ -48,6 +48,6 @@ export class Errand {
     @JoinColumn({ name: 'userId' })
     user: User;
 
-    @OneToMany(()=> ErrandApplication, (application)=>application.errand,{onDelete:"CASCADE"})
-    applications:ErrandApplication[];
+    @OneToMany(() => ErrandApplication, (application) => application.errand, { onDelete: "CASCADE" })
+    applications: ErrandApplication[];
 }

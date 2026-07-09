@@ -1,8 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { DataSource, FindOptionsWhere, ILike, Repository } from "typeorm";
 import { Errand } from "./entities/errand.entity";
-import { CreateErrandDto } from "./dto/create-errand.dto";
-import { User } from "../user/entities/user.entity";
 
 
 @Injectable()
@@ -54,15 +52,26 @@ export class ErrandRepository extends Repository<Errand> {
         const errand = await this.findOne({
             where: { id },
             relations: {
-                user: true,
+                applications: {
+                    helper:true,
+                },
             },
         });
         return errand;
     }
 
-    async findMyErrands(userId: string) {
+    async findMyErrands(userId:string) {
         const errands = await this.find({
-            where: { user: { id: userId } },
+            where:{
+                user:{
+                    id:userId
+                }
+            },
+            relations: {
+                applications: {
+                    helper: true,
+                },
+            }
         });
         return errands;
     }

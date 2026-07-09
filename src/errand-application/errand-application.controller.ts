@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, RawBody } from '@nestjs/common';
 import { ErrandApplicationService } from './errand-application.service';
 import { CreateErrandApplicationDto } from './dto/create-errand-application.dto';
 import { UpdateErrandApplicationDto } from './dto/update-errand-application.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/common/user.decorator';
+import { UpdateApplicationStatusDto } from './dto/update-application-status.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('errand-application')
@@ -13,10 +14,10 @@ export class ErrandApplicationController {
   @Post(":id")
   async create(
     @Param('id') id: string,
-    @GetUser('userId') userId: any
+    @GetUser('userId') userId: any,
+    @Body() body: CreateErrandApplicationDto,
   ) {
-    console.log('errandid', id)
-    await this.errandApplicationService.create(userId, id);
+    await this.errandApplicationService.create(userId, id, body.message);
     return {
       success: true,
       message: "심부름을 신청하였습니다."
@@ -28,8 +29,23 @@ export class ErrandApplicationController {
   @Get('my')
   async getMyApplications(@GetUser('userId') userId: string) {
     console.log('userId', userId)
-    return this.errandApplicationService.getMyApplications(userId);
+    return await this.errandApplicationService.getMyApplications(userId);
   }
+
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post(':id/status')
+  async updateStatus(
+    @Param('id') id: string,
+    @Body() body: UpdateApplicationStatusDto,
+  ) {
+    await this.errandApplicationService.updateStatus(id, body);
+    return {
+      success:true,
+      message:"지원자를 수락하였습니다."
+    }
+  }
+
 
   @Get(':id')
   findOne(@Param('id') id: string) {

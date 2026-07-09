@@ -32,8 +32,8 @@ export class ErrandService {
     return await this.errandRepository.createErrand(newErrand as Errand);
   }
 
-  async getMyErrands(userId: string) {
-    return this.errandRepository.findMyErrands(userId);
+  async getMyErrands(userId:string) {
+    return await this.errandRepository.findMyErrands(userId);
   }
 
   findAll({

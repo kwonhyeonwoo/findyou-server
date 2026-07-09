@@ -1,19 +1,29 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "../../user/entities/user.entity";
 import { Errand } from "../../errand/entities/errand.entity";
+import { MaxLength } from "class-validator";
 
 @Entity('errand_application')
 export class ErrandApplication {
     @PrimaryGeneratedColumn('uuid')
-    id:string;
+    id: string;
 
-    @ManyToOne(()=>User,(user)=>user.applications)
-    helper:User
+    @ManyToOne(() => User, (user) => user.applications)
+    helper: User
 
-    @ManyToOne(()=>Errand, (errand)=>errand.applications)
-    errand:Errand
+    @ManyToOne(() => Errand, (errand) => errand.applications)
+    errand: Errand
 
-    @Column({default:"PENDING"})
-    status:"PENDING" | "ACCEPTED" | "REJECTED"
+    @Column({ default: "PENDING" })
+    status: "PENDING" | "ACCEPTED" | "REJECTED"
     // pending-> 대기, accepted -> 수락, rejected ->거절
+
+    @Column({ length: 100, nullable: true })
+    message: string;
+
+    @CreateDateColumn()
+    createdAt:Date;
+
+    @UpdateDateColumn()
+    updatedAt:Date;
 }
