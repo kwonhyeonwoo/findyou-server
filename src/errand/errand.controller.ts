@@ -70,6 +70,18 @@ export class ErrandController {
     return this.errandService.findOne(id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Post(":id/complete")
+  async completeErrand(
+    @Param("id") id:string,
+  ){
+    await this.errandService.completeErrand(id);
+    return {
+      success:true,
+      message:"심부름 진행을 완료하였습니다."
+    }
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateErrandDto: UpdateErrandDto) {
     return this.errandService.update(+id, updateErrandDto);

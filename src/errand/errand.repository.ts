@@ -1,6 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { DataSource, FindOptionsWhere, ILike, Repository } from "typeorm";
 import { Errand } from "./entities/errand.entity";
+import { ErrandStatus } from "./interface/errand.interface";
+import { ErrandApplication } from "../errand-application/entities/errand-application.entity";
+import { ErrandApplicationStatus } from "../errand-application/interfaces/errand-application.interface";
 
 
 @Injectable()
@@ -58,6 +61,27 @@ export class ErrandRepository extends Repository<Errand> {
             },
         });
         return errand;
+    }
+
+    async completeErrand(id: string) {
+        return await this.dataSource.transaction(async (transactionalEntityManager) => {
+            await transactionalEntityManager.update(
+                Errand, 
+                id, 
+                { status: ErrandStatus.completed }
+            );
+    
+            await transactionalEntityManager.update(
+                ErrandApplication,
+                { 
+                    errand: { id: id }, 
+                    status: ErrandApplicationStatus.accepted 
+                },
+                { 
+                    status: ErrandApplicationStatus.complted 
+                }
+            );
+        }); 
     }
 
     async findMyErrands(userId:string) {

@@ -1,7 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "../../user/entities/user.entity";
 import { Errand } from "../../errand/entities/errand.entity";
-import { MaxLength } from "class-validator";
 
 @Entity('errand_application')
 export class ErrandApplication {
@@ -15,8 +14,8 @@ export class ErrandApplication {
     errand: Errand
 
     @Column({ default: "PENDING" })
-    status: "PENDING" | "ACCEPTED" | "REJECTED"
-    // pending-> 대기, accepted -> 수락, rejected ->거절
+    status: "PENDING" | "ACCEPTED" | "REJECTED" | "CANCELED" | "COMPLETED"
+    // pending-> 대기, accepted -> 수락, rejected ->거절 , CANCELED->취소
 
     @Column({ length: 100, nullable: true })
     message: string;
@@ -24,6 +23,6 @@ export class ErrandApplication {
     @CreateDateColumn()
     createdAt:Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn ()
     updatedAt:Date;
 }

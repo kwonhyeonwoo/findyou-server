@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateErrandDto } from './dto/create-errand.dto';
 import { UpdateErrandDto } from './dto/update-errand.dto';
 import { ErrandRepository } from './errand.repository';
 import { Errand } from './entities/errand.entity';
 import { UserRepository } from '../user/user.repository';
+import { ErrandStatus } from './interface/errand.interface';
 
 @Injectable()
 export class ErrandService {
@@ -51,6 +52,19 @@ export class ErrandService {
   findOne(id: string) {
     if (!id) throw new NotFoundException("존재하지 않는 게시글입니다.");
     return this.errandRepository.findErrandById(id);
+  }
+
+  async completeErrand(id:string){
+    const errand = await this.errandRepository.findOne({ where: { id } });
+
+    if (!errand) {
+        throw new NotFoundException('심부름을 찾을 수 없습니다.');
+    }
+
+    if (errand.status === ErrandStatus.completed) {
+        throw new BadRequestException('이미 완료 처리된 심부름입니다.');
+    }
+    return await this.errandRepository.completeErrand(id);
   }
   update(id: number, updateErrandDto: UpdateErrandDto) {
     return `This action updates a #${id} errand`;
