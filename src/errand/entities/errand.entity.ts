@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, Pri
 import { ErrandStatus } from "../interface/errand.interface";
 import { User } from "../../user/entities/user.entity";
 import { ErrandApplication } from "../../errand-application/entities/errand-application.entity";
+import { Review } from "src/review/entities/review.entity";
 
 @Entity('errand')
 export class Errand {
@@ -50,4 +51,7 @@ export class Errand {
 
     @OneToMany(() => ErrandApplication, (application) => application.errand, { onDelete: "CASCADE" })
     applications: ErrandApplication[];
+
+    @OneToMany(() => Review, (review) => review.errand, { onDelete: "CASCADE" })
+    reviews: Review[];
 }

@@ -56,7 +56,7 @@ export class ErrandRepository extends Repository<Errand> {
             where: { id },
             relations: {
                 applications: {
-                    helper:true,
+                    helper: true,
                 },
             },
         });
@@ -66,29 +66,29 @@ export class ErrandRepository extends Repository<Errand> {
     async completeErrand(id: string) {
         return await this.dataSource.transaction(async (transactionalEntityManager) => {
             await transactionalEntityManager.update(
-                Errand, 
-                id, 
+                Errand,
+                id,
                 { status: ErrandStatus.completed }
             );
-    
+
             await transactionalEntityManager.update(
                 ErrandApplication,
-                { 
-                    errand: { id: id }, 
-                    status: ErrandApplicationStatus.accepted 
+                {
+                    errand: { id: id },
+                    status: ErrandApplicationStatus.accepted
                 },
-                { 
-                    status: ErrandApplicationStatus.complted 
+                {
+                    status: ErrandApplicationStatus.complted
                 }
             );
-        }); 
+        });
     }
 
-    async findMyErrands(userId:string) {
+    async findMyErrands(userId: string) {
         const errands = await this.find({
-            where:{
-                user:{
-                    id:userId
+            where: {
+                user: {
+                    id: userId
                 }
             },
             relations: {

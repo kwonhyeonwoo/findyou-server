@@ -49,8 +49,8 @@ export class ErrandController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get("my")
-  async getMyErrands(@GetUser('userId') userId:string) {
-    const errands =  await this.errandService.getMyErrands(userId);
+  async getMyErrands(@GetUser('userId') userId: string) {
+    const errands = await this.errandService.getMyErrands(userId);
     return errands
   }
 
@@ -63,7 +63,7 @@ export class ErrandController {
   ) {
     return this.errandService.findAll({ limit, keyword, category });
   }
-  
+
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -73,12 +73,12 @@ export class ErrandController {
   @UseGuards(AuthGuard('jwt'))
   @Post(":id/complete")
   async completeErrand(
-    @Param("id") id:string,
-  ){
+    @Param("id") id: string,
+  ) {
     await this.errandService.completeErrand(id);
     return {
-      success:true,
-      message:"심부름 진행을 완료하였습니다."
+      success: true,
+      message: "심부름 진행을 완료하였습니다."
     }
   }
 

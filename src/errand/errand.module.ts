@@ -7,11 +7,11 @@ import { Errand } from './entities/errand.entity';
 import { UserModule } from '../user/user.module';
 
 @Module({
-  imports:[
+  imports: [
     UserModule,
     TypeOrmModule.forFeature([Errand])
   ],
   controllers: [ErrandController],
-  providers: [ErrandService,ErrandRepository],
+  providers: [ErrandService, ErrandRepository],
 })
-export class ErrandModule {}
+export class ErrandModule { }

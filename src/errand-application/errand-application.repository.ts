@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { DataSource, Repository } from "typeorm";
 import { ErrandApplication } from "./entities/errand-application.entity";
 import { UpdateApplicationStatusDto } from "./dto/update-application-status.dto";
