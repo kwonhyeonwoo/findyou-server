@@ -1,12 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, UseGuards, Query, BadRequestException } from '@nestjs/common';
 import { ErrandService } from './errand.service';
 import { CreateErrandDto } from './dto/create-errand.dto';
-import { UpdateErrandDto } from './dto/update-errand.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/common/user.decorator';
+import { ErrandCategory } from './interface/errand.interface';
 
 @Controller('errand')
 export class ErrandController {
@@ -30,16 +30,10 @@ export class ErrandController {
   async create(
     @Body() createErrandDto: CreateErrandDto,
     @UploadedFiles() files: Express.Multer.File[],
-    @GetUser('userId') userId: any,
+    @GetUser('userId') userId: string,
   ) {
     const imagePaths = files.map(file => `/uploads/errand/${file.filename}`);
-    const newErrand = await this.errandService.create({ createErrandDto, imagePaths, userId });
-    if (!newErrand) {
-      return {
-        success: false,
-        message: "게시글 업로드 실패!"
-      }
-    };
+    await this.errandService.create({ createErrandDto, imagePaths, userId });
 
     return {
       success: true,
@@ -49,46 +43,37 @@ export class ErrandController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get("my")
-  async getMyErrands(@GetUser('userId') userId:string) {
-    const errands =  await this.errandService.getMyErrands(userId);
+  async findMyErrands(@GetUser('userId') userId: string) {
+    const errands = await this.errandService.findMyErrands(userId);
     return errands
   }
 
 
   @Get()
-  findAll(
+  findErrandLists(
     @Query('limit') limit?: string,
     @Query('keyword') keyword?: string,
-    @Query('category') category?: string,
+    @Query('category') category?: ErrandCategory,
   ) {
-    return this.errandService.findAll({ limit, keyword, category });
+    return this.errandService.findErrandLists({ limit, keyword, category });
   }
-  
+
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.errandService.findOne(id);
+  findErrandDetail(@Param('id') id: string) {
+    return this.errandService.findErrandDetail(id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post(":id/complete")
+  @UseGuards(AuthGuard('jwt'))
   async completeErrand(
-    @Param("id") id:string,
-  ){
-    await this.errandService.completeErrand(id);
+    @Param("id") id: string,
+    @GetUser('userId') userId: string,
+  ) {
+    await this.errandService.completeErrand(id, userId);
     return {
-      success:true,
-      message:"심부름 진행을 완료하였습니다."
+      success: true,
+      message: "심부름 진행을 완료하였습니다."
     }
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateErrandDto: UpdateErrandDto) {
-    return this.errandService.update(+id, updateErrandDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.errandService.remove(+id);
   }
 }

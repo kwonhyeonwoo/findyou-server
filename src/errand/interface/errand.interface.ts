@@ -1,13 +1,16 @@
 export enum ErrandCategory {
-    all = "all",
-    delivery = "delivery",
-    food = "food",
-    shopping = "shopping",
-    etc = "etc",
+    DELIVERY = "DELIVERY",
+    SHOPPING = "SHOPPING",
+    CLEANING = "CLEANING",
+    REPAIR = "REPAIR",
+    PROXY = "PROXY",
+    PET = "PET",
+    CAR_WASH = "CAR_WASH",
+    ETC = "ETC",
 }
 
 export enum ErrandStatus {
-    matching = "matching", // 모집중
-    completed = "completed", // 완료
-    in_progress = "in_progress", // 진행중
+    MATCHING = "MATCHING", // 모집중
+    COMPLETED = "COMPLETED", // 완료
+    IN_PROGRESS = "IN_PROGRESS", // 진행중
 }

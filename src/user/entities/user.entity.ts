@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Errand } from "../../errand/entities/errand.entity";
 import { ErrandApplication } from "../../errand-application/entities/errand-application.entity";
+import { Review } from "src/review/entities/review.entity";
 
 @Entity('user')
 export class User {
@@ -61,5 +62,14 @@ export class User {
     // 내가 수행 한 심부름 
     @OneToMany(() => ErrandApplication, (application) => application.helper)
     applications: ErrandApplication[]
+
+    @OneToMany(() => Review, (review) => review.reviewer, { onDelete: "CASCADE" })
+    writeReviews: Review[]
+
+    @OneToMany(() => Review, (review) => review.reviewee)
+    receivedReviews: Review[]
+
+    @OneToMany(() => Errand, (errand) => errand.helper)
+    helpingErrands: Errand[]
 
 }

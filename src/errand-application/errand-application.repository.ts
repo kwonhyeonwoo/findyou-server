@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { DataSource, Repository } from "typeorm";
 import { ErrandApplication } from "./entities/errand-application.entity";
 import { UpdateApplicationStatusDto } from "./dto/update-application-status.dto";
@@ -81,7 +81,7 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
 
             // 6. 심부름(Errand) 본글의 상태를 '진행 중'으로 업데이트
             await queryRunner.manager.update(Errand, errandId, {
-                status: ErrandStatus.in_progress
+                status: ErrandStatus.IN_PROGRESS
             });
 
             // 7. 모든 과정이 에러 없이 통과하면 DB에 커밋 (적용)

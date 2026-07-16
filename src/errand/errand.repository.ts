@@ -1,9 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { DataSource, FindOptionsWhere, ILike, Repository } from "typeorm";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { DataSource, DeepPartial, FindOptionsWhere, ILike, Repository, SelectQueryBuilder } from "typeorm";
 import { Errand } from "./entities/errand.entity";
-import { ErrandStatus } from "./interface/errand.interface";
+import { ErrandCategory, ErrandStatus } from "./interface/errand.interface";
 import { ErrandApplication } from "../errand-application/entities/errand-application.entity";
 import { ErrandApplicationStatus } from "../errand-application/interfaces/errand-application.interface";
+import { CreateErrandDto } from "./dto/create-errand.dto";
 
 
 @Injectable()
@@ -14,36 +15,49 @@ export class ErrandRepository extends Repository<Errand> {
         super(Errand, dataSource.createEntityManager());
     }
 
-    async createErrand(body: Errand): Promise<Errand> {
-        const newErrand = await this.create(body);
+    async createErrand(body: DeepPartial<Errand>) {
+        const newErrand = this.create(body);
         return await this.save(newErrand);
     }
 
-    async findAll({
+    async findErrandDetail(id: string) {
+        const errand = await this.findOne({
+            where: { id },
+            relations: { user: true },
+            select: {
+                user: {
+                    id: true,
+                    nickName: true,
+                    profile: true,
+                },
+            }
+        })
+        return errand;
+    }
+
+    async findErrandLists({
         limit,
         keyword,
         category,
     }: {
         limit?: string;
         keyword?: string;
-        category?: string;
+        category?: ErrandCategory;
     }) {
         const takeValue = limit ? +limit : undefined;
-        const whereCondition: FindOptionsWhere<Errand> = {};
+        const whereCondition: FindOptionsWhere<Errand> = {
+            status: ErrandStatus.MATCHING
+        };
         if (keyword) {
             // 제목에 키워드가 포함된 것을 찾음 (대소문자 구분 없음)
             whereCondition.title = ILike(`%${keyword}%`);
         }
-
-        if (category && category !== 'all') {
+        if (category) {
             whereCondition.category = category;
         }
         const errands = await this.find({
-            take: takeValue,
+            take: Math.min(takeValue ?? 20, 50),
             where: whereCondition,
-            relations: {
-                applications: true,
-            },
             order: {
                 createdAt: "DESC"
             }
@@ -51,52 +65,39 @@ export class ErrandRepository extends Repository<Errand> {
         return errands;
     }
 
-    async findErrandById(id: string) {
-        const errand = await this.findOne({
-            where: { id },
-            relations: {
-                applications: {
-                    helper:true,
-                },
-            },
-        });
+    async findOneErrand(id: string) {
+        const errand = await this.findOne({ where: { id } });
         return errand;
     }
 
     async completeErrand(id: string) {
-        return await this.dataSource.transaction(async (transactionalEntityManager) => {
-            await transactionalEntityManager.update(
-                Errand, 
-                id, 
-                { status: ErrandStatus.completed }
-            );
-    
-            await transactionalEntityManager.update(
-                ErrandApplication,
-                { 
-                    errand: { id: id }, 
-                    status: ErrandApplicationStatus.accepted 
-                },
-                { 
-                    status: ErrandApplicationStatus.complted 
-                }
-            );
-        }); 
+        return await this.dataSource.transaction(
+            async (transactionalEntityManager) => {
+                await transactionalEntityManager.update(
+                    Errand,
+                    id,
+                    { status: ErrandStatus.COMPLETED }
+                );
+
+                await transactionalEntityManager.update(
+                    ErrandApplication,
+                    {
+                        errand: { id: id },
+                        status: ErrandApplicationStatus.ACCEPTED
+                    },
+                    {
+                        status: ErrandApplicationStatus.COMPLETED
+                    }
+                );
+            });
     }
 
-    async findMyErrands(userId:string) {
-        const errands = await this.find({
-            where:{
-                user:{
-                    id:userId
-                }
-            },
-            relations: {
-                applications: {
-                    helper: true,
-                },
-            }
-        });
-        return errands;
+    async findMyErrands(userId: string) {
+        const qb: SelectQueryBuilder<Errand> = this.createQueryBuilder('errand');
+        return qb
+            .where('errand.userId = :userId', { userId })
+            .loadRelationCountAndMap('errand.applicationCount', 'errand.applications')
+            .orderBy('errand.createdAt', 'DESC')
+            .getMany();
     }
 }
