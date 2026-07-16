@@ -1,15 +1,45 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { ReviewRepository } from './review.repository';
+import { ErrandRepository } from 'src/errand/errand.repository';
+import { ReviewRole } from './enum/review-role.enum';
 
 @Injectable()
 export class ReviewService {
   constructor(
-    private readonly reviewRepository: ReviewRepository
+    private readonly reviewRepository: ReviewRepository,
+    private readonly errandRepository: ErrandRepository,
   ) { }
   async create(body: CreateReviewDto, userId: string, errandId: string) {
-    await this.reviewRepository.createReview(body, userId, errandId)
+    // const errand = await this.errandRepository.findErrandById(errandId);
+
+    // if (!errand) {
+    //   throw new NotFoundException('심부름을 찾을 수 없습니다.')
+    // }
+    // if (errand.user.id !== userId) {
+    //   throw new ForbiddenException('본인 심부름에는 리뷰를 남길 수 없습니다.')
+    // }
+    // const isHelper = errand.applications[0].helper.id === userId; // 헬퍼
+    // const isRequester = errand.user.id === userId; // 의뢰인
+    // if (!isHelper && !isRequester) {
+    //   throw new ForbiddenException('해당 리뷰는 당사자만 남길 수 있습니다.')
+    // }
+    // const existReview = await this.reviewRepository.existsReview(errandId, userId);
+    // if (existReview) {
+    //   throw new BadRequestException('이미 리뷰를 남겼습니다.')
+    // }
+
+    // const role = isHelper ? ReviewRole.HELPER : ReviewRole.USER;
+    // await this.reviewRepository.createReview({
+    //   rating: body.rating,
+    //   tags: body.tags,
+    //   content: body.content,
+    //   reviewerId: userId,
+    //   revieweeId: errand.applications[0].helper.id,
+    //   role: role,
+    //   errandId: errandId,
+    // })
   }
 
   findAll() {

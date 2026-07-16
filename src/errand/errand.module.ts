@@ -13,5 +13,6 @@ import { UserModule } from '../user/user.module';
   ],
   controllers: [ErrandController],
   providers: [ErrandService, ErrandRepository],
+  exports: [ErrandRepository],
 })
 export class ErrandModule { }

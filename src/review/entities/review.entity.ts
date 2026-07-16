@@ -1,7 +1,8 @@
 import { Errand } from "src/errand/entities/errand.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ReviewTag } from "../enum/review-tags.enum";
+import { ReviewRole } from "../enum/review-role.enum";
 
 @Entity('review')
 export class Review {
@@ -12,25 +13,23 @@ export class Review {
     rating: number;
 
     @Column({ type: 'enum', enum: ReviewTag, array: true, nullable: true })
-    tags: string[];
+    tags: ReviewTag[];
 
     @Column() // 리뷰 내용
     content: string;
 
-    @Column()// 리뷰작성자
-    reviewr: string; // 리뷰작성자
+    @ManyToOne(() => User, (user) => user.writeReviews, { onDelete: "CASCADE" })// 리뷰작성자
+    reviewer: User; // 리뷰작성자
 
-    @Column()  // 리뷰 대상자
-    reviewee: string;
+    @ManyToOne(() => User, (user) => user.receivedReviews, { onDelete: "CASCADE" })  // 리뷰 대상자
+    reviewee: User;
 
-    @Column() // 누구에 대한 리뷰(의뢰인인지, 도움인인지)
-    role: "HELPER" | "USER";
+    @Column({ type: "enum", enum: ReviewRole, nullable: true }) // 누구에 대한 리뷰(의뢰인인지, 도움인인지)
+    role: ReviewRole;
 
     @ManyToOne(() => Errand, (errand) => errand.reviews, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'errandId' })
     errand: Errand;
 
-    @ManyToOne(() => User, (user) => user.reviews)
-    @JoinColumn({ name: 'userId' })
-    user: User;
+    @CreateDateColumn({ type: 'timestamp' })
+    createdAt: Date;
 }

@@ -9,8 +9,8 @@ import { GetUser } from 'src/auth/common/user.decorator';
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) { }
 
-  @Post(':errandId')
   @UseGuards(AuthGuard('jwt'))
+  @Post(':errandId')
   async create(
     @Body() body: CreateReviewDto,
     @Param("errandId") errandId: string,

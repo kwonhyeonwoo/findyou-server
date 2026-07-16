@@ -1,7 +1,7 @@
-export enum ErrandApplicationStatus{
-    pending = "PENDING",
-    accepted = "ACCEPTED",
-    rejected = "REJECTED",
-    canceled = "CANCELED",
-    complted = "COMPLETED",
+export enum ErrandApplicationStatus {
+    PENDING = "PENDING",
+    ACCEPTED = "ACCEPTED",
+    REJECTED = "REJECTED",
+    CANCELED = "CANCELED",
+    COMPLETED = "COMPLETED",
 }

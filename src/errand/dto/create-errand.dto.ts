@@ -1,15 +1,16 @@
 import { Type } from "class-transformer";
-import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { User } from "../../user/entities/user.entity";
+import { ErrandCategory } from "../interface/errand.interface";
 
 export class CreateErrandDto {
     @IsString()
     @IsNotEmpty()
     title: string;
 
-    @IsString()
+    @IsEnum(ErrandCategory)
     @IsNotEmpty()
-    category: string;
+    category: ErrandCategory;
 
     @IsArray()
     @IsString({ each: true })
@@ -36,9 +37,10 @@ export class CreateErrandDto {
     @Type(() => Number)
     lng: number;
 
-    @IsString()
+    @Type(() => Number)
+    @IsInt()
     @IsNotEmpty()
-    price: string;
+    price: number;
 
     @IsString()
     @IsNotEmpty()

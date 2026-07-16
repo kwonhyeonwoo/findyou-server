@@ -7,10 +7,10 @@ export class ErrandApplication {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => User, (user) => user.applications)
+    @ManyToOne(() => User, (user) => user.applications, { onDelete: 'CASCADE' })
     helper: User
 
-    @ManyToOne(() => Errand, (errand) => errand.applications)
+    @ManyToOne(() => Errand, (errand) => errand.applications, { onDelete: 'CASCADE' })
     errand: Errand
 
     @Column({ default: "PENDING" })
@@ -21,8 +21,8 @@ export class ErrandApplication {
     message: string;
 
     @CreateDateColumn()
-    createdAt:Date;
+    createdAt: Date;
 
-    @UpdateDateColumn ()
-    updatedAt:Date;
+    @UpdateDateColumn()
+    updatedAt: Date;
 }

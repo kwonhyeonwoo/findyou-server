@@ -1,16 +1,12 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateErrandDto } from './dto/create-errand.dto';
-import { UpdateErrandDto } from './dto/update-errand.dto';
 import { ErrandRepository } from './errand.repository';
-import { Errand } from './entities/errand.entity';
-import { UserRepository } from '../user/user.repository';
-import { ErrandStatus } from './interface/errand.interface';
+import { ErrandCategory, ErrandStatus } from './interface/errand.interface';
 
 @Injectable()
 export class ErrandService {
   constructor(
     private readonly errandRepository: ErrandRepository,
-    private readonly userRepository: UserRepository,
   ) { }
   async create(
     {
@@ -23,54 +19,47 @@ export class ErrandService {
       userId: string;
     }
   ) {
-    const user = await this.userRepository.findByUser(userId);
-    if (!user) throw new NotFoundException('회원을 찾을 수 없습니다.');
     const newErrand = {
       ...createErrandDto,
       images: imagePaths,
-      user,
+      user: { id: userId },
+      status: ErrandStatus.MATCHING,
     };
-    return await this.errandRepository.createErrand(newErrand as Errand);
+    return await this.errandRepository.createErrand(newErrand);
   }
 
-  async getMyErrands(userId:string) {
+  async findMyErrands(userId: string) {
     return await this.errandRepository.findMyErrands(userId);
   }
 
-  findAll({
+  async findErrandLists({
     limit,
     keyword,
     category,
   }: {
     limit?: string;
     keyword?: string;
-    category?: string;
+    category?: ErrandCategory;
   }) {
-    return this.errandRepository.findAll({ limit, keyword, category });
+    return this.errandRepository.findErrandLists({ limit, keyword, category });
   }
 
-  findOne(id: string) {
-    if (!id) throw new NotFoundException("존재하지 않는 게시글입니다.");
-    return this.errandRepository.findErrandById(id);
+  async findErrandDetail(id: string) {
+    const errand = await this.errandRepository.findErrandDetail(id);
+    return errand;
   }
 
-  async completeErrand(id:string){
-    const errand = await this.errandRepository.findOne({ where: { id } });
-
+  async completeErrand(id: string, userId: string) {
+    const errand = await this.errandRepository.findOneErrand(id);
     if (!errand) {
-        throw new NotFoundException('심부름을 찾을 수 없습니다.');
+      throw new NotFoundException('심부름을 찾을 수 없습니다.');
     }
-
-    if (errand.status === ErrandStatus.completed) {
-        throw new BadRequestException('이미 완료 처리된 심부름입니다.');
+    if (errand.user.id !== userId) {
+      throw new ForbiddenException('심부름 완료 권한이 없습니다.');
+    }
+    if (errand.status !== ErrandStatus.IN_PROGRESS) {
+      throw new BadRequestException('진행중인 심부름만 완료할 수 있습니다.');
     }
     return await this.errandRepository.completeErrand(id);
-  }
-  update(id: number, updateErrandDto: UpdateErrandDto) {
-    return `This action updates a #${id} errand`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} errand`;
   }
 }

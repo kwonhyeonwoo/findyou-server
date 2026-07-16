@@ -9,6 +9,6 @@ export class CreateReviewDto {
     rating: number;
 
     @IsArray()
-    @IsEnum(ReviewTag)
+    @IsEnum(ReviewTag, { each: true })
     tags: ReviewTag[];
 }

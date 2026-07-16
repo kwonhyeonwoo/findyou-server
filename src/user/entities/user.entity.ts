@@ -63,7 +63,13 @@ export class User {
     @OneToMany(() => ErrandApplication, (application) => application.helper)
     applications: ErrandApplication[]
 
-    @OneToMany(() => Review, (review) => review.user, { onDelete: "CASCADE" })
-    reviews: Review[]
+    @OneToMany(() => Review, (review) => review.reviewer, { onDelete: "CASCADE" })
+    writeReviews: Review[]
+
+    @OneToMany(() => Review, (review) => review.reviewee)
+    receivedReviews: Review[]
+
+    @OneToMany(() => Errand, (errand) => errand.helper)
+    helpingErrands: Errand[]
 
 }
