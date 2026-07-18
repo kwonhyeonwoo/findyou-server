@@ -4,7 +4,6 @@ import { Errand } from "./entities/errand.entity";
 import { ErrandCategory, ErrandStatus } from "./interface/errand.interface";
 import { ErrandApplication } from "../errand-application/entities/errand-application.entity";
 import { ErrandApplicationStatus } from "../errand-application/interfaces/errand-application.interface";
-import { CreateErrandDto } from "./dto/create-errand.dto";
 
 
 @Injectable()
