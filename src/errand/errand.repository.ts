@@ -92,11 +92,28 @@ export class ErrandRepository extends Repository<Errand> {
     }
 
     async findMyErrands(userId: string) {
-        const qb: SelectQueryBuilder<Errand> = this.createQueryBuilder('errand');
-        return qb
-            .where('errand.userId = :userId', { userId })
-            .loadRelationCountAndMap('errand.applicationCount', 'errand.applications')
-            .orderBy('errand.createdAt', 'DESC')
-            .getMany();
+        return this.find({
+            where: { user: { id: userId } },
+            relations: {
+                applications: {
+                    helper: true,
+                },
+            },
+            select: {
+                applications: {
+                    id: true,
+                    message: true,
+                    status: true,
+                    helper: {
+                        id: true,
+                        nickName: true,
+                        profile: true,
+                    },
+                },
+            },
+            order: {
+                createdAt: 'DESC',
+            },
+        });
     }
 }

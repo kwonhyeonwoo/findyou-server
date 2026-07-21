@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsArray, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDate, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { User } from "../../user/entities/user.entity";
 import { ErrandCategory } from "../interface/errand.interface";
 
@@ -45,4 +45,9 @@ export class CreateErrandDto {
     @IsString()
     @IsNotEmpty()
     openLink: string;
+
+      @IsNotEmpty()
+    @IsDate()
+    @Type(() => Date)
+    deadlineTime: Date
 }

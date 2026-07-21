@@ -45,6 +45,9 @@ export class Errand {
     images: string[] | null;
 
     @Column()
+    deadlineTime: Date;
+
+    @Column()
     openLink: string;
 
     @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
