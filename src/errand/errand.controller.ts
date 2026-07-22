@@ -6,7 +6,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/common/user.decorator';
-import { ErrandCategory } from './interface/errand.interface';
+import { CustomCategory } from 'src/interfaces/custom-category.enum';
 
 @Controller('errand')
 export class ErrandController {
@@ -53,7 +53,7 @@ export class ErrandController {
   findErrandLists(
     @Query('limit') limit?: string,
     @Query('keyword') keyword?: string,
-    @Query('category') category?: ErrandCategory,
+    @Query('category') category?: CustomCategory,
   ) {
     return this.errandService.findErrandLists({ limit, keyword, category });
   }

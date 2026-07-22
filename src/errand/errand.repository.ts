@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { DataSource, DeepPartial, FindOptionsWhere, ILike, Repository, SelectQueryBuilder } from "typeorm";
 import { Errand } from "./entities/errand.entity";
-import { ErrandCategory, ErrandStatus } from "./interface/errand.interface";
+import { ErrandStatus } from "./interface/errand.interface";
 import { ErrandApplication } from "../errand-application/entities/errand-application.entity";
-import { ErrandApplicationStatus } from "../errand-application/interfaces/errand-application.interface";
+import { CustomCategory } from "src/interfaces/custom-category.enum";
+import { CustomStatus } from "src/interfaces/custom-status.enum";
 
 
 @Injectable()
@@ -41,7 +42,7 @@ export class ErrandRepository extends Repository<Errand> {
     }: {
         limit?: string;
         keyword?: string;
-        category?: ErrandCategory;
+        category?: CustomCategory;
     }) {
         const takeValue = limit ? +limit : undefined;
         const whereCondition: FindOptionsWhere<Errand> = {
@@ -82,10 +83,10 @@ export class ErrandRepository extends Repository<Errand> {
                     ErrandApplication,
                     {
                         errand: { id: id },
-                        status: ErrandApplicationStatus.ACCEPTED
+                        status: CustomStatus.ACCEPTED
                     },
                     {
-                        status: ErrandApplicationStatus.COMPLETED
+                        status: CustomStatus.COMPLETED
                     }
                 );
             });

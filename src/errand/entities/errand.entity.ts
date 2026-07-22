@@ -2,10 +2,11 @@ import {
     Column, CreateDateColumn, UpdateDateColumn, Entity, Index,
     JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn,
 } from "typeorm";
-import { ErrandStatus, ErrandCategory } from "../interface/errand.interface";
+import { ErrandStatus } from "../interface/errand.interface";
 import { User } from "../../user/entities/user.entity";
 import { ErrandApplication } from "../../errand-application/entities/errand-application.entity";
 import { Review } from "src/review/entities/review.entity";
+import { CustomCategory } from "src/interfaces/custom-category.enum";
 
 @Index(['status', 'category'])
 @Index(['status', 'address_dong'])
@@ -17,8 +18,8 @@ export class Errand {
     @Column({ type: 'enum', enum: ErrandStatus, default: ErrandStatus.MATCHING })
     status: ErrandStatus;
 
-    @Column({ type: 'enum', enum: ErrandCategory })
-    category: ErrandCategory;
+    @Column({ type: 'enum', enum: CustomCategory })
+    category: CustomCategory;
 
     @Column()
     title: string;

@@ -1,7 +1,8 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateErrandDto } from './dto/create-errand.dto';
 import { ErrandRepository } from './errand.repository';
-import { ErrandCategory, ErrandStatus } from './interface/errand.interface';
+import { ErrandStatus } from './interface/errand.interface';
+import { CustomCategory } from 'src/interfaces/custom-category.enum';
 
 @Injectable()
 export class ErrandService {
@@ -39,7 +40,7 @@ export class ErrandService {
   }: {
     limit?: string;
     keyword?: string;
-    category?: ErrandCategory;
+    category?: CustomCategory;
   }) {
     return this.errandRepository.findErrandLists({ limit, keyword, category });
   }
