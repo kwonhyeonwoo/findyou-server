@@ -1,7 +1,7 @@
 import { CustomCategory } from "src/interfaces/custom-category.enum";
 import { CustomStatus } from "src/interfaces/custom-status.enum";
 import { User } from "src/user/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 export enum HelperMovement {
     BICYCLE = "BICYCLE",
@@ -54,6 +54,7 @@ export class Helper {
     @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
     updatedAt: Date;
 
-    @ManyToOne(() => User, (user) => user.helpers)
-    user: User;
+    @ManyToOne(() => User, (user) => user.helperPosts)
+    @JoinColumn({name:'helperId'})
+    helper: User;
 }

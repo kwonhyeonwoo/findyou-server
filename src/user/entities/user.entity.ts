@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Errand } from "../../errand/entities/errand.entity";
 import { ErrandApplication } from "../../errand-application/entities/errand-application.entity";
 import { Review } from "src/review/entities/review.entity";
@@ -74,7 +74,6 @@ export class User {
     @OneToMany(() => Errand, (errand) => errand.helper)
     helpingErrands: Errand[]
 
-    @OneToMany(() => Helper, (helper) => helper.user)
-    helpers: Helper[];
-
+    @OneToMany(() => Helper, (helper) => helper.helper)
+    helperPosts: Helper[];
 }
