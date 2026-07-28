@@ -47,26 +47,23 @@ export class ErrandRepository extends Repository<Errand> {
         category?: CustomCategory;
     }) {
         const takeValue = limit ? +limit : undefined;
-        const whereCondition: FindOptionsWhere<Errand> = {
-            status: ErrandStatus.MATCHING
-        };
+        const statusValue = status ?? ErrandStatus.MATCHING;
+
+        const qb = this.createQueryBuilder('errand')
+            .where('errand.status = :status', { status: statusValue })
+            .loadRelationCountAndMap('errand.applicationsCount', 'errand.applications')
+            .orderBy('errand.createdAt', 'DESC')
+            .take(Math.min(takeValue ?? 20, 50));
+
         if (keyword) {
             // 제목에 키워드가 포함된 것을 찾음 (대소문자 구분 없음)
-            whereCondition.title = ILike(`%${keyword}%`);
+            qb.andWhere('errand.title ILIKE :keyword', { keyword: `%${keyword}%` });
         }
         if (category) {
-            whereCondition.category = category;
+            qb.andWhere('errand.category = :category', { category });
         }
-        if(status){
-            whereCondition.status = status
-        }
-        const errands = await this.find({
-            take: Math.min(takeValue ?? 20, 50),
-            where: whereCondition,
-            order: {
-                createdAt: "DESC"
-            }
-        });
+
+        const errands = await qb.getMany();
         return errands;
     }
 
