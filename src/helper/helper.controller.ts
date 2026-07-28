@@ -16,6 +16,7 @@ export class HelperController {
     @GetUser('userId') userId: string,
 
   ) {
+    console.log('body', body)
     await this.helperService.create(body, userId);
     return {
       success: true,

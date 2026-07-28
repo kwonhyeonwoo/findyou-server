@@ -55,6 +55,6 @@ export class Helper {
     updatedAt: Date;
 
     @ManyToOne(() => User, (user) => user.helperPosts)
-    @JoinColumn({name:'helperId'})
+    @JoinColumn({ name: 'helperId' })
     helper: User;
 }

@@ -1,6 +1,5 @@
 import { Type } from "class-transformer";
 import { IsArray, IsDate, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import { User } from "../../user/entities/user.entity";
 import { CustomCategory } from "src/interfaces/custom-category.enum";
 
 export class CreateErrandDto {

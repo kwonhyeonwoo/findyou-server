@@ -1,7 +1,6 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CustomCategory } from "src/interfaces/custom-category.enum";
-import { CustomStatus } from "src/interfaces/custom-status.enum";
 import { HelperMovement } from "../entities/helper.entity";
 
 export class CreateHelperDto {
@@ -24,10 +23,6 @@ export class CreateHelperDto {
     @IsEnum(CustomCategory)
     @IsNotEmpty()
     category: CustomCategory
-
-    @IsEnum(CustomStatus)
-    @IsNotEmpty()
-    status: CustomStatus
 
     @Type(() => Number)
     @IsNotEmpty()

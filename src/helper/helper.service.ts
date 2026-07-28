@@ -13,11 +13,8 @@ export class HelperService {
       ...body,
       user: { id: userId }
     }
-    const helper = await this.helperRepository.createHelper(newHelper);
-    if (!helper) {
-      throw new BadRequestException('헬퍼 등록에 실패했습니다.');
-    }
-    return helper;
+
+    return await this.helperRepository.createHelper(newHelper);
 
   }
 
