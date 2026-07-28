@@ -7,6 +7,7 @@ import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/common/user.decorator';
 import { CustomCategory } from 'src/interfaces/custom-category.enum';
+import { ErrandStatus } from './interface/errand.interface';
 
 @Controller('errand')
 export class ErrandController {
@@ -51,11 +52,14 @@ export class ErrandController {
 
   @Get()
   findErrandLists(
+    @Query('status') status?:ErrandStatus,
     @Query('limit') limit?: string,
     @Query('keyword') keyword?: string,
     @Query('category') category?: CustomCategory,
   ) {
-    return this.errandService.findErrandLists({ limit, keyword, category });
+    console.log('status',status)
+    console.log('category',category)
+    return this.errandService.findErrandLists({ status,limit, keyword, category });
   }
 
   @UseGuards(AuthGuard('jwt'))

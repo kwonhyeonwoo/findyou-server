@@ -34,15 +34,17 @@ export class ErrandService {
   }
 
   async findErrandLists({
+    status,
     limit,
     keyword,
     category,
   }: {
+    status?:ErrandStatus,
     limit?: string;
     keyword?: string;
     category?: CustomCategory;
   }) {
-    return this.errandRepository.findErrandLists({ limit, keyword, category });
+    return this.errandRepository.findErrandLists({status, limit, keyword, category });
   }
 
   async findErrandDetail(id: string) {

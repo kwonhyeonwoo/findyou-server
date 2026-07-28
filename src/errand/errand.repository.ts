@@ -36,10 +36,12 @@ export class ErrandRepository extends Repository<Errand> {
     }
 
     async findErrandLists({
+        status,
         limit,
         keyword,
         category,
     }: {
+        status?:ErrandStatus,
         limit?: string;
         keyword?: string;
         category?: CustomCategory;
@@ -54,6 +56,9 @@ export class ErrandRepository extends Repository<Errand> {
         }
         if (category) {
             whereCondition.category = category;
+        }
+        if(status){
+            whereCondition.status = status
         }
         const errands = await this.find({
             take: Math.min(takeValue ?? 20, 50),
