@@ -61,9 +61,16 @@ export class ErrandController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get(':id')
-  findErrandDetail(@Param('id') id: string) {
+  @Get(':id/progress')
+  findErrandProgress(@Param('id') id: string) {
     return this.errandService.findErrandProgress(id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id')
+  async findErrandDetail(@Param('id') id:string){
+    const errand = await this.errandService.findErrandDetail(id);
+    return errand;
   }
 
   @Post(":id/complete")

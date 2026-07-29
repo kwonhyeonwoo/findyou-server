@@ -73,8 +73,9 @@ export class ErrandRepository extends Repository<Errand> {
     }
 
     async findOneErrand(id: string) {
-        const errand = await this.findOne({ where: { id } });
-        return errand;
+        return await this.findOne({
+            where:{id}
+        });
     }
 
     // 심부름완료

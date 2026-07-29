@@ -53,6 +53,11 @@ export class ErrandService {
     return errand;
   }
 
+  async findErrandDetail(id:string){
+    if(!id) throw new NotFoundException("심부름이 없습니다.")
+    return await this.errandRepository.findOneErrand(id);
+  }
+
   async completeErrand(id: string, userId: string) {
     const errand = await this.errandRepository.findOneErrand(id);
     if (!errand) {
