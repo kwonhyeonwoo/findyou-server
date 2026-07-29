@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { DataSource, DeepPartial, FindOptionsWhere, ILike, Repository, SelectQueryBuilder } from "typeorm";
+import { DataSource, DeepPartial, Repository } from "typeorm";
 import { Errand } from "./entities/errand.entity";
-import { ErrandStatus } from "./interface/errand.interface";
 import { ErrandApplication } from "../errand-application/entities/errand-application.entity";
 import { CustomCategory } from "src/interfaces/custom-category.enum";
 import { CustomStatus } from "src/interfaces/custom-status.enum";
@@ -20,34 +19,40 @@ export class ErrandRepository extends Repository<Errand> {
         return await this.save(newErrand);
     }
 
-    async findErrandDetail(id: string) {
+    // 진행중인 심부름
+    async findErrandProgress(id: string) {
         const errand = await this.findOne({
             where: { id },
-            relations: { user: true },
+            relations: { applications: {
+                helper:true,
+            } },
             select: {
-                user: {
+                applications: {
                     id: true,
-                    nickName: true,
-                    profile: true,
+                    helper: {
+                        nickName:true,
+                        profile:true,
+                    },
                 },
             }
         })
         return errand;
     }
 
+    // 심부름리스트(검색,카테고리 필터까지)
     async findErrandLists({
         status,
         limit,
         keyword,
         category,
     }: {
-        status?:ErrandStatus,
+        status?:CustomStatus,
         limit?: string;
         keyword?: string;
         category?: CustomCategory;
     }) {
         const takeValue = limit ? +limit : undefined;
-        const statusValue = status ?? ErrandStatus.MATCHING;
+        const statusValue = status ?? CustomStatus.MATCHING;
 
         const qb = this.createQueryBuilder('errand')
             .where('errand.status = :status', { status: statusValue })
@@ -72,13 +77,14 @@ export class ErrandRepository extends Repository<Errand> {
         return errand;
     }
 
+    // 심부름완료
     async completeErrand(id: string) {
         return await this.dataSource.transaction(
             async (transactionalEntityManager) => {
                 await transactionalEntityManager.update(
                     Errand,
                     id,
-                    { status: ErrandStatus.COMPLETED }
+                    { status: CustomStatus.COMPLETED }
                 );
 
                 await transactionalEntityManager.update(

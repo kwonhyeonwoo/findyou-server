@@ -1,8 +1,8 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateErrandDto } from './dto/create-errand.dto';
 import { ErrandRepository } from './errand.repository';
-import { ErrandStatus } from './interface/errand.interface';
 import { CustomCategory } from 'src/interfaces/custom-category.enum';
+import { CustomStatus } from 'src/interfaces/custom-status.enum';
 
 @Injectable()
 export class ErrandService {
@@ -24,7 +24,7 @@ export class ErrandService {
       ...createErrandDto,
       images: imagePaths,
       user: { id: userId },
-      status: ErrandStatus.MATCHING,
+      status: CustomStatus.MATCHING,
     };
     return await this.errandRepository.createErrand(newErrand);
   }
@@ -39,7 +39,7 @@ export class ErrandService {
     keyword,
     category,
   }: {
-    status?:ErrandStatus,
+    status?:CustomStatus,
     limit?: string;
     keyword?: string;
     category?: CustomCategory;
@@ -47,8 +47,9 @@ export class ErrandService {
     return this.errandRepository.findErrandLists({status, limit, keyword, category });
   }
 
-  async findErrandDetail(id: string) {
-    const errand = await this.errandRepository.findErrandDetail(id);
+  async findErrandProgress(id: string) {
+    const errand = await this.errandRepository.findErrandProgress(id);
+    console.log('errand ',errand)
     return errand;
   }
 
@@ -60,7 +61,7 @@ export class ErrandService {
     if (errand.user.id !== userId) {
       throw new ForbiddenException('심부름 완료 권한이 없습니다.');
     }
-    if (errand.status !== ErrandStatus.IN_PROGRESS) {
+    if (errand.status !== CustomStatus.IN_PROGRESS) {
       throw new BadRequestException('진행중인 심부름만 완료할 수 있습니다.');
     }
     return await this.errandRepository.completeErrand(id);

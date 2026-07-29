@@ -37,9 +37,9 @@ export class ErrandApplicationController {
   @Post(':id/status')
   async updateStatus(
     @Param('id') id: string,
-    @Body() body: UpdateApplicationStatusDto,
+    @GetUser('userId') userId:string,
   ) {
-    await this.errandApplicationService.updateStatus(id, body);
+    await this.errandApplicationService.updateStatus(id,userId);
     return {
       success:true,
       message:"지원자를 수락하였습니다."

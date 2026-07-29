@@ -1,7 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateErrandApplicationDto } from './dto/update-errand-application.dto';
 import { ErrandApplicationRepository } from './errand-application.repository';
-import { UpdateApplicationStatusDto } from './dto/update-application-status.dto';
 
 @Injectable()
 export class ErrandApplicationService {
@@ -21,11 +20,11 @@ export class ErrandApplicationService {
     return await this.applicationRepository.myApplications(helperId);
   }
 
-  async updateStatus(id: string, status: UpdateApplicationStatusDto) {
+  async updateStatus(id: string,userId:string) {
     // id는 심부름내역의 고유 id
     // id가 없으면 에러, 있으면 updateStatus로 줌,
     // 여기에서 errand에 접근해서 진행중으로 변경해주면 됨.
-    return await this.applicationRepository.updateStatus(id, status);
+    return await this.applicationRepository.updateStatus(id,userId);
   }
 
   async findAll() {
