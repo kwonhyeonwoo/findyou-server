@@ -63,6 +63,7 @@ export class ErrandController {
   @UseGuards(AuthGuard('jwt'))
   @Get(':id/progress')
   findErrandProgress(@Param('id') id: string) {
+    console.log('tq',id)
     return this.errandService.findErrandProgress(id);
   }
 
