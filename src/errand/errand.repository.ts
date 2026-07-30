@@ -23,15 +23,17 @@ export class ErrandRepository extends Repository<Errand> {
     async findErrandProgress(id: string) {
         const errand = await this.findOne({
             where: { id },
-            relations: { applications: {
-                helper:true,
-            } },
+            relations: {
+                applications: {
+                    helper: true,
+                }
+            },
             select: {
                 applications: {
                     id: true,
                     helper: {
-                        nickName:true,
-                        profile:true,
+                        nickName: true,
+                        profile: true,
                     },
                 },
             }
@@ -46,7 +48,7 @@ export class ErrandRepository extends Repository<Errand> {
         keyword,
         category,
     }: {
-        status?:CustomStatus,
+        status?: CustomStatus,
         limit?: string;
         keyword?: string;
         category?: CustomCategory;
@@ -74,7 +76,13 @@ export class ErrandRepository extends Repository<Errand> {
 
     async findOneErrand(id: string) {
         return await this.findOne({
-            where:{id}
+            where: { id },
+            relations: { user: true },
+            select: {
+                user: {
+                    id: true,
+                }
+            }
         });
     }
 
