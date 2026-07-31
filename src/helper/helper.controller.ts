@@ -29,8 +29,8 @@ export class HelperController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.helperService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.helperService.findOne(id);
   }
 
   @Patch(':id')

@@ -1,6 +1,7 @@
 import { DataSource, DeepPartial, Repository } from "typeorm";
 import { Helper } from "./entities/helper.entity";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { CustomStatus } from "src/interfaces/custom-status.enum";
 
 @Injectable()
 export class HelperRepository extends Repository<Helper> {
@@ -31,5 +32,23 @@ export class HelperRepository extends Repository<Helper> {
                 }
             }
         })
+    }
+
+    async findHelper(helperId:string){
+        const helper = await this.findOne({
+            where:{id:helperId},
+            relations:{
+                helper:{
+                    errands:{
+                        status:CustomStatus.COMPLETED
+                    }
+                }
+            },
+            select:{
+
+            }
+        });
+        
+        return helper;
     }
 }
