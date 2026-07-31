@@ -1,7 +1,8 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Errand } from "../../errand/entities/errand.entity";
 import { ErrandApplication } from "../../errand-application/entities/errand-application.entity";
 import { Review } from "src/review/entities/review.entity";
+import { Helper } from "src/helper/entities/helper.entity";
 
 @Entity('user')
 export class User {
@@ -63,13 +64,19 @@ export class User {
     @OneToMany(() => ErrandApplication, (application) => application.helper)
     applications: ErrandApplication[]
 
+    // 작성 한 리뷰
     @OneToMany(() => Review, (review) => review.reviewer, { onDelete: "CASCADE" })
     writeReviews: Review[]
 
+    // 받은 리뷰
     @OneToMany(() => Review, (review) => review.reviewee)
     receivedReviews: Review[]
 
+    // 매칭된 심부름
     @OneToMany(() => Errand, (errand) => errand.helper)
     helpingErrands: Errand[]
+
+    @OneToMany(() => Helper, (helper) => helper.helper)
+    helperPosts: Helper[];
 
 }

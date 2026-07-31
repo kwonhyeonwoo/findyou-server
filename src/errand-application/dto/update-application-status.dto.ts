@@ -1,14 +1,9 @@
 import { IsEnum } from "class-validator"
-
-export enum ApplicationStatus {
-    PENDING = "PENDING",
-    ACCEPTED = "ACCEPTED",
-    REJECTED = "REJECTED",
-}
+import { CustomStatus } from "../../interfaces/custom-status.enum";
 
 export class UpdateApplicationStatusDto {
-    @IsEnum(ApplicationStatus, {
+    @IsEnum(CustomStatus, {
         message: '유효하지 않은 상태값입니다.'
     })
-    status: ApplicationStatus;
+    status: CustomStatus;
 }

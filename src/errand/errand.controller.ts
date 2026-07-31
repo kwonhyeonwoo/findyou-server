@@ -6,7 +6,8 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/common/user.decorator';
-import { ErrandCategory } from './interface/errand.interface';
+import { CustomCategory } from 'src/interfaces/custom-category.enum';
+import { CustomStatus } from 'src/interfaces/custom-status.enum';
 
 @Controller('errand')
 export class ErrandController {
@@ -51,17 +52,26 @@ export class ErrandController {
 
   @Get()
   findErrandLists(
+    @Query('status') status?:CustomStatus,
     @Query('limit') limit?: string,
     @Query('keyword') keyword?: string,
-    @Query('category') category?: ErrandCategory,
+    @Query('category') category?: CustomCategory,
   ) {
-    return this.errandService.findErrandLists({ limit, keyword, category });
+    return this.errandService.findErrandLists({ status,limit, keyword, category });
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id/progress')
+  findErrandProgress(@Param('id') id: string) {
+    console.log('tq',id)
+    return this.errandService.findErrandProgress(id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  findErrandDetail(@Param('id') id: string) {
-    return this.errandService.findErrandDetail(id);
+  async findErrandDetail(@Param('id') id:string){
+    const errand = await this.errandService.findErrandDetail(id);
+    return errand;
   }
 
   @Post(":id/complete")

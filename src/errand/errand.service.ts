@@ -1,7 +1,8 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateErrandDto } from './dto/create-errand.dto';
 import { ErrandRepository } from './errand.repository';
-import { ErrandCategory, ErrandStatus } from './interface/errand.interface';
+import { CustomCategory } from 'src/interfaces/custom-category.enum';
+import { CustomStatus } from 'src/interfaces/custom-status.enum';
 
 @Injectable()
 export class ErrandService {
@@ -23,7 +24,7 @@ export class ErrandService {
       ...createErrandDto,
       images: imagePaths,
       user: { id: userId },
-      status: ErrandStatus.MATCHING,
+      status: CustomStatus.MATCHING,
     };
     return await this.errandRepository.createErrand(newErrand);
   }
@@ -33,20 +34,27 @@ export class ErrandService {
   }
 
   async findErrandLists({
+    status,
     limit,
     keyword,
     category,
   }: {
+    status?: CustomStatus,
     limit?: string;
     keyword?: string;
-    category?: ErrandCategory;
+    category?: CustomCategory;
   }) {
-    return this.errandRepository.findErrandLists({ limit, keyword, category });
+    return this.errandRepository.findErrandLists({ status, limit, keyword, category });
+  }
+
+  async findErrandProgress(id: string) {
+    const errand = await this.errandRepository.findErrandProgress(id);
+    return errand;
   }
 
   async findErrandDetail(id: string) {
-    const errand = await this.errandRepository.findErrandDetail(id);
-    return errand;
+    if (!id) throw new NotFoundException("심부름이 없습니다.")
+    return await this.errandRepository.findOneErrand(id);
   }
 
   async completeErrand(id: string, userId: string) {
@@ -57,7 +65,7 @@ export class ErrandService {
     if (errand.user.id !== userId) {
       throw new ForbiddenException('심부름 완료 권한이 없습니다.');
     }
-    if (errand.status !== ErrandStatus.IN_PROGRESS) {
+    if (errand.status !== CustomStatus.IN_PROGRESS) {
       throw new BadRequestException('진행중인 심부름만 완료할 수 있습니다.');
     }
     return await this.errandRepository.completeErrand(id);

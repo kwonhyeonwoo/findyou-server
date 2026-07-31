@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { DataSource, DeepPartial, FindOptionsWhere, ILike, Repository, SelectQueryBuilder } from "typeorm";
+import { Injectable } from "@nestjs/common";
+import { DataSource, DeepPartial, Repository } from "typeorm";
 import { Errand } from "./entities/errand.entity";
-import { ErrandCategory, ErrandStatus } from "./interface/errand.interface";
 import { ErrandApplication } from "../errand-application/entities/errand-application.entity";
-import { ErrandApplicationStatus } from "../errand-application/interfaces/errand-application.interface";
+import { CustomCategory } from "src/interfaces/custom-category.enum";
+import { CustomStatus } from "src/interfaces/custom-status.enum";
 
 
 @Injectable()
@@ -19,73 +19,135 @@ export class ErrandRepository extends Repository<Errand> {
         return await this.save(newErrand);
     }
 
-    async findErrandDetail(id: string) {
+    // 진행중인 심부름
+    async findErrandProgress(id: string) {
         const errand = await this.findOne({
+            where: {
+                id,
+                applications: { status: CustomStatus.ACCEPTED },
+            },
+            relations: {
+                applications: {
+                    helper: true,
+                }
+            },
+            select: {
+                applications: {
+                    id: true,
+
+                },
+            }
+        })
+        if (!errand) {
+            return null;
+        }
+        const { applications, ...rest } = errand;
+        return {
+            ...rest,
+            applications: applications[0] ?? null,
+        };
+    }
+
+    // 심부름리스트(검색,카테고리 필터까지)
+    async findErrandLists({
+        status,
+        limit,
+        keyword,
+        category,
+    }: {
+        status?: CustomStatus,
+        limit?: string;
+        keyword?: string;
+        category?: CustomCategory;
+    }) {
+        const takeValue = limit ? +limit : undefined;
+        const statusValue = status ?? CustomStatus.MATCHING;
+
+        const qb = this.createQueryBuilder('errand')
+            .where('errand.status = :status', { status: statusValue })
+            .loadRelationCountAndMap('errand.applicationsCount', 'errand.applications')
+            .orderBy('errand.createdAt', 'DESC')
+            .take(Math.min(takeValue ?? 20, 50));
+
+        if (keyword) {
+            // 제목에 키워드가 포함된 것을 찾음 (대소문자 구분 없음)
+            qb.andWhere('errand.title ILIKE :keyword', { keyword: `%${keyword}%` });
+        }
+        if (category) {
+            qb.andWhere('errand.category = :category', { category });
+        }
+
+        const errands = await qb.getMany();
+        return errands;
+    }
+
+    async findErrandWithApplications(errandId: string) {
+        console.log('erid', errandId)
+        const errand = await this.findOne({
+            where: {
+                id: errandId,
+                applications: {
+                    status: CustomStatus.COMPLETED
+                }
+            },
+            relations: {
+                applications: {
+                    helper: true,
+                },
+                user: true,
+            },
+            select: {
+                applications: {
+                    id: true,
+                    helper: {
+                        id: true,
+                    }
+                },
+                user: {
+                    id: true,
+                }
+            }
+        })
+        if (!errand) {
+            return null;
+        }
+        const { applications, ...rest } = errand;
+        return {
+            ...rest,
+            applications: applications[0] ?? null,
+        }
+    }
+
+    async findOneErrand(id: string) {
+        return await this.findOne({
             where: { id },
             relations: { user: true },
             select: {
                 user: {
                     id: true,
-                    nickName: true,
-                    profile: true,
-                },
-            }
-        })
-        return errand;
-    }
-
-    async findErrandLists({
-        limit,
-        keyword,
-        category,
-    }: {
-        limit?: string;
-        keyword?: string;
-        category?: ErrandCategory;
-    }) {
-        const takeValue = limit ? +limit : undefined;
-        const whereCondition: FindOptionsWhere<Errand> = {
-            status: ErrandStatus.MATCHING
-        };
-        if (keyword) {
-            // 제목에 키워드가 포함된 것을 찾음 (대소문자 구분 없음)
-            whereCondition.title = ILike(`%${keyword}%`);
-        }
-        if (category) {
-            whereCondition.category = category;
-        }
-        const errands = await this.find({
-            take: Math.min(takeValue ?? 20, 50),
-            where: whereCondition,
-            order: {
-                createdAt: "DESC"
+                }
             }
         });
-        return errands;
     }
 
-    async findOneErrand(id: string) {
-        const errand = await this.findOne({ where: { id } });
-        return errand;
-    }
-
+    // 심부름완료
     async completeErrand(id: string) {
         return await this.dataSource.transaction(
             async (transactionalEntityManager) => {
                 await transactionalEntityManager.update(
                     Errand,
                     id,
-                    { status: ErrandStatus.COMPLETED }
+                    { status: CustomStatus.COMPLETED }
                 );
 
                 await transactionalEntityManager.update(
                     ErrandApplication,
                     {
                         errand: { id: id },
-                        status: ErrandApplicationStatus.ACCEPTED
+                        status: CustomStatus.ACCEPTED
                     },
                     {
-                        status: ErrandApplicationStatus.COMPLETED
+                        status: CustomStatus.COMPLETED
                     }
                 );
             });

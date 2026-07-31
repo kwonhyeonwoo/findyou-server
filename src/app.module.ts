@@ -14,6 +14,8 @@ import { ErrandApplicationModule } from './errand-application/errand-application
 import { ErrandApplication } from './errand-application/entities/errand-application.entity';
 import { ReviewModule } from './review/review.module';
 import { Review } from './review/entities/review.entity';
+import { HelperModule } from './helper/helper.module';
+import { Helper } from './helper/entities/helper.entity';
 
 @Module({
   imports: [
@@ -37,7 +39,7 @@ import { Review } from './review/entities/review.entity';
         username: configService.get('DB_USERNAME'), // DB 사용자 이름
         password: configService.get('DB_PASSWORD'), // DB 비밀번호
         database: configService.get('DB_NAME'), // DB 이름
-        entities: [User, Errand, ErrandApplication, Review], // 엔티티 경로
+        entities: [User, Errand, ErrandApplication, Review, Helper], // 엔티티 경로
         synchronize: configService.get('DB_SYNCHRONIZE') === 'true', // 스키마 자동 동기화 (운영 환경에서는 false 권장)
         logging: configService.get('DB_LOGGING') === 'true', // SQL 쿼리 콘솔 출력
       }),
@@ -48,6 +50,7 @@ import { Review } from './review/entities/review.entity';
     ErrandModule,
     ErrandApplicationModule,
     ReviewModule,
+    HelperModule,
   ],
   controllers: [AppController],
   providers: [AppService],
