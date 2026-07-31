@@ -16,6 +16,20 @@ export class HelperRepository extends Repository<Helper> {
     }
 
     async findLists() {
-        return await this.find()
+        return await this.find({
+            relations: {
+                helper: {
+                    receivedReviews: true
+                }
+            },
+            select: {
+                helper: {
+                    id: true,
+                    nickName: true,
+                    profile: true,
+                    receivedReviews: true,
+                }
+            }
+        })
     }
 }

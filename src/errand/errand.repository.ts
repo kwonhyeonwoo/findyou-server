@@ -22,8 +22,9 @@ export class ErrandRepository extends Repository<Errand> {
     // 진행중인 심부름
     async findErrandProgress(id: string) {
         const errand = await this.findOne({
-            where: { id ,
-                applications:{status:CustomStatus.ACCEPTED},
+            where: {
+                id,
+                applications: { status: CustomStatus.ACCEPTED },
             },
             relations: {
                 applications: {
@@ -33,7 +34,7 @@ export class ErrandRepository extends Repository<Errand> {
             select: {
                 applications: {
                     id: true,
-                    
+
                 },
             }
         })
@@ -80,38 +81,38 @@ export class ErrandRepository extends Repository<Errand> {
         return errands;
     }
 
-    async findErrandWithApplications(errandId:string){
-        console.log('erid',errandId)
+    async findErrandWithApplications(errandId: string) {
+        console.log('erid', errandId)
         const errand = await this.findOne({
-            where:{
-                id:errandId,
-                applications:{
-                    status:CustomStatus.COMPLETED
+            where: {
+                id: errandId,
+                applications: {
+                    status: CustomStatus.COMPLETED
                 }
             },
-            relations:{
-                applications:{
-                    helper:true,  
+            relations: {
+                applications: {
+                    helper: true,
                 },
-                user:true,
+                user: true,
             },
-            select:{
-                applications:{
-                    id:true,
-                    helper:{
-                        id:true,
+            select: {
+                applications: {
+                    id: true,
+                    helper: {
+                        id: true,
                     }
                 },
-                user:{
-                    id:true,
+                user: {
+                    id: true,
                 }
             }
         })
         if (!errand) {
             return null;
         }
-        const {applications,...rest} = errand;
-        return{
+        const { applications, ...rest } = errand;
+        return {
             ...rest,
             applications: applications[0] ?? null,
         }

@@ -39,12 +39,12 @@ export class ErrandService {
     keyword,
     category,
   }: {
-    status?:CustomStatus,
+    status?: CustomStatus,
     limit?: string;
     keyword?: string;
     category?: CustomCategory;
   }) {
-    return this.errandRepository.findErrandLists({status, limit, keyword, category });
+    return this.errandRepository.findErrandLists({ status, limit, keyword, category });
   }
 
   async findErrandProgress(id: string) {
@@ -52,8 +52,8 @@ export class ErrandService {
     return errand;
   }
 
-  async findErrandDetail(id:string){
-    if(!id) throw new NotFoundException("심부름이 없습니다.")
+  async findErrandDetail(id: string) {
+    if (!id) throw new NotFoundException("심부름이 없습니다.")
     return await this.errandRepository.findOneErrand(id);
   }
 

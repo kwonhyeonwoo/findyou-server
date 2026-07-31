@@ -11,7 +11,7 @@ export class HelperService {
   async create(body: CreateHelperDto, userId: string) {
     const newHelper = {
       ...body,
-      user: { id: userId }
+      helper: { id: userId }
     }
 
     return await this.helperRepository.createHelper(newHelper);

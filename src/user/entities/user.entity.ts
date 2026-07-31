@@ -64,9 +64,11 @@ export class User {
     @OneToMany(() => ErrandApplication, (application) => application.helper)
     applications: ErrandApplication[]
 
+    // 작성 한 리뷰
     @OneToMany(() => Review, (review) => review.reviewer, { onDelete: "CASCADE" })
     writeReviews: Review[]
 
+    // 받은 리뷰
     @OneToMany(() => Review, (review) => review.reviewee)
     receivedReviews: Review[]
 
@@ -76,4 +78,5 @@ export class User {
 
     @OneToMany(() => Helper, (helper) => helper.helper)
     helperPosts: Helper[];
+
 }
