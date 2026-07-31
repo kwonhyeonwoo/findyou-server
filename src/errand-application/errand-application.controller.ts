@@ -39,6 +39,7 @@ export class ErrandApplicationController {
     @Param('id') id: string,
     @GetUser('userId') userId: string,
   ) {
+    console.log('id',id)
     await this.errandApplicationService.updateStatus(id, userId);
     return {
       success: true,

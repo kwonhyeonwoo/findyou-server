@@ -49,7 +49,6 @@ export class ErrandService {
 
   async findErrandProgress(id: string) {
     const errand = await this.errandRepository.findErrandProgress(id);
-    console.log('errand ',errand)
     return errand;
   }
 

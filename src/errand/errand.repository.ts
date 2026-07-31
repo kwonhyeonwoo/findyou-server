@@ -22,7 +22,9 @@ export class ErrandRepository extends Repository<Errand> {
     // 진행중인 심부름
     async findErrandProgress(id: string) {
         const errand = await this.findOne({
-            where: { id },
+            where: { id ,
+                applications:{status:CustomStatus.ACCEPTED},
+            },
             relations: {
                 applications: {
                     helper: true,
@@ -31,14 +33,18 @@ export class ErrandRepository extends Repository<Errand> {
             select: {
                 applications: {
                     id: true,
-                    helper: {
-                        nickName: true,
-                        profile: true,
-                    },
+                    
                 },
             }
         })
-        return errand;
+        if (!errand) {
+            return null;
+        }
+        const { applications, ...rest } = errand;
+        return {
+            ...rest,
+            applications: applications[0] ?? null,
+        };
     }
 
     // 심부름리스트(검색,카테고리 필터까지)
@@ -72,6 +78,43 @@ export class ErrandRepository extends Repository<Errand> {
 
         const errands = await qb.getMany();
         return errands;
+    }
+
+    async findErrandWithApplications(errandId:string){
+        console.log('erid',errandId)
+        const errand = await this.findOne({
+            where:{
+                id:errandId,
+                applications:{
+                    status:CustomStatus.COMPLETED
+                }
+            },
+            relations:{
+                applications:{
+                    helper:true,  
+                },
+                user:true,
+            },
+            select:{
+                applications:{
+                    id:true,
+                    helper:{
+                        id:true,
+                    }
+                },
+                user:{
+                    id:true,
+                }
+            }
+        })
+        if (!errand) {
+            return null;
+        }
+        const {applications,...rest} = errand;
+        return{
+            ...rest,
+            applications: applications[0] ?? null,
+        }
     }
 
     async findOneErrand(id: string) {
