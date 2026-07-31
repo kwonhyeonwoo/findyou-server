@@ -14,4 +14,8 @@ export class HelperRepository extends Repository<Helper> {
         const newHelper = this.create(body);
         return await this.save(newHelper);
     }
+
+    async findLists() {
+        return await this.find()
+    }
 }

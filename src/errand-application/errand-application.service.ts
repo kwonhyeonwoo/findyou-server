@@ -24,9 +24,6 @@ export class ErrandApplicationService {
   }
 
   async updateStatus(id: string, userId: string) {
-    // id는 심부름내역의 고유 id
-    // id가 없으면 에러, 있으면 updateStatus로 줌,
-    // 여기에서 errand에 접근해서 진행중으로 변경해주면 됨.
     return await this.applicationRepository.updateStatus(id, userId);
   }
 

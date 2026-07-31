@@ -13,7 +13,6 @@ export class ReviewService {
   ) { }
   async create(body: CreateReviewDto, userId: string, errandId: string) {
     const errand = await this.errandRepository.findErrandWithApplications(errandId);
-    console.log('errand',errand)
     if (!errand) {
       throw new NotFoundException('심부름을 찾을 수 없습니다.')
     }

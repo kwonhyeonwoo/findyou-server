@@ -60,9 +60,9 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
         try {
             const application = await queryRunner.manager.findOne(ErrandApplication, {
                 where: { id },
-                relations: { errand: true, helper: true , },
+                relations: { errand: true, helper: true, },
             })
-            console.log('니미럴',application)
+            console.log('니미럴', application)
             if (!application) throw new NotFoundException("해당 지원 내역을 찾을 수 없습니다.")
 
             const errand = application.errand;
@@ -70,10 +70,6 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
             if (errand.status === CustomStatus.IN_PROGRESS) {
                 throw new BadRequestException('이미 진행중인 심부름 입니다.')
             }
-            // if (errand.helper.id !== userId) {
-            //     throw new ForbiddenException('본인 심부름의 지원자만 수락할 수 있습니다.');
-            // }
-            // 심부름 수락
             await queryRunner.manager.update(ErrandApplication,
                 {
                     id,

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateHelperDto } from './dto/create-helper.dto';
 import { UpdateHelperDto } from './dto/update-helper.dto';
 import { HelperRepository } from './helper.repository';
@@ -19,7 +19,7 @@ export class HelperService {
   }
 
   findAll() {
-    return `This action returns all helper`;
+    return this.helperRepository.findLists();
   }
 
   findOne(id: number) {
