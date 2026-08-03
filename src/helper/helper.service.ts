@@ -24,9 +24,9 @@ export class HelperService {
 
   async findOne(helperId: string) {
     const helper = await this.helperRepository.findHelper(helperId);
-    if(!helper) {
-            throw new NotFoundException('헬퍼가 없습니다.')
-        };
+    if (!helper) {
+      throw new NotFoundException('헬퍼가 없습니다.')
+    };
     return helper;
   }
 

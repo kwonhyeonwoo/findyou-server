@@ -34,21 +34,18 @@ export class HelperRepository extends Repository<Helper> {
         })
     }
 
-    async findHelper(helperId:string){
+    async findHelper(helperId: string) {
         const helper = await this.findOne({
-            where:{id:helperId},
-            relations:{
-                helper:{
-                    errands:{
-                        status:CustomStatus.COMPLETED
-                    }
-                }
+            where: {
+                id: helperId,
             },
-            select:{
-
-            }
-        });
-        
+            relations: {
+                helper: {
+                    receivedReviews: true,
+                },
+            },
+        })
+        console.log('helper', helper)
         return helper;
     }
 }
