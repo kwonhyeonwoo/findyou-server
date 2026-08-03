@@ -1,0 +1,40 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { HelperApplicationService } from './helper-application.service';
+import { CreateHelperApplicationDto } from './dto/create-helper-application.dto';
+import { UpdateHelperApplicationDto } from './dto/update-helper-application.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/common/user.decorator';
+
+@Controller('helper-application')
+export class HelperApplicationController {
+  constructor(private readonly helperApplicationService: HelperApplicationService) {}
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post()
+  create(
+    @Body() body: CreateHelperApplicationDto,
+    @GetUser('userId') userId:string
+  ) {
+    return this.helperApplicationService.create(body,userId);
+  }
+
+  @Get()
+  findAll() {
+    return this.helperApplicationService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') helperId: string) {
+    return this.helperApplicationService.findOne(helperId);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateHelperApplicationDto: UpdateHelperApplicationDto) {
+    return this.helperApplicationService.update(+id, updateHelperApplicationDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.helperApplicationService.remove(+id);
+  }
+}

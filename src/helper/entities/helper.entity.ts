@@ -1,7 +1,8 @@
+import { HelperApplication } from "src/helper-application/entities/helper-application.entity";
 import { CustomCategory } from "src/interfaces/custom-category.enum";
 import { CustomStatus } from "src/interfaces/custom-status.enum";
 import { User } from "src/user/entities/user.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 export enum HelperMovement {
     BICYCLE = "BICYCLE",
@@ -57,4 +58,7 @@ export class Helper {
     @ManyToOne(() => User, (user) => user.helperPosts)
     @JoinColumn({ name: 'helperId' })
     helper: User;
+
+    @OneToMany(()=>HelperApplication,(application)=>application.helper)
+    applications:HelperApplication[];
 }
