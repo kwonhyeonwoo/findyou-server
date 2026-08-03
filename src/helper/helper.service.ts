@@ -22,11 +22,9 @@ export class HelperService {
     return this.helperRepository.findLists();
   }
 
-  async findOne(helperId: string) {
-    const helper = await this.helperRepository.findHelper(helperId);
-    if (!helper) {
-      throw new NotFoundException('헬퍼가 없습니다.')
-    };
+  async findOne(helperId: string,limit?:string) {
+    const helper = await this.helperRepository.findHelper(helperId,limit);
+
     return helper;
   }
 
