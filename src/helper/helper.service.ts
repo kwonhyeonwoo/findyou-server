@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateHelperDto } from './dto/create-helper.dto';
 import { UpdateHelperDto } from './dto/update-helper.dto';
 import { HelperRepository } from './helper.repository';
@@ -22,8 +22,10 @@ export class HelperService {
     return this.helperRepository.findLists();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} helper`;
+  async findOne(helperId: string,limit?:string) {
+    const helper = await this.helperRepository.findHelper(helperId,limit);
+
+    return helper;
   }
 
   update(id: number, updateHelperDto: UpdateHelperDto) {

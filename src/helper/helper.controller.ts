@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { HelperService } from './helper.service';
 import { CreateHelperDto } from './dto/create-helper.dto';
 import { UpdateHelperDto } from './dto/update-helper.dto';
@@ -28,9 +28,13 @@ export class HelperController {
     return this.helperService.findAll();
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.helperService.findOne(+id);
+  async findOne(
+    @Param('id') id: string,
+    @Query('limit') limit?:string,
+  ) {
+    return await this.helperService.findOne(id,limit);
   }
 
   @Patch(':id')
