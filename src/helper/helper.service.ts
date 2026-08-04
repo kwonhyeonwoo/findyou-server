@@ -22,9 +22,11 @@ export class HelperService {
     return this.helperRepository.findLists();
   }
 
-  async findOne(helperId: string,limit?:string) {
-    const helper = await this.helperRepository.findHelper(helperId,limit);
-
+  async findOne(helperId: string, limit?: string) {
+    const helper = await this.helperRepository.findHelper(helperId, limit);
+    if (!helper) {
+      throw new NotFoundException('헬퍼가 없습니다.')
+    };
     return helper;
   }
 
@@ -33,6 +35,6 @@ export class HelperService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} helper`;
+    return `This action removes 3 #${id} helper`;
   }
 }

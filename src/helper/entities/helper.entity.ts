@@ -59,6 +59,6 @@ export class Helper {
     @JoinColumn({ name: 'helperId' })
     helper: User;
 
-    @OneToMany(()=>HelperApplication,(application)=>application.helper)
-    applications:HelperApplication[];
+    @OneToMany(() => HelperApplication, (application) => application.helper)
+    applications: HelperApplication[];
 }

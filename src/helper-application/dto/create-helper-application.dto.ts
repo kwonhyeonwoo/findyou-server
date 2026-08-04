@@ -3,9 +3,9 @@ import { IsNotEmpty, IsString } from "class-validator";
 export class CreateHelperApplicationDto {
     @IsString()
     @IsNotEmpty()
-    message:string;
+    message: string;
 
     @IsString()
     @IsNotEmpty()
-    helperId:string;
+    helperId: string;
 }

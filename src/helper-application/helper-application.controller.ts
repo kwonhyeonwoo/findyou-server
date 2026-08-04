@@ -7,15 +7,17 @@ import { GetUser } from 'src/auth/common/user.decorator';
 
 @Controller('helper-application')
 export class HelperApplicationController {
-  constructor(private readonly helperApplicationService: HelperApplicationService) {}
+  constructor(private readonly helperApplicationService: HelperApplicationService) { }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post()
+  @Post(":id")
   create(
     @Body() body: CreateHelperApplicationDto,
-    @GetUser('userId') userId:string
+    @GetUser('userId') userId: string,
+    @Param('id') helperPostId: string
   ) {
-    return this.helperApplicationService.create(body,userId);
+    console.log('bodyt', body);
+    return this.helperApplicationService.create(body, userId);
   }
 
   @Get()
