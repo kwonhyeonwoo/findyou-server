@@ -23,7 +23,7 @@ export class HelperService {
   }
 
   async findOne(helperId: string, limit?: string) {
-    const helper = await this.helperRepository.findHelper(helperId, limit);
+    const helper = await this.helperRepository.findHelperProfile(helperId, limit);
     if (!helper) {
       throw new NotFoundException('헬퍼가 없습니다.')
     };

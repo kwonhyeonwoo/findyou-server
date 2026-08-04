@@ -17,7 +17,6 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         clientId: string,
         helperId: string
     }) {
-        console.log('cient', clientId)
         const application = this.create({
             message,
             client: { id: clientId },
@@ -27,19 +26,19 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
     }
 
     async findOneApplication(helperId: string) {
-        console.log('helperId', helperId)
         const application = await this.findOne({
             where: {
                 helper: { id: helperId },
             },
-            relations: {
-                helper: true,
-            }
         });
-        console.log('tqtqtq', application)
         return application;
     }
 
     async checkApplication(applicationId: string) {
+        const application = await this.findOne({
+            where: {
+            },
+        });
+        return application;
     }
 }

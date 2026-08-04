@@ -17,7 +17,7 @@ export class HelperApplicationController {
     @Param('id') helperPostId: string
   ) {
     console.log('bodyt', body);
-    return this.helperApplicationService.create(body, userId);
+    return this.helperApplicationService.create(body, userId, helperPostId);
   }
 
   @Get()

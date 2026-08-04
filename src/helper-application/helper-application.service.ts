@@ -2,23 +2,21 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { CreateHelperApplicationDto } from './dto/create-helper-application.dto';
 import { UpdateHelperApplicationDto } from './dto/update-helper-application.dto';
 import { HelperApplicationRepository } from './helper-application.repository';
+import { HelperRepository } from 'src/helper/helper.repository';
 
 @Injectable()
 export class HelperApplicationService {
   constructor(
     private readonly applicationRepo: HelperApplicationRepository,
+    private readonly helperRepository: HelperRepository,
   ) { }
-  async create(dto: CreateHelperApplicationDto, userId: string) {
-    const application = await this.applicationRepo.findOneApplication(dto.helperId);
-    console.log('application', application)
-    if (dto.helperId === userId) throw new ConflictException('본인한테 신청할 수 없습니다.');
-    if (application.client.id === userId) throw new ConflictException('이미 신청한 헬퍼 입니다.')
-    console.log("여기에서에러가?")
-    return await this.applicationRepo.createApplication({
-      message: dto.message,
-      clientId: userId,
-      helperId: dto.helperId,
-    })
+  async create(dto: CreateHelperApplicationDto, userId: string, helperPostId: string) {
+    // 중복신청 불가능,
+    // 내 자신한테 신청 불가능,
+    // 이미 신청 한 내역 불가능,
+    const helper = await this.helperRepository.findOneHelper(helperPostId);
+    if (!helper) throw new NotFoundException("헬퍼를 찾을 수 없습니다.");
+    if (dto.helperId === userId) throw new ConflictException("자신에게 신청할 수 없습니다.");
   }
 
   findAll() {
