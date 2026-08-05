@@ -30,17 +30,18 @@ export class HelperApplicationRepository extends Repository<HelperApplication>{
             where:{
                 helper:{id:helperId},
             },
-
+            relations:{helper:true}
         });
         return application;
     };
 
-    async checkApplication(clientId:string){
+    async checkApplication(clientId:string,helperId:string){
         const existApplication = await this.findOne({
             where:{
                 client:{
                     id:clientId
-                }
+                },
+                helper:{id:helperId}
             }
         })
         return existApplication;

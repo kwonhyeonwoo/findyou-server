@@ -76,7 +76,8 @@ export class HelperRepository extends Repository<Helper> {
             where: { 
                 id: helperId,
                 helper:true
-             }
+             },
+             relations:{helper:true}
         });
         return helper;
     }
