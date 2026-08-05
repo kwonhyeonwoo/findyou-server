@@ -3,6 +3,7 @@ import { Errand } from "../../errand/entities/errand.entity";
 import { ErrandApplication } from "../../errand-application/entities/errand-application.entity";
 import { Review } from "src/review/entities/review.entity";
 import { Helper } from "src/helper/entities/helper.entity";
+import { HelperApplication } from "src/helper-application/entities/helper-application.entity";
 
 @Entity('user')
 export class User {
@@ -79,4 +80,8 @@ export class User {
     @OneToMany(() => Helper, (helper) => helper.helper)
     helperPosts: Helper[];
 
+
+    // 헬퍼신청서 내역들
+    @OneToMany(()=>HelperApplication, (helperApplications)=>helperApplications.client)
+    helperApplications:HelperApplication[]
 }

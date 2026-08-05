@@ -10,6 +10,7 @@ import { HelperRepository } from './helper.repository';
     TypeOrmModule.forFeature([Helper])
   ],
   controllers: [HelperController],
+  exports: [HelperRepository],
   providers: [HelperService, HelperRepository],
 })
 export class HelperModule { }

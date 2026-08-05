@@ -37,7 +37,7 @@ export class HelperRepository extends Repository<Helper> {
         })
     }
 
-    async findHelper(helperId: string,limit?:string) {
+    async findHelperProfile(helperId: string, limit?: string) {
         const take = limit ? +limit : 5;
         const helper = await this.findOne({
             where: {
@@ -47,27 +47,38 @@ export class HelperRepository extends Repository<Helper> {
                 helper: true,
             },
         });
-        if(!helper) throw new NotFoundException('헬퍼를 찾을 수 없습니다.')
+        if (!helper) throw new NotFoundException('헬퍼를 찾을 수 없습니다.')
         const receivedReviews = await this.dataSource.getRepository(Review).find({
             where: { reviewee: { id: helper.helper.id } },
-            order:{createdAt:"DESC"},
+            order: { createdAt: "DESC" },
             take,
         });
         const errands = await this.dataSource.getRepository(Errand).find({
-            where:{
-                helper:{
-                    id:helper.helper.id
+            where: {
+                helper: {
+                    id: helper.helper.id
                 },
-                status:CustomStatus.COMPLETED,
+                status: CustomStatus.COMPLETED,
             },
             take,
-            order:{createdAt:"DESC"}
+            order: { createdAt: "DESC" }
         })
-        return{
+        return {
             ...helper,
             errands,
             receivedReviews,
         }
-        
+
+    }
+
+    async findOneHelper(helperId: string) {
+        const helper = await this.findOne({
+            where: { 
+                id: helperId,
+                helper:true
+             },
+             relations:{helper:true}
+        });
+        return helper;
     }
 }
