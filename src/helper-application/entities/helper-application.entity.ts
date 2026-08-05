@@ -1,11 +1,11 @@
 import { Helper } from "src/helper/entities/helper.entity";
 import { CustomStatus } from "src/interfaces/custom-status.enum";
 import { User } from "src/user/entities/user.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('helper_application')
 export class HelperApplication {
-    @PrimaryColumn('uuid')
+    @PrimaryGeneratedColumn('uuid')
     id: string
 
     // 의뢰인

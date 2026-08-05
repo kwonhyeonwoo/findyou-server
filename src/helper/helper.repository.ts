@@ -73,7 +73,10 @@ export class HelperRepository extends Repository<Helper> {
 
     async findOneHelper(helperId: string) {
         const helper = await this.findOne({
-            where: { id: helperId }
+            where: { 
+                id: helperId,
+                helper:true
+             }
         });
         return helper;
     }

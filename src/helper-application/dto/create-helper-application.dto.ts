@@ -5,7 +5,7 @@ export class CreateHelperApplicationDto {
     @IsNotEmpty()
     message: string;
 
-    @IsString()
-    @IsNotEmpty()
-    helperId: string;
+    // @IsString()
+    // @IsNotEmpty()
+    // helperId: string;
 }
