@@ -30,8 +30,9 @@ export class UserRepository extends Repository<User> {
     async findByUser(id: string) {
         return this.findOne({ where: { id } });
     }
+
+    
     async updateRefreshToken(userId: string, hashedRefreshToken: string | null): Promise<void> {
-        // 상속받았기 때문에 바로 this.update를 쓸 수 있어!
         await this.update(userId, {
             refreshToken: hashedRefreshToken,
         });

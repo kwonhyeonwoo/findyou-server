@@ -24,8 +24,8 @@ export class HelperApplicationService {
   }
 
 
-  findAll() {
-    return `This action returns all helperApplication`;
+  async findAll(userId:string) {
+    return await this.applicationRepo.findApplications(userId);
   }
 
   async findOne(helperId: string) {

@@ -46,4 +46,18 @@ export class HelperApplicationRepository extends Repository<HelperApplication>{
         })
         return existApplication;
     }
+
+    async findApplications(userId:string){
+        const applications = await this.find({
+            where:{
+                client:{
+                    id:userId
+                }
+            },
+            relations:{
+                helper:true
+            }
+        })
+        return applications;
+    }
 }

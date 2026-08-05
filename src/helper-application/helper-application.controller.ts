@@ -5,11 +5,11 @@ import { UpdateHelperApplicationDto } from './dto/update-helper-application.dto'
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/common/user.decorator';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('helper-application')
 export class HelperApplicationController {
   constructor(private readonly helperApplicationService: HelperApplicationService) { }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post(":id")
   create(
     @Body() body: CreateHelperApplicationDto,
@@ -21,8 +21,10 @@ export class HelperApplicationController {
   }
 
   @Get()
-  findAll() {
-    return this.helperApplicationService.findAll();
+  findAll(
+    @GetUser('userId') userId:string
+  ) {
+    return this.helperApplicationService.findAll(userId);
   }
 
   @Get(':id')
