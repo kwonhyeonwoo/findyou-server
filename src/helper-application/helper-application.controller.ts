@@ -22,7 +22,7 @@ export class HelperApplicationController {
 
   @Get()
   findAll(
-    @GetUser('userId') userId:string
+    @GetUser('userId') userId: string
   ) {
     return this.helperApplicationService.findAll(userId);
   }
