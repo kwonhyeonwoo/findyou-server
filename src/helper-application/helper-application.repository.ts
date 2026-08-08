@@ -61,4 +61,5 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         })
         return applications;
     }
+
 }

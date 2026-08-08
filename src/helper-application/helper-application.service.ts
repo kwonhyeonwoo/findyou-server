@@ -28,8 +28,6 @@ export class HelperApplicationService {
     return await this.applicationRepo.findApplicationsHistory(userId)
   }
 
-  
-
   async findOne(helperId: string) {
     if (!helperId) throw new NotFoundException("신청내역이 없습니다.")
     const application = await this.applicationRepo.findOneApplication(helperId);

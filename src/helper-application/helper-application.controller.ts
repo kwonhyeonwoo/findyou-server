@@ -28,6 +28,7 @@ export class HelperApplicationController {
     return this.helperApplicationService.findHistory(userId);
   }
 
+
   @Get(':id')
   findOne(@Param('id') helperId: string) {
     return this.helperApplicationService.findOne(helperId);

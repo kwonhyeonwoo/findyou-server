@@ -81,4 +81,18 @@ export class HelperRepository extends Repository<Helper> {
         });
         return helper;
     }
+
+    // 받은 지원내역
+    async findMyApplications(userId:string){
+        const applications = await this.find({
+            where:{
+                id:userId
+            },
+            relations:{
+                applications:true,
+            }
+        });
+        console.log('applications',applications);
+        return applications;
+    }
 }

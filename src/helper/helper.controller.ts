@@ -29,6 +29,15 @@ export class HelperController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('applications')
+  async findMyApplications(
+    @GetUser('userId') userId:string
+  ){
+    console.log('userId',userId);
+      return await this.helperService.findMyApplications(userId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findOne(
     @Param('id') id: string,
