@@ -47,7 +47,8 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return existApplication;
     }
 
-    async findApplications(userId: string) {
+    // 지원내역
+    async findApplicationsHistory(userId: string) {
         const applications = await this.find({
             where: {
                 client: {

@@ -23,9 +23,12 @@ export class HelperApplicationService {
     })
   }
 
-  async findAll(userId: string) {
-    return await this.applicationRepo.findApplications(userId)
+  // 지원내역
+  async findHistory(userId: string) {
+    return await this.applicationRepo.findApplicationsHistory(userId)
   }
+
+  
 
   async findOne(helperId: string) {
     if (!helperId) throw new NotFoundException("신청내역이 없습니다.")

@@ -20,11 +20,12 @@ export class HelperApplicationController {
     return this.helperApplicationService.create(body, userId, helperPostId);
   }
 
+  // 지원내역
   @Get()
-  findAll(
+  findHistory(
     @GetUser('userId') userId: string
   ) {
-    return this.helperApplicationService.findAll(userId);
+    return this.helperApplicationService.findHistory(userId);
   }
 
   @Get(':id')
