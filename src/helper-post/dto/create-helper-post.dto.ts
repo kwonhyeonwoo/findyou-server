@@ -1,9 +1,9 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CustomCategory } from "src/interfaces/custom-category.enum";
-import { HelperMovement } from "../entities/helper.entity";
+import { HelperMovement } from "../entities/helper-post.entity";
 
-export class CreateHelperDto {
+export class CreateHelperPostDto {
     @IsString()
     @IsNotEmpty()
     title: string;

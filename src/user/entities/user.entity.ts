@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typ
 import { Errand } from "../../errand/entities/errand.entity";
 import { ErrandApplication } from "../../errand-application/entities/errand-application.entity";
 import { Review } from "src/review/entities/review.entity";
-import { Helper } from "src/helper/entities/helper.entity";
+import { HelperPost } from "src/helper-post/entities/helper-post.entity";
 import { HelperApplication } from "src/helper-application/entities/helper-application.entity";
 
 @Entity('user')
@@ -77,11 +77,11 @@ export class User {
     @OneToMany(() => Errand, (errand) => errand.helper)
     helpingErrands: Errand[]
 
-    @OneToMany(() => Helper, (helper) => helper.helper)
-    helperPosts: Helper[];
+    @OneToMany(() => HelperPost, (helper) => helper.helper)
+    helperPosts: HelperPost[];
 
 
     // 헬퍼신청서 내역들
-    @OneToMany(()=>HelperApplication, (helperApplications)=>helperApplications.client)
-    helperApplications:HelperApplication[]
+    @OneToMany(() => HelperApplication, (helperApplications) => helperApplications.client)
+    helperApplications: HelperApplication[]
 }

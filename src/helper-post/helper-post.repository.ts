@@ -1,20 +1,19 @@
 import { DataSource, DeepPartial, Repository } from "typeorm";
-import { Helper } from "./entities/helper.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CustomStatus } from "src/interfaces/custom-status.enum";
 import { Review } from "src/review/entities/review.entity";
 import { Errand } from "src/errand/entities/errand.entity";
-import { User } from "src/user/entities/user.entity";
+import { HelperPost } from "./entities/helper-post.entity";
 
 @Injectable()
-export class HelperRepository extends Repository<Helper> {
+export class HelperPostRepository extends Repository<HelperPost> {
     constructor(
         private readonly dataSource: DataSource,
     ) {
-        super(Helper, dataSource.createEntityManager());
+        super(HelperPost, dataSource.createEntityManager());
     }
 
-    async createHelper(body: DeepPartial<Helper>) {
+    async createHelper(body: DeepPartial<HelperPost>) {
         const newHelper = this.create(body);
         return await this.save(newHelper);
     }

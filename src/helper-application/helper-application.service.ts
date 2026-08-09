@@ -2,13 +2,13 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { CreateHelperApplicationDto } from './dto/create-helper-application.dto';
 import { UpdateHelperApplicationDto } from './dto/update-helper-application.dto';
 import { HelperApplicationRepository } from './helper-application.repository';
-import { HelperRepository } from 'src/helper/helper.repository';
+import { HelperPostRepository } from 'src/helper-post/helper-post.repository';
 
 @Injectable()
 export class HelperApplicationService {
   constructor(
     private readonly applicationRepo: HelperApplicationRepository,
-    private readonly helperRepository: HelperRepository,
+    private readonly helperRepository: HelperPostRepository,
   ) { }
   async create(dto: CreateHelperApplicationDto, userId: string, helperPostId: string) {
     const helper = await this.helperRepository.findOneHelper(helperPostId);
