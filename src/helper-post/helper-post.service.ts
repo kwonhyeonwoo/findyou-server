@@ -21,6 +21,8 @@ export class HelperPostService {
         return this.helperPostRepository.findLists();
     }
 
+
+    // 받은내역
     async findMyApplications(userId: string) {
         const applications = await this.helperPostRepository.findMyApplications(userId);
         return applications;
