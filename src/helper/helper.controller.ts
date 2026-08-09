@@ -31,19 +31,19 @@ export class HelperController {
   @UseGuards(AuthGuard('jwt'))
   @Get('applications')
   async findMyApplications(
-    @GetUser('userId') userId:string
-  ){
-    console.log('userId',userId);
-      return await this.helperService.findMyApplications(userId);
+    @GetUser('userId') userId: string
+  ) {
+    console.log('userId', userId);
+    return await this.helperService.findMyApplications(userId);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findOne(
     @Param('id') id: string,
-    @Query('limit') limit?:string,
+    @Query('limit') limit?: string,
   ) {
-    return await this.helperService.findOne(id,limit);
+    return await this.helperService.findOne(id, limit);
   }
 
   @Patch(':id')

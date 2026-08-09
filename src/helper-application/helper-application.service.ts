@@ -12,14 +12,14 @@ export class HelperApplicationService {
   ) { }
   async create(dto: CreateHelperApplicationDto, userId: string, helperPostId: string) {
     const helper = await this.helperRepository.findOneHelper(helperPostId);
-    const existApplication = await this.applicationRepo.checkApplication(userId,helperPostId);
-    if(existApplication) throw new ConflictException('이미 신청한 내역 입니다.')
+    const existApplication = await this.applicationRepo.checkApplication(userId, helperPostId);
+    if (helper.helper.id === userId) throw new ConflictException("자신에게 신청할 수 없습니다.");
+    if (existApplication) throw new ConflictException('이미 신청한 내역 입니다.')
     if (!helper) throw new NotFoundException("헬퍼를 찾을 수 없습니다.");
-    if (helperPostId === userId) throw new ConflictException("자신에게 신청할 수 없습니다.");
     return await this.applicationRepo.createApplication({
-      message:dto.message,
-      clientId:userId,
-      helperId:helperPostId
+      message: dto.message,
+      clientId: userId,
+      helperId: helperPostId
     })
   }
 

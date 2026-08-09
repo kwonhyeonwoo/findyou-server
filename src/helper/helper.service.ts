@@ -21,8 +21,9 @@ export class HelperService {
     return this.helperRepository.findLists();
   }
 
-  async findMyApplications(userId:string){
+  async findMyApplications(userId: string) {
     const applications = await this.helperRepository.findMyApplications(userId);
+    console.log('applications', applications);
     return applications;
   }
 
