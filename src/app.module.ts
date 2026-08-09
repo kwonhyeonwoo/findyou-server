@@ -14,10 +14,10 @@ import { ErrandApplicationModule } from './errand-application/errand-application
 import { ErrandApplication } from './errand-application/entities/errand-application.entity';
 import { ReviewModule } from './review/review.module';
 import { Review } from './review/entities/review.entity';
-import { HelperModule } from './helper/helper.module';
-import { Helper } from './helper/entities/helper.entity';
+import { HelperPost } from './helper-post/entities/helper-post.entity';
 import { HelperApplicationModule } from './helper-application/helper-application.module';
 import { HelperApplication } from './helper-application/entities/helper-application.entity';
+import { HelperPostModule } from './helper-post/helper-post.module';
 
 @Module({
   imports: [
@@ -41,7 +41,7 @@ import { HelperApplication } from './helper-application/entities/helper-applicat
         username: configService.get('DB_USERNAME'), // DB 사용자 이름
         password: configService.get('DB_PASSWORD'), // DB 비밀번호
         database: configService.get('DB_NAME'), // DB 이름
-        entities: [User, Errand, ErrandApplication, Review, Helper,HelperApplication], // 엔티티 경로
+        entities: [User, Errand, ErrandApplication, Review, HelperPost, HelperApplication], // 엔티티 경로
         synchronize: configService.get('DB_SYNCHRONIZE') === 'true', // 스키마 자동 동기화 (운영 환경에서는 false 권장)
         logging: configService.get('DB_LOGGING') === 'true', // SQL 쿼리 콘솔 출력
       }),
@@ -52,7 +52,7 @@ import { HelperApplication } from './helper-application/entities/helper-applicat
     ErrandModule,
     ErrandApplicationModule,
     ReviewModule,
-    HelperModule,
+    HelperPostModule,
     HelperApplicationModule,
   ],
   controllers: [AppController],

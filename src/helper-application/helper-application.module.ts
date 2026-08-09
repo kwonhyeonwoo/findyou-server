@@ -4,14 +4,14 @@ import { HelperApplicationController } from './helper-application.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HelperApplication } from './entities/helper-application.entity';
 import { HelperApplicationRepository } from './helper-application.repository';
-import { HelperModule } from 'src/helper/helper.module';
+import { HelperPostModule } from 'src/helper-post/helper-post.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       HelperApplication,
     ]),
-    HelperModule,
+    HelperPostModule,
   ],
   controllers: [HelperApplicationController],
   providers: [HelperApplicationService, HelperApplicationRepository],

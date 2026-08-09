@@ -20,7 +20,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         const application = this.create({
             message,
             client: { id: clientId },
-            helper: { id: helperId },
+            helperPosts: { id: helperId },
         });
         return await this.save(application);
     }
@@ -28,9 +28,9 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
     async findOneApplication(helperId: string) {
         const application = await this.findOne({
             where: {
-                helper: { id: helperId },
+                helperPosts: { id: helperId },
             },
-            relations: { helper: true }
+            relations: { helperPosts: true }
         });
         return application;
     };
@@ -41,7 +41,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
                 client: {
                     id: clientId
                 },
-                helper: { id: helperId }
+                helperPosts: { id: helperId }
             }
         })
         return existApplication;
@@ -56,7 +56,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
                 }
             },
             relations: {
-                helper: true
+                helperPosts: true
             }
         })
         return applications;

@@ -52,24 +52,23 @@ export class ErrandController {
 
   @Get()
   findErrandLists(
-    @Query('status') status?:CustomStatus,
+    @Query('status') status?: CustomStatus,
     @Query('limit') limit?: string,
     @Query('keyword') keyword?: string,
     @Query('category') category?: CustomCategory,
   ) {
-    return this.errandService.findErrandLists({ status,limit, keyword, category });
+    return this.errandService.findErrandLists({ status, limit, keyword, category });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id/progress')
   findErrandProgress(@Param('id') id: string) {
-    console.log('tq',id)
     return this.errandService.findErrandProgress(id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  async findErrandDetail(@Param('id') id:string){
+  async findErrandDetail(@Param('id') id: string) {
     const errand = await this.errandService.findErrandDetail(id);
     return errand;
   }
