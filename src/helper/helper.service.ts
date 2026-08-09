@@ -23,7 +23,6 @@ export class HelperService {
 
   async findMyApplications(userId: string) {
     const applications = await this.helperRepository.findMyApplications(userId);
-    console.log('applications', applications);
     return applications;
   }
 

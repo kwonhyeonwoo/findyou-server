@@ -28,12 +28,12 @@ export class HelperController {
     return this.helperService.findAll();
   }
 
+  // 받은내역
   @UseGuards(AuthGuard('jwt'))
   @Get('applications')
   async findMyApplications(
     @GetUser('userId') userId: string
   ) {
-    console.log('userId', userId);
     return await this.helperService.findMyApplications(userId);
   }
 

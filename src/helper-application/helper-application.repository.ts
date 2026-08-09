@@ -62,4 +62,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return applications;
     }
 
+
+    // 받은내역
+    async findReceivedApplications() { }
 }

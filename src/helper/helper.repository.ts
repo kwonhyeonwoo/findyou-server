@@ -86,13 +86,14 @@ export class HelperRepository extends Repository<Helper> {
     async findMyApplications(userId: string) {
         const applications = await this.find({
             where: {
-                id: userId
+                helper: {
+                    id: userId
+                }
             },
             relations: {
                 applications: true,
             }
         });
-        console.log('applications', applications);
         return applications;
     }
 }
