@@ -10,22 +10,22 @@ export class HelperApplicationService {
     private readonly applicationRepo: HelperApplicationRepository,
     private readonly helperRepository: HelperRepository,
   ) { }
-  async create(dto: CreateHelperApplicationDto, userId: string, helperId: string) {
-      const existApplication = await this.applicationRepo.checkApplication(userId,helperId);
-      const helper = await this.helperRepository.findOneHelper(helperId);
-      if(!helper) throw new NotFoundException("헬퍼를 찾을 수 없습니다.")
-      if(helper.helper.id === userId) throw new ConflictException('본인 한테는 신청할 수 없습니다.');
-      if(existApplication) throw new NotFoundException('이미 지원한 헬퍼입니다.')
-      return await this.applicationRepo.createApplication({
-        message:dto.message,
-        clientId:userId,
-        helperId:helperId
-      })      
+  async create(dto: CreateHelperApplicationDto, userId: string, helperPostId: string) {
+    const helper = await this.helperRepository.findOneHelper(helperPostId);
+    const existApplication = await this.applicationRepo.checkApplication(userId, helperPostId);
+    if (helper.helper.id === userId) throw new ConflictException("자신에게 신청할 수 없습니다.");
+    if (existApplication) throw new ConflictException('이미 신청한 내역 입니다.')
+    if (!helper) throw new NotFoundException("헬퍼를 찾을 수 없습니다.");
+    return await this.applicationRepo.createApplication({
+      message: dto.message,
+      clientId: userId,
+      helperId: helperPostId
+    })
   }
 
-
-  findAll() {
-    return `This action returns all helperApplication`;
+  // 지원내역
+  async findHistory(userId: string) {
+    return await this.applicationRepo.findApplicationsHistory(userId)
   }
 
   async findOne(helperId: string) {

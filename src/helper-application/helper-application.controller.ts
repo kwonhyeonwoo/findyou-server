@@ -5,11 +5,11 @@ import { UpdateHelperApplicationDto } from './dto/update-helper-application.dto'
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/common/user.decorator';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('helper-application')
 export class HelperApplicationController {
   constructor(private readonly helperApplicationService: HelperApplicationService) { }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post(":id")
   create(
     @Body() body: CreateHelperApplicationDto,
@@ -20,10 +20,14 @@ export class HelperApplicationController {
     return this.helperApplicationService.create(body, userId, helperPostId);
   }
 
+  // 지원내역
   @Get()
-  findAll() {
-    return this.helperApplicationService.findAll();
+  findHistory(
+    @GetUser('userId') userId: string
+  ) {
+    return this.helperApplicationService.findHistory(userId);
   }
+
 
   @Get(':id')
   findOne(@Param('id') helperId: string) {

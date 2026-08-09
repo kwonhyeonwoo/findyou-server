@@ -73,12 +73,27 @@ export class HelperRepository extends Repository<Helper> {
 
     async findOneHelper(helperId: string) {
         const helper = await this.findOne({
-            where: { 
+            where: {
                 id: helperId,
-                helper:true
-             },
-             relations:{helper:true}
+                helper: true
+            },
+            relations: { helper: true }
         });
         return helper;
+    }
+
+    // 받은 지원내역
+    async findMyApplications(userId: string) {
+        const applications = await this.find({
+            where: {
+                helper: {
+                    id: userId
+                }
+            },
+            relations: {
+                applications: true,
+            }
+        });
+        return applications;
     }
 }

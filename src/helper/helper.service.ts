@@ -15,11 +15,15 @@ export class HelperService {
     }
 
     return await this.helperRepository.createHelper(newHelper);
-
   }
 
   findAll() {
     return this.helperRepository.findLists();
+  }
+
+  async findMyApplications(userId: string) {
+    const applications = await this.helperRepository.findMyApplications(userId);
+    return applications;
   }
 
   async findOne(helperId: string, limit?: string) {
