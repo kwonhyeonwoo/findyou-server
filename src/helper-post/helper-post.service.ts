@@ -22,9 +22,9 @@ export class HelperPostService {
     }
 
 
-    // 받은내역
-    async findMyApplications(userId: string) {
-        const applications = await this.helperPostRepository.findMyApplications(userId);
+    // 내가 올린 헬퍼게시글
+    async findMyPosts(userId: string) {
+        const applications = await this.helperPostRepository.findMyPosts(userId);
         return applications;
     }
 
@@ -34,6 +34,12 @@ export class HelperPostService {
             throw new NotFoundException('헬퍼가 없습니다.')
         };
         return helper;
+    }
+
+    async findWidthApplications(helperPostId:string){
+        const applications = await this.helperPostRepository.findWidthApplications(helperPostId);
+        console.log('applications',applications);
+        return applications;
     }
 
     update(id: number, updateHelperDto: UpdateHelperPostDto) {

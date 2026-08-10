@@ -81,8 +81,8 @@ export class HelperPostRepository extends Repository<HelperPost> {
         return helper;
     }
 
-    // 받은 지원내역
-    async findMyApplications(userId: string) {
+    // 내가 등록한 헬퍼게시글 목록
+    async findMyPosts(userId: string) {
         const applications = await this.find({
             where: {
                 helper: {
@@ -91,6 +91,21 @@ export class HelperPostRepository extends Repository<HelperPost> {
             },
             relations: {
                 applications: true,
+            }
+        });
+        return applications;
+    }
+
+    // 받은 지원내역 목록들
+    async findWidthApplications(helperPostId:string){
+        const applications = await this.find({
+            where:{
+                id:helperPostId,
+            },
+            relations:{
+                applications:{
+                    client:true,
+                },
             }
         });
         return applications;
