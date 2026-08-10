@@ -37,15 +37,6 @@ export class HelperPostController {
         return await this.helperPostService.findMyPosts(userId);
     }
 
-    // 지원 받은 내역들
-    @UseGuards(AuthGuard('jwt'))
-    @Get('applications/:id')
-    async findWidthApplications(
-        @Param('id') id:string
-    ){
-        await this.helperPostService.findWidthApplications(id);
-    }
-
     @UseGuards(AuthGuard('jwt'))
     @Get(':id')
     async findOne(

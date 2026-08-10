@@ -96,18 +96,4 @@ export class HelperPostRepository extends Repository<HelperPost> {
         return applications;
     }
 
-    // 받은 지원내역 목록들
-    async findWidthApplications(helperPostId:string){
-        const applications = await this.find({
-            where:{
-                id:helperPostId,
-            },
-            relations:{
-                applications:{
-                    client:true,
-                },
-            }
-        });
-        return applications;
-    }
 }

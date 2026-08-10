@@ -10,6 +10,7 @@ import { GetUser } from 'src/auth/common/user.decorator';
 export class HelperApplicationController {
   constructor(private readonly helperApplicationService: HelperApplicationService) { }
 
+  // 지원신청
   @Post(":id")
   create(
     @Body() body: CreateHelperApplicationDto,
@@ -28,6 +29,12 @@ export class HelperApplicationController {
     return this.helperApplicationService.findHistory(userId);
   }
 
+  @Get('/received/:id')
+  async findReceivedApplications(
+    @Param("id") id:string
+  ){
+    return await this.helperApplicationService.findReceivedApplications(id);
+  }
 
   @Get(':id')
   findOne(@Param('id') helperId: string) {

@@ -36,12 +36,6 @@ export class HelperPostService {
         return helper;
     }
 
-    async findWidthApplications(helperPostId:string){
-        const applications = await this.helperPostRepository.findWidthApplications(helperPostId);
-        console.log('applications',applications);
-        return applications;
-    }
-
     update(id: number, updateHelperDto: UpdateHelperPostDto) {
         return `This action updates a #${id} helper`;
     }

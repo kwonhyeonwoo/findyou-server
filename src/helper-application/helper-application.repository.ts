@@ -64,5 +64,15 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
 
 
     // 받은내역
-    async findReceivedApplications() { }
+    async findReceivedApplications(helperPostId:string) { 
+        const applications = await this.find({
+            where:{
+                helperPosts:{id:helperPostId}
+            },
+            relations:{
+                client:true
+            }
+        });
+        return applications;
+    }
 }
