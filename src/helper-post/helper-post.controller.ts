@@ -28,13 +28,13 @@ export class HelperPostController {
         return this.helperPostService.findAll();
     }
 
-    // 받은내역
+   // 내가 올린 헬퍼게시글
     @UseGuards(AuthGuard('jwt'))
-    @Get('applications')
+    @Get('my')
     async findMyApplications(
         @GetUser('userId') userId: string
     ) {
-        return await this.helperPostService.findMyApplications(userId);
+        return await this.helperPostService.findMyPosts(userId);
     }
 
     @UseGuards(AuthGuard('jwt'))

@@ -62,7 +62,6 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
                 where: { id },
                 relations: { errand: true, helper: true, },
             })
-            console.log('니미럴', application)
             if (!application) throw new NotFoundException("해당 지원 내역을 찾을 수 없습니다.")
 
             const errand = application.errand;
@@ -99,4 +98,5 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
             await queryRunner.release()
         }
     }
+
 }

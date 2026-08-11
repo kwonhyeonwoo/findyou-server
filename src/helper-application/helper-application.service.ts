@@ -28,11 +28,31 @@ export class HelperApplicationService {
     return await this.applicationRepo.findApplicationsHistory(userId)
   }
 
+  // 받은내역
+  async findReceivedApplications(helperPostId:string){
+    const applications = await this.applicationRepo.findReceivedApplications(helperPostId);
+    return applications;
+  }
+
   async findOne(helperId: string) {
     if (!helperId) throw new NotFoundException("신청내역이 없습니다.")
     const application = await this.applicationRepo.findOneApplication(helperId);
     return application
   }
+
+  async accepted(id:string){
+    await this.applicationRepo.accepted(id);
+    return {
+      success:true,
+      message:"수락을 완료 하였습니다."
+    }
+  }
+
+  async rejected(id:string,userId:string){
+    if(!id) throw new NotFoundException('내역이 존재하지 않습니다.');
+    return await this.applicationRepo.rejected(id,userId);
+  }
+
   update(id: number, updateHelperApplicationDto: UpdateHelperApplicationDto) {
     return `This action updates a #${id} helperApplication`;
   }

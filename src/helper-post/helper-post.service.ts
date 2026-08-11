@@ -21,8 +21,10 @@ export class HelperPostService {
         return this.helperPostRepository.findLists();
     }
 
-    async findMyApplications(userId: string) {
-        const applications = await this.helperPostRepository.findMyApplications(userId);
+
+    // 내가 올린 헬퍼게시글
+    async findMyPosts(userId: string) {
+        const applications = await this.helperPostRepository.findMyPosts(userId);
         return applications;
     }
 
