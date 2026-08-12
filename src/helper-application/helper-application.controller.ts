@@ -49,7 +49,11 @@ export class HelperApplicationController {
   async accepted(
     @Param('id') id:string,
   ){
-    return await this.helperApplicationService.accepted(id);
+    await this.helperApplicationService.accepted(id);
+    return {
+      success:true,
+      message:"수락을 완료 하였습니다."
+    }
   }
 
   @Get(':id')
