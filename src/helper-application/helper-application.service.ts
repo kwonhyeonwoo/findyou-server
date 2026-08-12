@@ -42,10 +42,7 @@ export class HelperApplicationService {
 
   async accepted(id:string){
     await this.applicationRepo.accepted(id);
-    return {
-      success:true,
-      message:"수락을 완료 하였습니다."
-    }
+    
   }
 
   async rejected(id:string,userId:string){
