@@ -27,15 +27,24 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return await this.save(application);
     }
 
-    async findOneApplication(helperId: string) {
+    async findOneApplicationWidthClient(id: string) {
         const application = await this.findOne({
             where: {
-                helperPosts: { id: helperId },
+                id,
             },
-            relations: { helperPosts: true }
+            relations: { helperPosts: {helper:true} , client:true}
         });
         return application;
     };
+
+    async findOneApplication(id:string){
+        const application = await this.findOne({
+            where:{id}
+        });
+
+        return application;
+    }
+
 
     async checkApplication(clientId: string, helperId: string) {
         const existApplication = await this.findOne({
@@ -76,6 +85,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return applications;
     }
 
+    // 수락
     async accepted(id:string){
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect()
@@ -116,6 +126,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         }
     }
 
+    // 거절
     async rejected(id:string,userId:string){
         const application = await this.findOne({
             where:{id},
@@ -133,6 +144,13 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         }
         await this.update(id,{
             status:CustomStatus.REJECTED
+        })
+    }
+
+    // 완료요청 
+    async completedRequest(id:string){
+        return await this.update(id,{
+            status:CustomStatus.COMPLETED_REQUEST
         })
     }
 }
