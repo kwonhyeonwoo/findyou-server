@@ -28,7 +28,12 @@ export class UserRepository extends Repository<User> {
     }
 
     async findByUser(id: string) {
-        return this.findOne({ where: { id } });
+        return this.findOne({ 
+            where: { id },
+            relations:{
+                applications:true,
+                receivedReviews:true,
+        } });
     }
 
     
