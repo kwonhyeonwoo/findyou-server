@@ -35,6 +35,14 @@ export class HelperApplicationService {
     return applications;
   }
 
+  // 완료요청 수락
+  async completed(id:string, userId:string){
+    if(!id) throw new NotFoundException('내역을 찾을 수 없습니다.');
+    const application = await this.applicationRepo.findOneApplicationWidthClient(id);
+    if(application.client.id !== userId) throw new BadRequestException('본인만 수락이 가능합니다.');
+    return await this.applicationRepo.completed(id);
+  }
+
   async findOneApplicationWidthClient(id: string) {
     if (!id) throw new NotFoundException("신청내역이 없습니다.")
     const application = await this.applicationRepo.findOneApplicationWidthClient(id);

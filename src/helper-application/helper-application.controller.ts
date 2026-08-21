@@ -56,8 +56,6 @@ export class HelperApplicationController {
     }
   }
 
-
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.helperApplicationService.findOneApplicationWidthClient(id);
@@ -91,8 +89,13 @@ export class HelperApplicationController {
     }
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.helperApplicationService.remove(+id);
-  // }
+  // 심부름 완전히 수락
+  @Patch(':id/completed')
+  async completed(@Param('id') id:string, @GetUser('userId') userId:string){
+    await this.helperApplicationService.completed(id,userId);
+    return {
+      success:true,
+      message:"심부름을 완료 하였습니다."
+    }
+  }
 }

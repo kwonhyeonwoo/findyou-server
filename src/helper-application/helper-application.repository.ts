@@ -27,12 +27,16 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return await this.save(application);
     }
 
+    // 헬퍼게시글, 의뢰인 데이터
     async findOneApplicationWidthClient(id: string) {
         const application = await this.findOne({
             where: {
                 id,
             },
-            relations: { helperPosts: {helper:true} , client:true}
+            relations: { 
+                helperPosts: {helper:true} , 
+                client:true
+            }
         });
         return application;
     };
@@ -159,5 +163,13 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return await this.update(id,{
             status:CustomStatus.COMPLETED_REQUEST
         })
+    }
+
+    // 완료 수락
+    async completed(id:string){
+        const application = await this.update(id,{
+            status:CustomStatus.COMPLETED
+        });
+        return application;
     }
 }
