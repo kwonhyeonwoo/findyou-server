@@ -20,7 +20,6 @@ export class ErrandController {
       storage: diskStorage({
         destination: './uploads/errand',
         filename: (req, file, callback) => {
-          // 3. 파일 이름 중복을 막기 위해 고유한 랜덤 이름 생성 (예: uuid나 타임스탬프)
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
           const ext = extname(file.originalname);
           callback(null, `${uniqueSuffix}${ext}`);
@@ -46,6 +45,7 @@ export class ErrandController {
   @Get("my")
   async findMyErrands(@GetUser('userId') userId: string) {
     const errands = await this.errandService.findMyErrands(userId);
+    
     return errands
   }
 

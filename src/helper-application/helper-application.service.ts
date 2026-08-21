@@ -1,8 +1,9 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateHelperApplicationDto } from './dto/create-helper-application.dto';
 import { UpdateHelperApplicationDto } from './dto/update-helper-application.dto';
 import { HelperApplicationRepository } from './helper-application.repository';
 import { HelperPostRepository } from 'src/helper-post/helper-post.repository';
+import { CustomStatus } from 'src/interfaces/custom-status.enum';
 
 @Injectable()
 export class HelperApplicationService {
@@ -34,9 +35,9 @@ export class HelperApplicationService {
     return applications;
   }
 
-  async findOne(helperId: string) {
-    if (!helperId) throw new NotFoundException("신청내역이 없습니다.")
-    const application = await this.applicationRepo.findOneApplication(helperId);
+  async findOneApplicationWidthClient(id: string) {
+    if (!id) throw new NotFoundException("신청내역이 없습니다.")
+    const application = await this.applicationRepo.findOneApplicationWidthClient(id);
     return application
   }
 
@@ -45,14 +46,25 @@ export class HelperApplicationService {
 
   }
 
-  async rejected(id: string, userId: string) {
-    if (!id) throw new NotFoundException('내역이 존재하지 않습니다.');
-    return await this.applicationRepo.rejected(id, userId);
+  async completedRequest(appliId: string, userId: string) {
+  if (!appliId) throw new BadRequestException('신청 ID가 없습니다.');
+
+  const application = await this.applicationRepo.findOneApplicationWidthClient(appliId);
+  if (!application) throw new NotFoundException('내역을 찾을 수 없습니다.');
+
+  // 완료 요청은 헬퍼만 (신청에 연결된 게시글의 작성자)
+  const helperId = application.helperPosts.helper.id;
+  if (userId !== helperId) {
+    throw new ForbiddenException('완료 요청은 헬퍼만 할 수 있습니다.');
   }
-  async remove(id: string) {
-    if (!id) throw new NotFoundException('삭제 할 내역이 없습니다.')
-    return this.applicationRepo.deleteApplication(id);
+
+  if (application.status === CustomStatus.COMPLETED_REQUEST) {
+    throw new BadRequestException('이미 완료 요청된 내역입니다.');
   }
+
+  return this.applicationRepo.completedRequest(appliId);
+}
+
   update(id: number, updateHelperApplicationDto: UpdateHelperApplicationDto) {
     return `This action updates a #${id} helperApplication`;
   }

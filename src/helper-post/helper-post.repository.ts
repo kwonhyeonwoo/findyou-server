@@ -90,8 +90,10 @@ export class HelperPostRepository extends Repository<HelperPost> {
                 }
             },
             relations: {
-                applications: true,
-            }
+                applications: {
+                    client:true
+                },
+            },
         });
         return applications;
     }

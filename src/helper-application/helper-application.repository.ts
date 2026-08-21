@@ -27,15 +27,24 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return await this.save(application);
     }
 
-    async findOneApplication(helperId: string) {
+    async findOneApplicationWidthClient(id: string) {
         const application = await this.findOne({
             where: {
-                helperPosts: { id: helperId },
+                id,
             },
-            relations: { helperPosts: true }
+            relations: { helperPosts: {helper:true} , client:true}
         });
         return application;
     };
+
+    async findOneApplication(id:string){
+        const application = await this.findOne({
+            where:{id}
+        });
+
+        return application;
+    }
+
 
     async checkApplication(clientId: string, helperId: string) {
         const existApplication = await this.findOne({
@@ -78,7 +87,8 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return applications;
     }
 
-    async accepted(id: string) {
+    // 수락
+    async accepted(id:string){
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect()
         await queryRunner.startTransaction()
@@ -94,9 +104,9 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
 
             await queryRunner.manager.update(HelperApplication, {
                 id,
-                status: CustomStatus.PENDING
-            }, {
-                status: CustomStatus.COMPLETED
+                status:CustomStatus.PENDING
+            },{
+                status:CustomStatus.ACCEPTED
             });
 
             await queryRunner.manager.update(HelperApplication, {
@@ -118,7 +128,8 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         }
     }
 
-    async rejected(id: string, userId: string) {
+    // 거절
+    async rejected(id:string,userId:string){
         const application = await this.findOne({
             where: { id },
             relations: {
@@ -138,9 +149,10 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         })
     }
 
-    // 지원취소
-    async deleteApplication(id: string) {
-        const application = await this.delete(id);
-        return application;
+    // 완료요청 
+    async completedRequest(id:string){
+        return await this.update(id,{
+            status:CustomStatus.COMPLETED_REQUEST
+        })
     }
 }
