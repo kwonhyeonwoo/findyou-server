@@ -30,7 +30,7 @@ export class HelperApplicationService {
   }
 
   // 받은내역
-  async findReceivedApplications(helperPostId:string){
+  async findReceivedApplications(helperPostId: string) {
     const applications = await this.applicationRepo.findReceivedApplications(helperPostId);
     return applications;
   }
@@ -41,14 +41,9 @@ export class HelperApplicationService {
     return application
   }
 
-  async accepted(id:string){
+  async accepted(id: string) {
     await this.applicationRepo.accepted(id);
-    
-  }
 
-  async rejected(id:string,userId:string){
-    if(!id) throw new NotFoundException('내역이 존재하지 않습니다.');
-    return await this.applicationRepo.rejected(id,userId);
   }
 
   async completedRequest(appliId: string, userId: string) {
@@ -74,7 +69,5 @@ export class HelperApplicationService {
     return `This action updates a #${id} helperApplication`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} helperApplication`;
-  }
+
 }

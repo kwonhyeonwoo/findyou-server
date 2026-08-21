@@ -67,19 +67,21 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
                 }
             },
             relations: {
-                helperPosts: true
+                helperPosts: {
+                    helper: true,
+                }
             }
         })
         return applications;
     }
     // 받은내역
-    async findReceivedApplications(helperPostId:string) { 
+    async findReceivedApplications(helperPostId: string) {
         const applications = await this.find({
-            where:{
-                helperPosts:{id:helperPostId}
+            where: {
+                helperPosts: { id: helperPostId }
             },
-            relations:{
-                client:true
+            relations: {
+                client: true
             }
         });
         return applications;
@@ -90,38 +92,38 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect()
         await queryRunner.startTransaction()
-        try{
-            const application = await queryRunner.manager.findOne(HelperApplication,{
-                where:{id},
-                relations:{helperPosts:true}
+        try {
+            const application = await queryRunner.manager.findOne(HelperApplication, {
+                where: { id },
+                relations: { helperPosts: true }
             });
-            if(!application) throw new NotFoundException('신청 내역이 없습니다.');
+            if (!application) throw new NotFoundException('신청 내역이 없습니다.');
             const helperPost = application.helperPosts;
-            if(!helperPost) throw new NotFoundException('헬퍼 게시글이 없습니다.');
-            if(application.status === CustomStatus.IN_PROGRESS) throw new BadRequestException('이미 진행중인 내역 입니다.')
-            
-            await queryRunner.manager.update(HelperApplication,{
+            if (!helperPost) throw new NotFoundException('헬퍼 게시글이 없습니다.');
+            if (application.status === CustomStatus.IN_PROGRESS) throw new BadRequestException('이미 진행중인 내역 입니다.')
+
+            await queryRunner.manager.update(HelperApplication, {
                 id,
                 status:CustomStatus.PENDING
             },{
                 status:CustomStatus.ACCEPTED
             });
 
-            await queryRunner.manager.update(HelperApplication,{
-                helperPosts:{id:application.helperPosts.id},
-                status:CustomStatus.PENDING
-            },{status:CustomStatus.REJECTED})
+            await queryRunner.manager.update(HelperApplication, {
+                helperPosts: { id: application.helperPosts.id },
+                status: CustomStatus.PENDING
+            }, { status: CustomStatus.REJECTED })
 
-            await queryRunner.manager.update(HelperPost,{
-                id:application.helperPosts.id
-            },{
-                status:CustomStatus.IN_PROGRESS
+            await queryRunner.manager.update(HelperPost, {
+                id: application.helperPosts.id
+            }, {
+                status: CustomStatus.IN_PROGRESS
             })
             await queryRunner.commitTransaction()
-        }catch(error){
+        } catch (error) {
             await queryRunner.rollbackTransaction();
             throw error;
-        }finally{
+        } finally {
             await queryRunner.release()
         }
     }
@@ -129,21 +131,21 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
     // 거절
     async rejected(id:string,userId:string){
         const application = await this.findOne({
-            where:{id},
-            relations:{
-                helperPosts:{
-                    helper:true
+            where: { id },
+            relations: {
+                helperPosts: {
+                    helper: true,
                 }
             }
         });
-        if(application.status === CustomStatus.REJECTED){
+        if (application.status === CustomStatus.REJECTED) {
             throw new BadRequestException('이미 거절된 내역 입니다.')
         };
-        if(application.helperPosts.id !== userId){
+        if (application.helperPosts.helper.id !== userId) {
             throw new ForbiddenException('본인 게시글의 신청만 거절할 수 있습니다.')
         }
-        await this.update(id,{
-            status:CustomStatus.REJECTED
+        await this.update(id, {
+            status: CustomStatus.REJECTED
         })
     }
 
