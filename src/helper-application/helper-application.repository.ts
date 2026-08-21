@@ -123,14 +123,14 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
             where: { id },
             relations: {
                 helperPosts: {
-                    helper: true
+                    helper: true,
                 }
             }
         });
         if (application.status === CustomStatus.REJECTED) {
             throw new BadRequestException('이미 거절된 내역 입니다.')
         };
-        if (application.helperPosts.id !== userId) {
+        if (application.helperPosts.helper.id !== userId) {
             throw new ForbiddenException('본인 게시글의 신청만 거절할 수 있습니다.')
         }
         await this.update(id, {
