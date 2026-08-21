@@ -104,7 +104,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
                 id,
                 status:CustomStatus.PENDING
             },{
-                status:CustomStatus.COMPLETED
+                status:CustomStatus.ACCEPTED
             });
 
             await queryRunner.manager.update(HelperApplication,{
