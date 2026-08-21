@@ -65,6 +65,12 @@ export class HelperApplicationService {
   return this.applicationRepo.completedRequest(appliId);
 }
 
+// 거절
+async rejected(id:string,userId:string){
+  const application = await this.applicationRepo.rejected(id,userId);
+  return application;
+}
+
   update(id: number, updateHelperApplicationDto: UpdateHelperApplicationDto) {
     return `This action updates a #${id} helperApplication`;
   }
