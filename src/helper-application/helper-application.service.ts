@@ -71,6 +71,14 @@ async rejected(id:string,userId:string){
   return application;
 }
 
+// 지원내역 삭제
+async remove(id:string,userId:string){
+  if(!id) throw new NotFoundException('내역이 존재하지 않습니다.')
+  const application = await this.applicationRepo.findOneApplicationWidthClient(id);
+  if(application.client.id !== userId) throw new BadRequestException('지원자 본인만 취소 가능 합니다.');
+  return await this.applicationRepo.removeApplication(id);
+}
+
   update(id: number, updateHelperApplicationDto: UpdateHelperApplicationDto) {
     return `This action updates a #${id} helperApplication`;
   }

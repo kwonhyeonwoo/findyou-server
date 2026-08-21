@@ -149,6 +149,11 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         })
     }
 
+    async removeApplication(id:string){
+        const application = await this.delete(id);
+        return application;
+    }
+
     // 완료요청 
     async completedRequest(id:string){
         return await this.update(id,{

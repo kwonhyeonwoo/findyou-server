@@ -64,15 +64,15 @@ export class HelperApplicationController {
   }
 
   // // 지원내역 삭제
-  // @Delete(':id')
-  // async remove(@Param('id') id: string) {
-  //   await this.helperApplicationService.remove(id);
+  @Delete(':id')
+  async remove(@Param('id') id: string,@GetUser('userId') userId:string) {
+    await this.helperApplicationService.remove(id,userId);
 
-  //   return {
-  //     success: true,
-  //     message: "심부름 지원을 취소 했습니다."
-  //   }
-  // }
+    return {
+      success: true,
+      message: "심부름 지원을 취소 했습니다."
+    }
+  }
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateHelperApplicationDto: UpdateHelperApplicationDto) {
     return this.helperApplicationService.update(+id, updateHelperApplicationDto);
