@@ -9,7 +9,7 @@ import { GetUser } from 'src/auth/common/user.decorator';
 @Controller('helper-application')
 export class HelperApplicationController {
   constructor(private readonly helperApplicationService: HelperApplicationService) { }
-// 지원내역
+  // 지원내역
   @Get()
   findHistory(
     @GetUser('userId') userId: string
@@ -19,18 +19,18 @@ export class HelperApplicationController {
 
   @Get('/received/:id')
   async findReceivedApplications(
-    @Param("id") id:string
-  ){
+    @Param("id") id: string
+  ) {
     return await this.helperApplicationService.findReceivedApplications(id);
   }
 
   // 거절
   @Patch('/rejected/:id')
-  async rejected(@Param('id') id: string, @GetUser('userId') userId:string){
-    await this.helperApplicationService.rejected(id,userId);
+  async rejected(@Param('id') id: string, @GetUser('userId') userId: string) {
+    await this.helperApplicationService.rejected(id, userId);
     return {
-      success:true,
-      message:"지원을 거절 하였습니다."
+      success: true,
+      message: "지원을 거절 하였습니다."
     }
   }
 
@@ -47,12 +47,12 @@ export class HelperApplicationController {
   // 헬퍼 게시글id, 내역id,
   @Patch(":id")
   async accepted(
-    @Param('id') id:string,
-  ){
+    @Param('id') id: string,
+  ) {
     await this.helperApplicationService.accepted(id);
     return {
-      success:true,
-      message:"수락을 완료 하였습니다."
+      success: true,
+      message: "수락을 완료 하였습니다."
     }
   }
 
@@ -61,13 +61,20 @@ export class HelperApplicationController {
     return this.helperApplicationService.findOne(helperId);
   }
 
+  // 지원내역 삭제
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    await this.helperApplicationService.remove(id);
+
+    return {
+      success: true,
+      message: "심부름 지원을 취소 했습니다."
+    }
+  }
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateHelperApplicationDto: UpdateHelperApplicationDto) {
     return this.helperApplicationService.update(+id, updateHelperApplicationDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.helperApplicationService.remove(+id);
-  }
+
 }
