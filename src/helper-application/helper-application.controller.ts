@@ -16,26 +16,7 @@ export class HelperApplicationController {
   ) {
     return this.helperApplicationService.findHistory(userId);
   }
-
-  @Get('/received/:id')
-  async findReceivedApplications(
-    @Param("id") id: string
-  ) {
-    return await this.helperApplicationService.findReceivedApplications(id);
-  }
-
-  // 거절
-  @Patch('/rejected/:id')
-  async rejected(@Param('id') id: string, @GetUser('userId') userId: string) {
-    await this.helperApplicationService.rejected(id, userId);
-    return {
-      success: true,
-      message: "지원을 거절 하였습니다."
-    }
-  }
-
-  // 지원신청
-  @Post(":id")
+ @Post(":id")
   create(
     @Body() body: CreateHelperApplicationDto,
     @GetUser('userId') userId: string,
@@ -57,9 +38,29 @@ export class HelperApplicationController {
   }
 
   @Get(':id')
-  findOne(@Param('id') helperId: string) {
-    return this.helperApplicationService.findOne(helperId);
+  findOne(@Param('id') appliId: string) {
+    return this.helperApplicationService.findOne(appliId);
+  
   }
+  @Get('/received/:id')
+  async findReceivedApplications(
+    @Param("id") id: string
+  ) {
+    return await this.helperApplicationService.findReceivedApplications(id);
+  }
+
+  // 거절
+  @Patch('/rejected/:id')
+  async rejected(@Param('id') id: string, @GetUser('userId') userId: string) {
+    await this.helperApplicationService.rejected(id, userId);
+    return {
+      success: true,
+      message: "지원을 거절 하였습니다."
+    }
+  }
+
+  // 지원신청
+ 
 
   // 지원내역 삭제
   @Delete(':id')
