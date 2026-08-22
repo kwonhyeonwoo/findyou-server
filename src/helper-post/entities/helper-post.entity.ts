@@ -1,6 +1,7 @@
 import { HelperApplication } from "src/helper-application/entities/helper-application.entity";
 import { CustomCategory } from "src/interfaces/custom-category.enum";
 import { CustomStatus } from "src/interfaces/custom-status.enum";
+import { Review } from "src/review/entities/review.entity";
 import { User } from "src/user/entities/user.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 

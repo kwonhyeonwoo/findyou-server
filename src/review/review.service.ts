@@ -11,8 +11,8 @@ export class ReviewService {
     private readonly reviewRepository: ReviewRepository,
     private readonly errandRepository: ErrandRepository,
   ) { }
-  async create(body: CreateReviewDto, userId: string, errandId: string) {
-    const errand = await this.errandRepository.findErrandWithApplications(errandId);
+  async create(body: CreateReviewDto, userId: string, errandApplicationId: string) {
+    const errand = await this.errandRepository.findErrandWithApplications(errandApplicationId);
     if (!errand) {
       throw new NotFoundException('심부름을 찾을 수 없습니다.')
     }
@@ -24,7 +24,7 @@ export class ReviewService {
     if (!isHelper && !isRequester) {
       throw new ForbiddenException('해당 리뷰는 당사자만 남길 수 있습니다.')
     }
-    const existReview = await this.reviewRepository.existsReview(errandId, userId);
+    const existReview = await this.reviewRepository.existsReview(errandApplicationId, userId);
     if (existReview) {
       throw new BadRequestException('이미 리뷰를 남겼습니다.')
     }
@@ -37,7 +37,7 @@ export class ReviewService {
       reviewerId: userId,
       revieweeId: errand.applications.helper.id,
       role: role,
-      errandId: errandId,
+      errandApplicationId: errandApplicationId,
     })
   }
 

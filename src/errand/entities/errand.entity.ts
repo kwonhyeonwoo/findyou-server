@@ -72,7 +72,4 @@ export class Errand {
 
     // loadRelationCountAndMap으로 매핑되는 값 (컬럼 아님)
     applicationsCount?: number;
-
-    @OneToMany(() => Review, (review) => review.errand)
-    reviews: Review[];
 }

@@ -15,7 +15,7 @@ export class ReviewRepository extends Repository<Review> {
     async existsReview(errandId: string, reviewrId: string) {
         const review = await this.findOne({
             where: {
-                errand: { id: errandId },
+                errandApplication: { id: errandId },
                 reviewer: { id: reviewrId }
             }
         })
@@ -29,7 +29,7 @@ export class ReviewRepository extends Repository<Review> {
         reviewerId: string;
         revieweeId: string;
         role: ReviewRole;
-        errandId: string;
+        errandApplicationId: string;
     }) {
         const review = this.create({
             rating: data.rating,
@@ -38,7 +38,7 @@ export class ReviewRepository extends Repository<Review> {
             reviewer: { id: data.reviewerId },
             reviewee: { id: data.revieweeId },
             role: data.role,
-            errand: { id: data.errandId },
+            errandApplication: { id: data.errandApplicationId },
         });
         return await this.save(review);
     }

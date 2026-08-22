@@ -13,11 +13,11 @@ export class ReviewController {
   @Post(':errandId')
   async create(
     @Body() body: CreateReviewDto,
-    @Param("errandId") errandId: string,
+    @Param("errandApplicationId") errandApplicationId: string,
     @GetUser('userId') userId: string,
   ) {
 
-    await this.reviewService.create(body, userId, errandId);
+    await this.reviewService.create(body, userId, errandApplicationId);
     return {
       success: true,
       message: '리뷰를 작성하였습니다.'
