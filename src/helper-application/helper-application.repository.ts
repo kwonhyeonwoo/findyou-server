@@ -27,7 +27,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return await this.save(application);
     }
 
-    async findOneApplication(helperId: string) {
+    async findeOneWidthHelperPost(helperId: string) {
         const application = await this.findOne({
             where: {
                 helperPosts: { id: helperId },

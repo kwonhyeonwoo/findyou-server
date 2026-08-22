@@ -10,19 +10,26 @@ export class ReviewController {
   constructor(private readonly reviewService: ReviewService) { }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post(':errandId')
-  async create(
+  @Post(':errandApplicationId/errand')
+  async createErrandReview(
     @Body() body: CreateReviewDto,
     @Param("errandApplicationId") errandApplicationId: string,
     @GetUser('userId') userId: string,
   ) {
 
-    await this.reviewService.create(body, userId, errandApplicationId);
+    await this.reviewService.createErrandReview(body, userId, errandApplicationId);
     return {
       success: true,
       message: '리뷰를 작성하였습니다.'
     }
-  }
+  };
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post(':helperApplicatoinId/helper')
+  async createHelper(
+    @Param('helperApplicationId') helperApplicationId: string,
+    @GetUser('userId') userId: string
+  ) { }
 
   @Get()
   findAll() {

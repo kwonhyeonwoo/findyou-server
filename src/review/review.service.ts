@@ -4,14 +4,16 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { ReviewRepository } from './review.repository';
 import { ErrandRepository } from 'src/errand/errand.repository';
 import { ReviewRole } from './enum/review-role.enum';
+import { HelperApplicationRepository } from 'src/helper-application/helper-application.repository';
 
 @Injectable()
 export class ReviewService {
   constructor(
     private readonly reviewRepository: ReviewRepository,
     private readonly errandRepository: ErrandRepository,
+    private readonly helperApplicationRepo: HelperApplicationRepository,
   ) { }
-  async create(body: CreateReviewDto, userId: string, errandApplicationId: string) {
+  async createErrandReview(body: CreateReviewDto, userId: string, errandApplicationId: string) {
     const errand = await this.errandRepository.findErrandWithApplications(errandApplicationId);
     if (!errand) {
       throw new NotFoundException('심부름을 찾을 수 없습니다.')
@@ -30,7 +32,7 @@ export class ReviewService {
     }
 
     const role = isHelper ? ReviewRole.HELPER : ReviewRole.USER;
-    await this.reviewRepository.createReview({
+    await this.reviewRepository.createErrandReview({
       rating: body.rating,
       tags: body.tags,
       content: body.content,
@@ -39,6 +41,10 @@ export class ReviewService {
       role: role,
       errandApplicationId: errandApplicationId,
     })
+  }
+
+  async createHelperReview(body: CreateReviewDto, userId: string, helperApplicationId: string) {
+    // const application
   }
 
   findAll() {

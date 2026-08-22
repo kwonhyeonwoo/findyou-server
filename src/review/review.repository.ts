@@ -22,7 +22,7 @@ export class ReviewRepository extends Repository<Review> {
         return review;
     }
 
-    async createReview(data: {
+    async createErrandReview(data: {
         rating: number;
         tags: ReviewTag[];
         content: string;
@@ -41,5 +41,9 @@ export class ReviewRepository extends Repository<Review> {
             errandApplication: { id: data.errandApplicationId },
         });
         return await this.save(review);
+    }
+
+    async createHelperReview() {
+
     }
 }
