@@ -27,12 +27,15 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return await this.save(application);
     }
 
-    async findeOneWidthHelperPost(appliId: string) {
+    async findOneWithHelperPost(appliId: string) {
         const application = await this.findOne({
-            where: {id:appliId},
-            relations: { helperPosts: true }
+            where: { id: appliId },
+            relations: {
+                helperPosts: {
+                    helper: true,
+                }
+            }
         });
-        console.log('43121',application)
         return application;
     };
 
@@ -66,17 +69,17 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
     }
     // 받은내역
     async findReceivedApplications(helperPostId: string) {
-        console.log('gggg',helperPostId)
+        console.log('gggg', helperPostId)
         const applications = await this.find({
             where: {
                 helperPosts: { id: helperPostId }
             },
             relations: {
-                helperPosts:true,
+                helperPosts: true,
                 client: true
             }
         });
-        console.log('????',applications)
+        console.log('????', applications)
         return applications;
     }
 

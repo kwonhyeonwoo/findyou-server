@@ -36,7 +36,7 @@ export class HelperApplicationService {
 
   async findOne(appliId: string) {
     if (!appliId) throw new NotFoundException("신청내역이 없습니다.")
-    const application = await this.applicationRepo.findeOneWidthHelperPost(appliId);
+    const application = await this.applicationRepo.findOneWithHelperPost(appliId);
     return application
   }
 

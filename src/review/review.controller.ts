@@ -25,11 +25,18 @@ export class ReviewController {
   };
 
   @UseGuards(AuthGuard('jwt'))
-  @Post(':helperApplicatoinId/helper')
-  async createHelper(
+  @Post(':helperApplicationId/helper-post')
+  async createHelperReview(
+    @Body() body: CreateReviewDto,
     @Param('helperApplicationId') helperApplicationId: string,
     @GetUser('userId') userId: string
-  ) { }
+  ) {
+    await this.reviewService.createHelperReview(body, userId, helperApplicationId)
+    return {
+      success: true,
+      message: "리뷰를 작성하였습니다."
+    }
+  }
 
   @Get()
   findAll() {
