@@ -5,5 +5,6 @@ export enum CustomStatus {
     REJECTED = "REJECTED", // 거절
     CANCELED = "CANCELED", // 취소
     COMPLETED = "COMPLETED", // 완료
-    IN_PROGRESS = "IN_PROGRESS"
+    IN_PROGRESS = "IN_PROGRESS",
+    COMPLETED_REQUEST = 'COMPLETED_REQUEST'
 }

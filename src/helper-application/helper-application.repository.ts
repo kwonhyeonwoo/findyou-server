@@ -27,17 +27,25 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return await this.save(application);
     }
 
+    // 의뢰인, 헬퍼게시글,헬퍼
     async findOneWithHelperPost(appliId: string) {
         const application = await this.findOne({
             where: { id: appliId },
             relations: {
                 helperPosts: {
                     helper: true,
-                }
+                },
+                client:true
             }
         });
         return application;
     };
+
+    // 헬퍼신청 내역만
+    async findOneApplication(id:string){
+        const application = await this.findOne({where:{id}});
+        return application;
+    }
 
     async checkApplication(clientId: string, helperId: string) {
         const existApplication = await this.findOne({
@@ -154,6 +162,18 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
     // 지원취소
     async deleteApplication(id: string) {
         const application = await this.delete(id);
+        return application;
+    }
+
+    // 완료요청 
+    async completedRequest(id:string){
+        return await this.update(id,{
+            status:CustomStatus.COMPLETED_REQUEST
+        })
+    }
+
+    async completed(id:string){
+        const application = await this.update(id,{status:CustomStatus.COMPLETED});
         return application;
     }
 }
