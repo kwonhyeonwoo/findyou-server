@@ -62,10 +62,18 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
             relations: {
                 helperPosts: {
                     helper: true,
-                }
+                },
+                reviews: {
+                    reviewer: true
+                },
             }
         })
-        return applications;
+        console.log('applications', applications)
+        // return applications;
+        return applications.map((app) => ({
+            ...app,
+            hasWrittenReview: app.reviews.some((review) => review.reviewer.id === userId) ?? false
+        }))
     }
     // 받은내역
     async findReceivedApplications(helperPostId: string) {
