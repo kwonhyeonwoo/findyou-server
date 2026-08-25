@@ -81,12 +81,17 @@ export class HelperApplicationController {
       success:true,
       message:"승인 요청을 완료 하였습니다."
     }
+
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.helperApplicationService.findOneApplicationWidthClient(id);
   }
 
-  // 지원내역 삭제
+  // // 지원내역 삭제
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.helperApplicationService.remove(id);
+  async remove(@Param('id') id: string,@GetUser('userId') userId:string) {
+    await this.helperApplicationService.remove(id,userId);
 
     return {
       success: true,
@@ -98,5 +103,21 @@ export class HelperApplicationController {
     return this.helperApplicationService.update(+id, updateHelperApplicationDto);
   }
 
+  // 완료요청
+  @Post('/:id/completed-request')
+  async completedRequest(
+    @Param('id') id:string,
+    @GetUser('userId') userId:string
+  ){
+    await this.helperApplicationService.completedRequest(id,userId);
+    return {
+      success:true,
+      message:"완료 요청을 하였습니다."
+    }
+  }
 
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.helperApplicationService.remove(+id);
+  // }
 }

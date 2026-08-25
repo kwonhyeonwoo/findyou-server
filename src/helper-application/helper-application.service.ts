@@ -49,6 +49,10 @@ async completedRequest(appliId: string, userId: string) {
   if (!appliId) throw new BadRequestException('신청 ID가 없습니다.');
 
   const application = await this.applicationRepo.findOneWithHelperPost(appliId);
+  async completedRequest(appliId: string, userId: string) {
+  if (!appliId) throw new BadRequestException('신청 ID가 없습니다.');
+
+  const application = await this.applicationRepo.findOneApplicationWidthClient(appliId);
   if (!application) throw new NotFoundException('내역을 찾을 수 없습니다.');
 
   // 완료 요청은 헬퍼만 (신청에 연결된 게시글의 작성자)
@@ -87,10 +91,28 @@ async completed(id: string, userId: string) {
     if (!id) throw new NotFoundException('내역이 존재하지 않습니다.');
     return await this.applicationRepo.rejected(id, userId);
   }
-  async remove(id: string) {
-    if (!id) throw new NotFoundException('삭제 할 내역이 없습니다.')
-    return this.applicationRepo.deleteApplication(id);
+
+  if (application.status === CustomStatus.COMPLETED_REQUEST) {
+    throw new BadRequestException('이미 완료 요청된 내역입니다.');
   }
+
+  return this.applicationRepo.completedRequest(appliId);
+}
+
+// 거절
+async rejected(id:string,userId:string){
+  const application = await this.applicationRepo.rejected(id,userId);
+  return application;
+}
+
+// 지원내역 삭제
+async remove(id:string,userId:string){
+  if(!id) throw new NotFoundException('내역이 존재하지 않습니다.')
+  const application = await this.applicationRepo.findOneApplicationWidthClient(id);
+  if(application.client.id !== userId) throw new BadRequestException('지원자 본인만 취소 가능 합니다.');
+  return await this.applicationRepo.removeApplication(id);
+}
+
   update(id: number, updateHelperApplicationDto: UpdateHelperApplicationDto) {
     return `This action updates a #${id} helperApplication`;
   }

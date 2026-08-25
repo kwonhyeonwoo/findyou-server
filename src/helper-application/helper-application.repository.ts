@@ -96,7 +96,8 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return applications;
     }
 
-    async accepted(id: string) {
+    // 수락
+    async accepted(id:string){
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect()
         await queryRunner.startTransaction()
@@ -112,9 +113,9 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
 
             await queryRunner.manager.update(HelperApplication, {
                 id,
-                status: CustomStatus.PENDING
-            }, {
-                status: CustomStatus.COMPLETED
+                status:CustomStatus.PENDING
+            },{
+                status:CustomStatus.ACCEPTED
             });
 
             await queryRunner.manager.update(HelperApplication, {
@@ -136,7 +137,8 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         }
     }
 
-    async rejected(id: string, userId: string) {
+    // 거절
+    async rejected(id:string,userId:string){
         const application = await this.findOne({
             where: { id },
             relations: {
@@ -156,8 +158,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         })
     }
 
-    // 지원취소
-    async deleteApplication(id: string) {
+    async removeApplication(id:string){
         const application = await this.delete(id);
         return application;
     }
