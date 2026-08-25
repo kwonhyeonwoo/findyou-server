@@ -13,10 +13,12 @@ export class HelperApplicationService {
   ) { }
   async create(dto: CreateHelperApplicationDto, userId: string, helperPostId: string) {
     const helper = await this.helperRepository.findOneHelper(helperPostId);
+    if (!helper) throw new NotFoundException("헬퍼를 찾을 수 없습니다.");
+
     const existApplication = await this.applicationRepo.checkApplication(userId, helperPostId);
     if (helper.helper.id === userId) throw new ConflictException("자신에게 신청할 수 없습니다.");
     if (existApplication) throw new ConflictException('이미 신청한 내역 입니다.')
-    if (!helper) throw new NotFoundException("헬퍼를 찾을 수 없습니다.");
+
     return await this.applicationRepo.createApplication({
       message: dto.message,
       clientId: userId,
@@ -43,79 +45,65 @@ export class HelperApplicationService {
 
   async accepted(id: string) {
     await this.applicationRepo.accepted(id);
-
   }
-async completedRequest(appliId: string, userId: string) {
-  if (!appliId) throw new BadRequestException('신청 ID가 없습니다.');
 
-  const application = await this.applicationRepo.findOneWithHelperPost(appliId);
+  // 완료 요청 (헬퍼가 요청)
   async completedRequest(appliId: string, userId: string) {
-  if (!appliId) throw new BadRequestException('신청 ID가 없습니다.');
+    if (!appliId) throw new BadRequestException('신청 ID가 없습니다.');
 
-  const application = await this.applicationRepo.findOneApplicationWidthClient(appliId);
-  if (!application) throw new NotFoundException('내역을 찾을 수 없습니다.');
+    const application = await this.applicationRepo.findOneWithHelperPost(appliId);
+    if (!application) throw new NotFoundException('내역을 찾을 수 없습니다.');
 
-  // 완료 요청은 헬퍼만 (신청에 연결된 게시글의 작성자)
-  const helperId = application.helperPosts.helper.id;
-  if (userId !== helperId) {
-    throw new ForbiddenException('완료 요청은 헬퍼만 할 수 있습니다.');
+    // 완료 요청은 헬퍼만 (신청에 연결된 게시글의 작성자)
+    const helperId = application.helperPosts.helper.id;
+    if (userId !== helperId) {
+      throw new ForbiddenException('완료 요청은 헬퍼만 할 수 있습니다.');
+    }
+
+    if (application.status === CustomStatus.COMPLETED_REQUEST) {
+      throw new BadRequestException('이미 완료 요청된 내역입니다.');
+    }
+
+    return this.applicationRepo.completedRequest(appliId);
   }
 
-  if (application.status === CustomStatus.COMPLETED_REQUEST) {
-    throw new BadRequestException('이미 완료 요청된 내역입니다.');
+  // 완료 (의뢰인이 확인)
+  async completed(id: string, userId: string) {
+    const application = await this.applicationRepo.findOneWithHelperPost(id);
+
+    if (!application) throw new NotFoundException('내역을 찾을 수 없습니다.');
+
+    if (application.client.id !== userId) {
+      throw new ForbiddenException('의뢰인만 완료할 수 있습니다.');
+    }
+
+    if (application.status === CustomStatus.COMPLETED) {
+      throw new BadRequestException('이미 완료된 내역입니다.');
+    }
+
+    if (application.status !== CustomStatus.COMPLETED_REQUEST) {
+      throw new BadRequestException('헬퍼의 완료 요청 후에 확인할 수 있습니다.');
+    }
+
+    return await this.applicationRepo.completed(id);
   }
 
-  return this.applicationRepo.completedRequest(appliId);
-}
-
-async completed(id: string, userId: string) {
-  const application = await this.applicationRepo.findOneWithHelperPost(id);
-
-  if (!application) throw new NotFoundException('내역을 찾을 수 없습니다.');
-
-  if (application.client.id !== userId) {
-    throw new ForbiddenException('의뢰인만 완료할 수 있습니다.');
-  }
-
-  if (application.status === CustomStatus.COMPLETED) {
-    throw new BadRequestException('이미 완료된 내역입니다.');
-  }
-
-  if (application.status !== CustomStatus.COMPLETED_REQUEST) {
-    throw new BadRequestException('헬퍼의 완료 요청 후에 확인할 수 있습니다.');
-  }
-
-  return await this.applicationRepo.completed(id);
-}
+  // 거절
   async rejected(id: string, userId: string) {
     if (!id) throw new NotFoundException('내역이 존재하지 않습니다.');
     return await this.applicationRepo.rejected(id, userId);
   }
 
-  if (application.status === CustomStatus.COMPLETED_REQUEST) {
-    throw new BadRequestException('이미 완료 요청된 내역입니다.');
+  // 지원내역 삭제
+  async remove(id: string, userId: string) {
+    if (!id) throw new NotFoundException('내역이 존재하지 않습니다.')
+    const application = await this.applicationRepo.findOneWithHelperPost(id);
+    if (!application) throw new NotFoundException('내역을 찾을 수 없습니다.');
+    if (application.client.id !== userId) throw new BadRequestException('지원자 본인만 취소 가능 합니다.');
+    return await this.applicationRepo.removeApplication(id);
   }
-
-  return this.applicationRepo.completedRequest(appliId);
-}
-
-// 거절
-async rejected(id:string,userId:string){
-  const application = await this.applicationRepo.rejected(id,userId);
-  return application;
-}
-
-// 지원내역 삭제
-async remove(id:string,userId:string){
-  if(!id) throw new NotFoundException('내역이 존재하지 않습니다.')
-  const application = await this.applicationRepo.findOneApplicationWidthClient(id);
-  if(application.client.id !== userId) throw new BadRequestException('지원자 본인만 취소 가능 합니다.');
-  return await this.applicationRepo.removeApplication(id);
-}
 
   update(id: number, updateHelperApplicationDto: UpdateHelperApplicationDto) {
     return `This action updates a #${id} helperApplication`;
   }
-
-
 }

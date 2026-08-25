@@ -40,7 +40,6 @@ export class HelperApplicationController {
   @Get(':id')
   findOne(@Param('id') appliId: string) {
     return this.helperApplicationService.findOne(appliId);
-  
   }
   @Get('/received/:id')
   async findReceivedApplications(
@@ -71,7 +70,6 @@ export class HelperApplicationController {
       message:"완료 요청을 하였습니다."
     }
   }
- 
 
   // 완료
   @Patch("/:id/completed")
@@ -81,14 +79,9 @@ export class HelperApplicationController {
       success:true,
       message:"승인 요청을 완료 하였습니다."
     }
-
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.helperApplicationService.findOneApplicationWidthClient(id);
   }
 
-  // // 지원내역 삭제
+  // 지원내역 삭제
   @Delete(':id')
   async remove(@Param('id') id: string,@GetUser('userId') userId:string) {
     await this.helperApplicationService.remove(id,userId);
@@ -102,22 +95,4 @@ export class HelperApplicationController {
   update(@Param('id') id: string, @Body() updateHelperApplicationDto: UpdateHelperApplicationDto) {
     return this.helperApplicationService.update(+id, updateHelperApplicationDto);
   }
-
-  // 완료요청
-  @Post('/:id/completed-request')
-  async completedRequest(
-    @Param('id') id:string,
-    @GetUser('userId') userId:string
-  ){
-    await this.helperApplicationService.completedRequest(id,userId);
-    return {
-      success:true,
-      message:"완료 요청을 하였습니다."
-    }
-  }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.helperApplicationService.remove(+id);
-  // }
 }
