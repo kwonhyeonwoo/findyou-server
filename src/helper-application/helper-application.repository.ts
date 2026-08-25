@@ -76,8 +76,6 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
                 },
             }
         })
-        console.log('applications', applications)
-        // return applications;
         return applications.map((app) => ({
             ...app,
             hasWrittenReview: app.reviews.some((review) => review.reviewer.id === userId) ?? false
@@ -95,7 +93,6 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
                 client: true
             }
         });
-        console.log('????', applications)
         return applications;
     }
 
@@ -173,7 +170,22 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
     }
 
     async completed(id:string){
-        const application = await this.update(id,{status:CustomStatus.COMPLETED});
-        return application;
+        await this.dataSource.transaction(async(manager)=>{
+            const application = await manager.findOne(HelperApplication,{
+                where:{id},
+                relations:{helperPosts:true},
+            })
+            // const application = await manager.update(HelperApplication,id,{
+            //     status:CustomStatus.COMPLETED
+            // });
+            await manager.update(HelperApplication,id,{status:CustomStatus.COMPLETED})
+            console.log('여기가?',application)
+            await manager.update(HelperPost,application.helperPosts.id,{
+                status:CustomStatus.COMPLETED
+            });
+
+        })
+        // const application = await this.update(id,{status:CustomStatus.COMPLETED});
+        // return application;
     }
 }

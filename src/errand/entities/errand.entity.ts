@@ -15,7 +15,7 @@ export class Errand {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ type: 'enum', enum: CustomStatus, default: CustomStatus.MATCHING })
+    @Column({ type: 'enum', enum: CustomStatus, default: CustomStatus.PENDING })
     status: CustomStatus;
 
     @Column({ type: 'enum', enum: CustomCategory })

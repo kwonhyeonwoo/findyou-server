@@ -24,7 +24,7 @@ export class ErrandService {
       ...createErrandDto,
       images: imagePaths,
       user: { id: userId },
-      status: CustomStatus.MATCHING,
+      status: CustomStatus.PENDING,
     };
     return await this.errandRepository.createErrand(newErrand);
   }
