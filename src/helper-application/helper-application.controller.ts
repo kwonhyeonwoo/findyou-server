@@ -16,26 +16,7 @@ export class HelperApplicationController {
   ) {
     return this.helperApplicationService.findHistory(userId);
   }
-
-  @Get('/received/:id')
-  async findReceivedApplications(
-    @Param("id") id: string
-  ) {
-    return await this.helperApplicationService.findReceivedApplications(id);
-  }
-
-  // 거절
-  @Patch('/rejected/:id')
-  async rejected(@Param('id') id: string, @GetUser('userId') userId: string) {
-    await this.helperApplicationService.rejected(id, userId);
-    return {
-      success: true,
-      message: "지원을 거절 하였습니다."
-    }
-  }
-
-  // 지원신청
-  @Post(":id")
+ @Post(":id")
   create(
     @Body() body: CreateHelperApplicationDto,
     @GetUser('userId') userId: string,
@@ -56,6 +37,50 @@ export class HelperApplicationController {
     }
   }
 
+  @Get(':id')
+  findOne(@Param('id') appliId: string) {
+    return this.helperApplicationService.findOne(appliId);
+  
+  }
+  @Get('/received/:id')
+  async findReceivedApplications(
+    @Param("id") id: string
+  ) {
+    return await this.helperApplicationService.findReceivedApplications(id);
+  }
+
+  // 거절
+  @Patch('/rejected/:id')
+  async rejected(@Param('id') id: string, @GetUser('userId') userId: string) {
+    await this.helperApplicationService.rejected(id, userId);
+    return {
+      success: true,
+      message: "지원을 거절 하였습니다."
+    }
+  }
+
+   // 완료요청
+  @Post('/:id/completed-request')
+  async completedRequest(
+    @Param('id') id:string,
+    @GetUser('userId') userId:string
+  ){
+    await this.helperApplicationService.completedRequest(id,userId);
+    return {
+      success:true,
+      message:"완료 요청을 하였습니다."
+    }
+  }
+ 
+
+  // 완료
+  @Patch("/:id/completed")
+  async completed(@Param('id') id:string,@GetUser('userId') userId:string){
+    await this.helperApplicationService.completed(id,userId);
+    return{
+      success:true,
+      message:"승인 요청을 완료 하였습니다."
+    }
 
 
   @Get(':id')

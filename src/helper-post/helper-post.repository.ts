@@ -93,7 +93,7 @@ export class HelperPostRepository extends Repository<HelperPost> {
                 applications: {
                     client:true
                 },
-            },
+            }
         });
         return applications;
     }

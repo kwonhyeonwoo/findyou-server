@@ -61,7 +61,7 @@ export class ErrandRepository extends Repository<Errand> {
         category?: CustomCategory;
     }) {
         const takeValue = limit ? +limit : undefined;
-        const statusValue = status ?? CustomStatus.MATCHING;
+        const statusValue = status ?? CustomStatus.PENDING;
 
         const qb = this.createQueryBuilder('errand')
             .where('errand.status = :status', { status: statusValue })

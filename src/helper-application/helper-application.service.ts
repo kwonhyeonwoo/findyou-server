@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateHelperApplicationDto } from './dto/create-helper-application.dto';
 import { UpdateHelperApplicationDto } from './dto/update-helper-application.dto';
 import { HelperApplicationRepository } from './helper-application.repository';
@@ -35,9 +35,9 @@ export class HelperApplicationService {
     return applications;
   }
 
-  async findOneApplicationWidthClient(id: string) {
-    if (!id) throw new NotFoundException("신청내역이 없습니다.")
-    const application = await this.applicationRepo.findOneApplicationWidthClient(id);
+  async findOne(appliId: string) {
+    if (!appliId) throw new NotFoundException("신청내역이 없습니다.")
+    const application = await this.applicationRepo.findOneWithHelperPost(appliId);
     return application
   }
 
@@ -45,7 +45,10 @@ export class HelperApplicationService {
     await this.applicationRepo.accepted(id);
 
   }
+async completedRequest(appliId: string, userId: string) {
+  if (!appliId) throw new BadRequestException('신청 ID가 없습니다.');
 
+  const application = await this.applicationRepo.findOneWithHelperPost(appliId);
   async completedRequest(appliId: string, userId: string) {
   if (!appliId) throw new BadRequestException('신청 ID가 없습니다.');
 
@@ -56,6 +59,37 @@ export class HelperApplicationService {
   const helperId = application.helperPosts.helper.id;
   if (userId !== helperId) {
     throw new ForbiddenException('완료 요청은 헬퍼만 할 수 있습니다.');
+  }
+
+  if (application.status === CustomStatus.COMPLETED_REQUEST) {
+    throw new BadRequestException('이미 완료 요청된 내역입니다.');
+  }
+
+  return this.applicationRepo.completedRequest(appliId);
+}
+
+async completed(id: string, userId: string) {
+  const application = await this.applicationRepo.findOneWithHelperPost(id);
+
+  if (!application) throw new NotFoundException('내역을 찾을 수 없습니다.');
+
+  if (application.client.id !== userId) {
+    throw new ForbiddenException('의뢰인만 완료할 수 있습니다.');
+  }
+
+  if (application.status === CustomStatus.COMPLETED) {
+    throw new BadRequestException('이미 완료된 내역입니다.');
+  }
+
+  if (application.status !== CustomStatus.COMPLETED_REQUEST) {
+    throw new BadRequestException('헬퍼의 완료 요청 후에 확인할 수 있습니다.');
+  }
+
+  return await this.applicationRepo.completed(id);
+}
+  async rejected(id: string, userId: string) {
+    if (!id) throw new NotFoundException('내역이 존재하지 않습니다.');
+    return await this.applicationRepo.rejected(id, userId);
   }
 
   if (application.status === CustomStatus.COMPLETED_REQUEST) {

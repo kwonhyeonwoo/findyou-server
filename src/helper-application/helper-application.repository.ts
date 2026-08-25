@@ -27,24 +27,25 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return await this.save(application);
     }
 
-    async findOneApplicationWidthClient(id: string) {
+    // 의뢰인, 헬퍼게시글,헬퍼
+    async findOneWithHelperPost(appliId: string) {
         const application = await this.findOne({
-            where: {
-                id,
-            },
-            relations: { helperPosts: {helper:true} , client:true}
+            where: { id: appliId },
+            relations: {
+                helperPosts: {
+                    helper: true,
+                },
+                client:true
+            }
         });
         return application;
     };
 
+    // 헬퍼신청 내역만
     async findOneApplication(id:string){
-        const application = await this.findOne({
-            where:{id}
-        });
-
+        const application = await this.findOne({where:{id}});
         return application;
     }
-
 
     async checkApplication(clientId: string, helperId: string) {
         const existApplication = await this.findOne({
@@ -69,18 +70,26 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
             relations: {
                 helperPosts: {
                     helper: true,
-                }
+                },
+                reviews: {
+                    reviewer: true
+                },
             }
         })
-        return applications;
+        return applications.map((app) => ({
+            ...app,
+            hasWrittenReview: app.reviews.some((review) => review.reviewer.id === userId) ?? false
+        }))
     }
     // 받은내역
     async findReceivedApplications(helperPostId: string) {
+        console.log('gggg', helperPostId)
         const applications = await this.find({
             where: {
                 helperPosts: { id: helperPostId }
             },
             relations: {
+                helperPosts: true,
                 client: true
             }
         });
@@ -159,5 +168,25 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return await this.update(id,{
             status:CustomStatus.COMPLETED_REQUEST
         })
+    }
+
+    async completed(id:string){
+        await this.dataSource.transaction(async(manager)=>{
+            const application = await manager.findOne(HelperApplication,{
+                where:{id},
+                relations:{helperPosts:true},
+            })
+            // const application = await manager.update(HelperApplication,id,{
+            //     status:CustomStatus.COMPLETED
+            // });
+            await manager.update(HelperApplication,id,{status:CustomStatus.COMPLETED})
+            console.log('여기가?',application)
+            await manager.update(HelperPost,application.helperPosts.id,{
+                status:CustomStatus.COMPLETED
+            });
+
+        })
+        // const application = await this.update(id,{status:CustomStatus.COMPLETED});
+        // return application;
     }
 }

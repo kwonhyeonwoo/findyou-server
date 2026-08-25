@@ -6,11 +6,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReviewRepository } from './review.repository';
 import { Errand } from 'src/errand/entities/errand.entity';
 import { ErrandModule } from 'src/errand/errand.module';
+import { HelperApplicationModule } from 'src/helper-application/helper-application.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Review]),
-    ErrandModule
+    ErrandModule,
+    HelperApplicationModule
   ],
   controllers: [ReviewController],
   providers: [ReviewService, ReviewRepository,],

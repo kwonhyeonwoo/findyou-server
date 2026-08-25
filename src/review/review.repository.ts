@@ -3,6 +3,7 @@ import { DataSource, Repository } from "typeorm";
 import { Review } from "./entities/review.entity";
 import { ReviewTag } from "./enum/review-tags.enum";
 import { ReviewRole } from "./enum/review-role.enum";
+import { ICreateReview } from "./interface/create-review.interface";
 
 @Injectable()
 export class ReviewRepository extends Repository<Review> {
@@ -12,25 +13,29 @@ export class ReviewRepository extends Repository<Review> {
         super(Review, dataSource.createEntityManager());
     }
 
-    async existsReview(errandId: string, reviewrId: string) {
+    // 심부름 리뷰.
+    async existErrandReview(errandId: string, reviewrId: string) {
         const review = await this.findOne({
             where: {
-                errand: { id: errandId },
+                errandApplication: { id: errandId },
                 reviewer: { id: reviewrId }
             }
         })
         return review;
     }
 
-    async createReview(data: {
-        rating: number;
-        tags: ReviewTag[];
-        content: string;
-        reviewerId: string;
-        revieweeId: string;
-        role: ReviewRole;
-        errandId: string;
-    }) {
+    async existHelperPostReview(helperApplicationId: string, reviewrId: string) {
+        const exist = this.findOne({
+            where: {
+                helperApplication: { id: helperApplicationId },
+                reviewer: { id: reviewrId }
+            }
+        })
+
+        return exist;
+    }
+
+    async createErrandReview(data: ICreateReview) {
         const review = this.create({
             rating: data.rating,
             tags: data.tags,
@@ -38,7 +43,20 @@ export class ReviewRepository extends Repository<Review> {
             reviewer: { id: data.reviewerId },
             reviewee: { id: data.revieweeId },
             role: data.role,
-            errand: { id: data.errandId },
+            errandApplication: { id: data.errandApplicationId },
+        });
+        return await this.save(review);
+    }
+
+    async createHelperReview(data: ICreateReview) {
+        const review = this.create({
+            rating: data.rating,
+            tags: data.tags,
+            content: data.content,
+            reviewer: { id: data.reviewerId },
+            reviewee: { id: data.revieweeId },
+            role: data.role,
+            helperApplication: { id: data.helperApplicationId },
         });
         return await this.save(review);
     }

@@ -15,7 +15,7 @@ export class Errand {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ type: 'enum', enum: CustomStatus, default: CustomStatus.MATCHING })
+    @Column({ type: 'enum', enum: CustomStatus, default: CustomStatus.PENDING })
     status: CustomStatus;
 
     @Column({ type: 'enum', enum: CustomCategory })
@@ -72,7 +72,4 @@ export class Errand {
 
     // loadRelationCountAndMap으로 매핑되는 값 (컬럼 아님)
     applicationsCount?: number;
-
-    @OneToMany(() => Review, (review) => review.errand)
-    reviews: Review[];
 }

@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "../../user/entities/user.entity";
 import { Errand } from "../../errand/entities/errand.entity";
 import { CustomStatus } from "src/interfaces/custom-status.enum";
+import { Review } from "src/review/entities/review.entity";
 
 @Entity('errand_application')
 export class ErrandApplication {
@@ -19,6 +20,9 @@ export class ErrandApplication {
 
     @Column({ length: 100, nullable: true })
     message: string;
+
+    @OneToMany(() => Review, (review) => review.errandApplication)
+    reviews: Review[];
 
     @CreateDateColumn()
     createdAt: Date;

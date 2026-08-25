@@ -4,15 +4,17 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { ReviewRepository } from './review.repository';
 import { ErrandRepository } from 'src/errand/errand.repository';
 import { ReviewRole } from './enum/review-role.enum';
+import { HelperApplicationRepository } from 'src/helper-application/helper-application.repository';
 
 @Injectable()
 export class ReviewService {
   constructor(
     private readonly reviewRepository: ReviewRepository,
     private readonly errandRepository: ErrandRepository,
+    private readonly helperApplicationRepo: HelperApplicationRepository,
   ) { }
-  async create(body: CreateReviewDto, userId: string, errandId: string) {
-    const errand = await this.errandRepository.findErrandWithApplications(errandId);
+  async createErrandReview(body: CreateReviewDto, userId: string, errandApplicationId: string) {
+    const errand = await this.errandRepository.findErrandWithApplications(errandApplicationId);
     if (!errand) {
       throw new NotFoundException('심부름을 찾을 수 없습니다.')
     }
@@ -24,20 +26,38 @@ export class ReviewService {
     if (!isHelper && !isRequester) {
       throw new ForbiddenException('해당 리뷰는 당사자만 남길 수 있습니다.')
     }
-    const existReview = await this.reviewRepository.existsReview(errandId, userId);
+    const existReview = await this.reviewRepository.existErrandReview(errandApplicationId, userId);
     if (existReview) {
       throw new BadRequestException('이미 리뷰를 남겼습니다.')
     }
 
-    const role = isHelper ? ReviewRole.HELPER : ReviewRole.USER;
-    await this.reviewRepository.createReview({
+    const role = isHelper ? ReviewRole.HELPER : ReviewRole.CLIENT;
+    await this.reviewRepository.createErrandReview({
       rating: body.rating,
       tags: body.tags,
       content: body.content,
       reviewerId: userId,
       revieweeId: errand.applications.helper.id,
       role: role,
-      errandId: errandId,
+      errandApplicationId: errandApplicationId,
+    })
+  }
+
+  async createHelperReview(body: CreateReviewDto, userId: string, helperApplicationId: string) {
+    if (!helperApplicationId) throw new NotFoundException('헬퍼 게시글을 찾을 수 없습니다.')
+    const helperPostApplication = await this.helperApplicationRepo.findOneWithHelperPost(helperApplicationId);
+    if (helperPostApplication.helperPosts.helper.id === userId) throw new ForbiddenException('본인 게시글에는 리뷰를 남길 수 없습니다.')
+    const existReview = await this.reviewRepository.existHelperPostReview(helperApplicationId, userId);
+    if (existReview) throw new BadRequestException('이미 리뷰를 남겼습니다.');
+
+    await this.reviewRepository.createHelperReview({
+      rating: body.rating,
+      tags: body.tags,
+      content: body.content,
+      reviewerId: userId, // 작성자
+      revieweeId: helperPostApplication.helperPosts.helper.id,// 받는사람
+      role: ReviewRole.HELPER,
+      helperApplicationId,
     })
   }
 

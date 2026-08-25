@@ -15,5 +15,6 @@ import { HelperPostModule } from 'src/helper-post/helper-post.module';
   ],
   controllers: [HelperApplicationController],
   providers: [HelperApplicationService, HelperApplicationRepository],
+  exports: [HelperApplicationRepository]
 })
 export class HelperApplicationModule { }

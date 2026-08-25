@@ -1,7 +1,8 @@
 import { HelperPost } from "src/helper-post/entities/helper-post.entity";
 import { CustomStatus } from "src/interfaces/custom-status.enum";
+import { Review } from "src/review/entities/review.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('helper_application')
 export class HelperApplication {
@@ -24,6 +25,10 @@ export class HelperApplication {
 
     @Column({ length: 100, nullable: true })
     message: string;
+
+    // 리뷰
+    @OneToMany(() => Review, (reivew) => reivew.helperApplication)
+    reviews: Review[]
 
     @CreateDateColumn()
     createdAt: Date;
