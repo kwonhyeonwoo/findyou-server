@@ -92,20 +92,35 @@ export class HelperPostRepository extends Repository<HelperPost> {
             relations: {
                 applications: {
                     client: true,
-                    reviews: true
+                    reviews: {
+                        reviewer:true,
+                    }
+                }
+            },
+            select:{
+                applications:{
+                    id: true,
+                    status: true,
+                    client:{id:true},
+                    reviews:{
+                        id:true,
+                        rating:true,
+                        tags:true,
+                        content:true,
+                        reviewer:{id:true}
+                    }
                 }
             }
         });
-
-        const aaaa = helperPosts.map((post) => ({
+        const helperPost = helperPosts.map((post) => ({
             ...post,
             applications: post.applications?.map((application) => ({
                 ...application,
-                hasWrittenReview: application.reviews.length > 0 ? true : false,
+                hasWrittenReview: application.reviews.some(review=>review.reviewer.id === userId),
+                review:application.reviews.find(review=>review.reviewer.id === application.client.id)
             }))
         }));
-        console.log('aaaa', aaaa[0].applications)
-        return aaaa;
+        return helperPost;
     }
 
 }

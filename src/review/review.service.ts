@@ -46,17 +46,18 @@ export class ReviewService {
   async createHelperReview(body: CreateReviewDto, userId: string, helperApplicationId: string) {
     if (!helperApplicationId) throw new NotFoundException('헬퍼 게시글을 찾을 수 없습니다.')
     const helperPostApplication = await this.helperApplicationRepo.findOneWithHelperPost(helperApplicationId);
-    if (helperPostApplication.helperPosts.helper.id === userId) throw new ForbiddenException('본인 게시글에는 리뷰를 남길 수 없습니다.')
     const existReview = await this.reviewRepository.existHelperPostReview(helperApplicationId, userId);
     if (existReview) throw new BadRequestException('이미 리뷰를 남겼습니다.');
 
+    // role -> 리뷰받는 대상자로 구분, client면 helper, helper이면 client
+    const role = helperPostApplication.client.id === userId ? ReviewRole.HELPER : ReviewRole.CLIENT
     await this.reviewRepository.createHelperReview({
       rating: body.rating,
       tags: body.tags,
       content: body.content,
       reviewerId: userId, // 작성자
-      revieweeId: helperPostApplication.helperPosts.helper.id,// 받는사람
-      role: ReviewRole.HELPER,
+      revieweeId: role === ReviewRole.CLIENT ? helperPostApplication.helperPosts.helper.id : helperPostApplication.client.id,
+      role,
       helperApplicationId,
     })
   }
