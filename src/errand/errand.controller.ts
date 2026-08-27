@@ -45,7 +45,7 @@ export class ErrandController {
   @Get("my")
   async findMyErrands(@GetUser('userId') userId: string) {
     const errands = await this.errandService.findMyErrands(userId);
-    
+
     return errands
   }
 

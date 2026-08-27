@@ -28,7 +28,7 @@ export class HelperPostController {
         return this.helperPostService.findAll();
     }
 
-   // 내가 올린 헬퍼게시글
+    // 내가 올린 헬퍼게시글
     @UseGuards(AuthGuard('jwt'))
     @Get('my')
     async findMyApplications(

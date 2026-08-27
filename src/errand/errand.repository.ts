@@ -122,11 +122,7 @@ export class ErrandRepository extends Repository<Errand> {
         return await this.findOne({
             where: { id },
             relations: { user: true },
-            select: {
-                user: {
-                    id: true,
-                }
-            }
+
         });
     }
 

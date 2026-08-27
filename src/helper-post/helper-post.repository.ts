@@ -83,7 +83,7 @@ export class HelperPostRepository extends Repository<HelperPost> {
 
     // 내가 등록한 헬퍼게시글 목록
     async findMyPosts(userId: string) {
-        const applications = await this.find({
+        const helperPosts = await this.find({
             where: {
                 helper: {
                     id: userId
@@ -91,11 +91,21 @@ export class HelperPostRepository extends Repository<HelperPost> {
             },
             relations: {
                 applications: {
-                    client:true
-                },
+                    client: true,
+                    reviews: true
+                }
             }
         });
-        return applications;
+
+        const aaaa = helperPosts.map((post) => ({
+            ...post,
+            applications: post.applications?.map((application) => ({
+                ...application,
+                hasWrittenReview: application.reviews.length > 0 ? true : false,
+            }))
+        }));
+        console.log('aaaa', aaaa[0].applications)
+        return aaaa;
     }
 
 }
