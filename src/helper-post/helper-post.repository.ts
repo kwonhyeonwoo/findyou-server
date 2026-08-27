@@ -94,6 +94,7 @@ export class HelperPostRepository extends Repository<HelperPost> {
                     client: true,
                     reviews: {
                         reviewer:true,
+                        reviewee:true
                     }
                 }
             },
@@ -107,7 +108,8 @@ export class HelperPostRepository extends Repository<HelperPost> {
                         rating:true,
                         tags:true,
                         content:true,
-                        reviewer:{id:true}
+                        reviewer:{id:true},
+                        reviewee:{id:true}
                     }
                 }
             }
