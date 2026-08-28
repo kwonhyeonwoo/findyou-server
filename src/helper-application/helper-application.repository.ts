@@ -35,15 +35,15 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
                 helperPosts: {
                     helper: true,
                 },
-                client:true
+                client: true
             }
         });
         return application;
     };
 
     // 헬퍼신청 내역만
-    async findOneApplication(id:string){
-        const application = await this.findOne({where:{id}});
+    async findOneApplication(id: string) {
+        const application = await this.findOne({ where: { id } });
         return application;
     }
 
@@ -97,7 +97,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
     }
 
     // 수락
-    async accepted(id:string){
+    async accepted(id: string) {
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect()
         await queryRunner.startTransaction()
@@ -113,9 +113,9 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
 
             await queryRunner.manager.update(HelperApplication, {
                 id,
-                status:CustomStatus.PENDING
-            },{
-                status:CustomStatus.ACCEPTED
+                status: CustomStatus.PENDING
+            }, {
+                status: CustomStatus.ACCEPTED
             });
 
             await queryRunner.manager.update(HelperApplication, {
@@ -138,7 +138,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
     }
 
     // 거절
-    async rejected(id:string,userId:string){
+    async rejected(id: string, userId: string) {
         const application = await this.findOne({
             where: { id },
             relations: {
@@ -158,31 +158,31 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         })
     }
 
-    async removeApplication(id:string){
+    async removeApplication(id: string) {
         const application = await this.delete(id);
         return application;
     }
 
     // 완료요청 
-    async completedRequest(id:string){
-        return await this.update(id,{
-            status:CustomStatus.COMPLETED_REQUEST
+    async completedRequest(id: string) {
+        return await this.update(id, {
+            status: CustomStatus.COMPLETED_REQUEST
         })
     }
 
-    async completed(id:string){
-        await this.dataSource.transaction(async(manager)=>{
-            const application = await manager.findOne(HelperApplication,{
-                where:{id},
-                relations:{helperPosts:true},
+    async completed(id: string) {
+        await this.dataSource.transaction(async (manager) => {
+            const application = await manager.findOne(HelperApplication, {
+                where: { id },
+                relations: { helperPosts: true },
             })
             // const application = await manager.update(HelperApplication,id,{
             //     status:CustomStatus.COMPLETED
             // });
-            await manager.update(HelperApplication,id,{status:CustomStatus.COMPLETED})
-            console.log('여기가?',application)
-            await manager.update(HelperPost,application.helperPosts.id,{
-                status:CustomStatus.COMPLETED
+            await manager.update(HelperApplication, id, { status: CustomStatus.COMPLETED })
+            console.log('여기가?', application)
+            await manager.update(HelperPost, application.helperPosts.id, {
+                status: CustomStatus.COMPLETED
             });
 
         })

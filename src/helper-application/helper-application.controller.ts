@@ -16,7 +16,7 @@ export class HelperApplicationController {
   ) {
     return this.helperApplicationService.findHistory(userId);
   }
- @Post(":id")
+  @Post(":id")
   create(
     @Body() body: CreateHelperApplicationDto,
     @GetUser('userId') userId: string,
@@ -58,33 +58,33 @@ export class HelperApplicationController {
     }
   }
 
-   // 완료요청
+  // 완료요청
   @Post('/:id/completed-request')
   async completedRequest(
-    @Param('id') id:string,
-    @GetUser('userId') userId:string
-  ){
-    await this.helperApplicationService.completedRequest(id,userId);
+    @Param('id') id: string,
+    @GetUser('userId') userId: string
+  ) {
+    await this.helperApplicationService.completedRequest(id, userId);
     return {
-      success:true,
-      message:"완료 요청을 하였습니다."
+      success: true,
+      message: "완료 요청을 하였습니다."
     }
   }
 
   // 완료
   @Patch("/:id/completed")
-  async completed(@Param('id') id:string,@GetUser('userId') userId:string){
-    await this.helperApplicationService.completed(id,userId);
-    return{
-      success:true,
-      message:"승인 요청을 완료 하였습니다."
+  async completed(@Param('id') id: string, @GetUser('userId') userId: string) {
+    await this.helperApplicationService.completed(id, userId);
+    return {
+      success: true,
+      message: "승인 요청을 완료 하였습니다."
     }
   }
 
   // 지원내역 삭제
   @Delete(':id')
-  async remove(@Param('id') id: string,@GetUser('userId') userId:string) {
-    await this.helperApplicationService.remove(id,userId);
+  async remove(@Param('id') id: string, @GetUser('userId') userId: string) {
+    await this.helperApplicationService.remove(id, userId);
 
     return {
       success: true,
