@@ -68,8 +68,10 @@ export class Errand {
     helper: User;
 
     @OneToMany(() => ErrandApplication, (application) => application.errand)
-    applications: ErrandApplication;
+    applications: ErrandApplication[];
 
     // loadRelationCountAndMap으로 매핑되는 값 (컬럼 아님)
     applicationsCount?: number;
+
+
 }

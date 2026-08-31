@@ -30,7 +30,8 @@ export class ErrandService {
   }
 
   async findMyErrands(userId: string) {
-    return await this.errandRepository.findMyErrands(userId);
+    const errands =  await this.errandRepository.findMyErrands(userId);
+    return errands;
   }
 
   async findErrandLists({

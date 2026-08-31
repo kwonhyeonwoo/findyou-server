@@ -150,11 +150,14 @@ export class ErrandRepository extends Repository<Errand> {
     }
 
     async findMyErrands(userId: string) {
-        return this.find({
+        const errands = await this.find({
             where: { user: { id: userId } },
             relations: {
                 applications: {
                     helper: true,
+                    reviews:{
+                        reviewer:true,
+                    },
                 },
             },
             select: {
@@ -162,6 +165,7 @@ export class ErrandRepository extends Repository<Errand> {
                     id: true,
                     message: true,
                     status: true,
+                    reviews:true,
                     helper: {
                         id: true,
                         nickName: true,
@@ -173,5 +177,14 @@ export class ErrandRepository extends Repository<Errand> {
                 createdAt: 'DESC',
             },
         });
+        return errands.map((errand) => ({
+            ...errand,
+            applications: errand.applications.map((application) => ({
+                ...application,
+                hasWrittenReview: application.reviews.some(
+                    (review) => review.reviewer.id === userId,
+                ),
+            })),
+        }));
     }
 }
