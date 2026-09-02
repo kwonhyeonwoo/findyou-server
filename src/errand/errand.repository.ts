@@ -32,25 +32,25 @@ export class ErrandRepository extends Repository<Errand> {
                 },
                 helper:true
             },
-            select: {
-                applications: {
-                    id: true,
 
-                },
-            }
         })
         if (!errand) {
             return null;
         }
+<<<<<<< HEAD
         console.log('sdfsf',errand)
         const { applications, ...rest } = errand;
         console.log('tq',{
             ...rest,
             applications: applications[0] ?? null,
         })
+=======
+        const application = errand.applications.find(app => app.status === CustomStatus.ACCEPTED);
+        const { ...rest } = errand;
+>>>>>>> 54107f9 (fix:myerrands-> select 수정)
         return {
             ...rest,
-            applications: applications[0] ?? null,
+            application
         };
     }
 
@@ -161,8 +161,8 @@ export class ErrandRepository extends Repository<Errand> {
             relations: {
                 applications: {
                     helper: true,
-                    reviews:{
-                        reviewer:true,
+                    reviews: {
+                        reviewer: true,
                     },
                 },
             },
@@ -171,7 +171,7 @@ export class ErrandRepository extends Repository<Errand> {
                     id: true,
                     message: true,
                     status: true,
-                    reviews:true,
+                    reviews: true,
                     helper: {
                         id: true,
                         nickName: true,
