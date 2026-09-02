@@ -14,7 +14,7 @@ export class HelperApplication {
     @JoinColumn({ name: "clientId" })
     client: User
 
-    //헬퍼
+    //헬퍼 게시글
     @ManyToOne(() => HelperPost, (helper) => helper.applications)
     @JoinColumn({ name: "helperPostsId" })
     helperPosts: HelperPost;

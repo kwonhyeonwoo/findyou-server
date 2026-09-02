@@ -9,9 +9,11 @@ export class ErrandApplication {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    // 헬퍼
     @ManyToOne(() => User, (user) => user.applications, { onDelete: 'CASCADE' })
     helper: User
 
+    // 심부름게시글
     @ManyToOne(() => Errand, (errand) => errand.applications, { onDelete: 'CASCADE' })
     errand: Errand
 

@@ -29,7 +29,8 @@ export class ErrandRepository extends Repository<Errand> {
             relations: {
                 applications: {
                     helper: true,
-                }
+                },
+                helper:true
             },
             select: {
                 applications: {
@@ -41,7 +42,12 @@ export class ErrandRepository extends Repository<Errand> {
         if (!errand) {
             return null;
         }
+        console.log('sdfsf',errand)
         const { applications, ...rest } = errand;
+        console.log('tq',{
+            ...rest,
+            applications: applications[0] ?? null,
+        })
         return {
             ...rest,
             applications: applications[0] ?? null,
