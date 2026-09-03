@@ -5,6 +5,7 @@ import { ErrandApplicationRepository } from './errand-application.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ErrandApplication } from './entities/errand-application.entity';
 import { ErrandModule } from 'src/errand/errand.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ErrandModule } from 'src/errand/errand.module';
       ErrandApplication,
     ]),
     ErrandModule,
+    UserModule,
   ],
   controllers: [ErrandApplicationController],
   providers: [ErrandApplicationService, ErrandApplicationRepository],

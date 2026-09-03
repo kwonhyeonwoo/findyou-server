@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { DataSource, Repository } from "typeorm";
 import { User } from "./entities/user.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -43,4 +43,11 @@ export class UserRepository extends Repository<User> {
         });
     }
 
+
+    async updateOpenLink({userId, openLink}:{userId: string, openLink: string}){
+        if(userId) throw new NotFoundException("사용자를 찾을 수 없습니다.")
+        await this.update(userId,{
+            openLink,
+        })
+    }
 }

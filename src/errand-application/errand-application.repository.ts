@@ -10,21 +10,38 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
         super(ErrandApplication, dataSource.createEntityManager())
     }
 
-    async createApplication(helperId: string, errandId: string, message: string) {
+    async createApplication({
+        helperId,
+        errandId,
+        message,
+        openLink,
+    }: {
+        helperId: string,
+        errandId: string,
+        message: string,
+        openLink:string
+    }) {
         const newApplication = this.create({
             helper: { id: helperId },
             errand: { id: errandId },
+            openLink,
             message,
         });
 
         return this.save(newApplication);
     }
 
-    async findErrandWidthUser(userId: string) {
+    async findErrandWidthUser(applicationId: string, userId: string) {
         const applicationUser = await this.findOne({
             where: {
-                errand: { user: { id: userId } }
-            }
+                id: applicationId,
+                errand: { user: { id: userId } },
+            },
+            relations:{
+                    errand:{
+                        user:true
+                    }
+                }
         })
         return applicationUser;
     }
@@ -50,53 +67,61 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
         })
     }
 
-    async updateStatus(id: string, userId: string) {
-        // 1. 트랜잭션을 제어하기 위한 QueryRunner 생성
-        const queryRunner = this.dataSource.createQueryRunner();
-
-        // 2. DB 연결 및 트랜잭션 시작
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
-        try {
-            const application = await queryRunner.manager.findOne(ErrandApplication, {
-                where: { id },
-                relations: { errand: true, helper: true, },
-            })
-            if (!application) throw new NotFoundException("해당 지원 내역을 찾을 수 없습니다.")
-
-            const errand = application.errand;
-            if (!errand) throw new NotFoundException('심부름이 없습니다.')
-            if (errand.status === CustomStatus.IN_PROGRESS) {
-                throw new BadRequestException('이미 진행중인 심부름 입니다.')
-            }
-            await queryRunner.manager.update(ErrandApplication,
-                {
-                    id,
-                    status: CustomStatus.PENDING,
-                }, {
-                status: CustomStatus.ACCEPTED,
+    // 지원자 수락
+    async accepted(id: string, userId: string) {
+        return this.dataSource.transaction(async manager=>{
+            const application = await manager.findOne(ErrandApplication,{
+                where:{id},
+                relations:{errand:{user:true},helper:true}
             })
 
-            // 나머지 내역들은 다 거절
-            await queryRunner.manager.update(ErrandApplication, {
-                errand: { id: errand.id },
-                status: CustomStatus.PENDING
-            }, {
-                status: CustomStatus.REJECTED,
+            if(!application) throw new NotFoundException("지원 내역을 찾을 수 없습니다.");
+            const errand = await manager.findOne(Errand,{
+                where:{id:application.errand.id},
+                relations:{user:true}
+            });
+            if(!errand) throw new NotFoundException("심부름을 찾을 수 없습니다.");
+            if(errand.user.id !== userId) throw new ForbiddenException("권한이 없습니다.");
+            await manager.update(ErrandApplication,id,{
+                status:CustomStatus.ACCEPTED,
             })
-
-            await queryRunner.manager.update(Errand, errand.id, {
-                helper: { id: application.helper.id },
-                status: CustomStatus.IN_PROGRESS,
+            await manager.update(Errand,errand.id,{
+                status:CustomStatus.IN_PROGRESS,
+                helper:{id:application.helper.id}
             })
-            await queryRunner.commitTransaction()
-        } catch (error) {
-            await queryRunner.rollbackTransaction()
-            throw error
-
-        } finally {
-            await queryRunner.release()
-        }
+        });
     }
 
+
+    // 완료요청
+    async completedRequest({errandId, appliId}:{
+        errandId:string;
+        appliId:string;
+    }){
+        return await this.dataSource.transaction(async manager=>{
+            const application = await manager.findOne(ErrandApplication,{
+                where:{id:appliId},
+                relations:{errand:{user:true}}
+            });
+            if(!application) throw new NotFoundException("지원 내역을 찾을 수 없습니다.")
+            const errand = await manager.findOne(Errand,{
+                where:{id:errandId},
+                relations:{user:true}
+            })
+            if(!errand) throw new NotFoundException("심부름을 찾을 수 없습니다.")
+            if(errand.user.id !== application.errand.user.id) throw new ForbiddenException("권한이 없습니다.")
+            await manager.update(ErrandApplication,appliId,{
+                status:CustomStatus.COMPLETED,
+            })
+            await manager.update(Errand,errandId,{
+                status:CustomStatus.COMPLETED_REQUEST,
+            })
+            await manager.update(ErrandApplication,{
+                errand:{id:errandId},
+                status:CustomStatus.ACCEPTED,
+            },{
+                status:CustomStatus.COMPLETED_REQUEST
+            })
+        })
+    }
 }

@@ -123,6 +123,7 @@ export class ErrandRepository extends Repository<Errand> {
         });
     }
 
+
     // 심부름완료
     async completeErrand(id: string) {
         return await this.dataSource.transaction(

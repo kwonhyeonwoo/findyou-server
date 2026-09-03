@@ -17,7 +17,11 @@ export class ErrandApplicationController {
     @GetUser('userId') userId: string,
     @Body() body: CreateErrandApplicationDto,
   ) {
-    await this.errandApplicationService.create(userId, id, body.message);
+    await this.errandApplicationService.create({
+      body,
+      helperId: userId,
+      errandId: id,
+    });
     return {
       success: true,
       message: "심부름을 신청하였습니다."
@@ -35,11 +39,11 @@ export class ErrandApplicationController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post(':id/status')
-  async updateStatus(
+  async accepted (
     @Param('id') id: string,
     @GetUser('userId') userId: string,
   ) {
-    await this.errandApplicationService.updateStatus(id, userId);
+    await this.errandApplicationService.accepted(id, userId);
     return {
       success: true,
       message: "지원자를 수락하였습니다."

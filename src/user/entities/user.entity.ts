@@ -58,6 +58,9 @@ export class User {
     @Column({ nullable: true })
     refreshToken: string | null;
 
+    @Column({nullable:true})
+    openLink:string
+
     @OneToMany(() => Errand, (errand) => errand.user)
     errands: Errand[];
 

@@ -23,6 +23,9 @@ export class ErrandApplication {
     @Column({ length: 100, nullable: true })
     message: string;
 
+    @Column()
+    openLink:string;
+
     @OneToMany(() => Review, (review) => review.errandApplication)
     reviews: Review[];
 
