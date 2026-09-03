@@ -10,7 +10,6 @@ import { GetUser } from '../auth/common/user.decorator';
 export class ErrandApplicationController {
   constructor(private readonly errandApplicationService: ErrandApplicationService) { }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post(":id")
   async create(
     @Param('id') id: string,
@@ -28,18 +27,15 @@ export class ErrandApplicationController {
     }
   }
 
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('my')
-  async getMyApplications(@GetUser('userId') userId: string) {
-    console.log('userId', userId)
-    return await this.errandApplicationService.getMyApplications(userId);
+  @Get()
+  async getApplications(@GetUser('userId') userId: string) {
+    return await this.errandApplicationService.getApplications(userId);
   }
 
 
   @UseGuards(AuthGuard('jwt'))
   @Post(':id/status')
-  async accepted (
+  async accepted(
     @Param('id') id: string,
     @GetUser('userId') userId: string,
   ) {

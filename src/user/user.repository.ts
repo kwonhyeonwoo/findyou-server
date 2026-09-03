@@ -9,7 +9,7 @@ export class UserRepository extends Repository<User> {
         // 부모인 Repository 클래스에 엔티티와 매니저를 넘겨줍니다.
         super(User, dataSource.createEntityManager());
     }
-    
+
     async createUser(createUserDto: CreateUserDto): Promise<User> {
         const newUser = this.create(createUserDto);
         return await this.save(newUser);
@@ -28,15 +28,16 @@ export class UserRepository extends Repository<User> {
     }
 
     async findByUser(id: string) {
-        return this.findOne({ 
+        return this.findOne({
             where: { id },
-            relations:{
-                applications:true,
-                receivedReviews:true,
-        } });
+            relations: {
+                applications: true,
+                receivedReviews: true,
+            }
+        });
     }
 
-    
+
     async updateRefreshToken(userId: string, hashedRefreshToken: string | null): Promise<void> {
         await this.update(userId, {
             refreshToken: hashedRefreshToken,
@@ -44,9 +45,9 @@ export class UserRepository extends Repository<User> {
     }
 
 
-    async updateOpenLink({userId, openLink}:{userId: string, openLink: string}){
-        if(userId) throw new NotFoundException("사용자를 찾을 수 없습니다.")
-        await this.update(userId,{
+    async updateOpenLink({ userId, openLink }: { userId: string, openLink: string }) {
+        if (!userId) throw new NotFoundException("사용자를 찾을 수 없습니다.")
+        await this.update(userId, {
             openLink,
         })
     }

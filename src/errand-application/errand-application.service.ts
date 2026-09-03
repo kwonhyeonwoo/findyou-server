@@ -10,24 +10,24 @@ export class ErrandApplicationService {
   constructor(
     private readonly applicationRepository: ErrandApplicationRepository,
     private readonly errandRepository: ErrandRepository,
-    private readonly userRepository:UserRepository
+    private readonly userRepository: UserRepository
   ) { }
 
-  
+
   async create({
     body,
     helperId,
     errandId,
-  }:{body:CreateErrandApplicationDto,helperId:string,errandId:string}) {
-    if(!body.message) throw new NotFoundException("메시지를 입력해주세요.");
-    if(!body.openLink) throw new NotFoundException("오픈링크를 입력해주세요.");
+  }: { body: CreateErrandApplicationDto, helperId: string, errandId: string }) {
+    if (!body.message) throw new NotFoundException("메시지를 입력해주세요.");
+    if (!body.openLink) throw new NotFoundException("오픈링크를 입력해주세요.");
     const errand = await this.errandRepository.findOneErrand(errandId);
     if (errand.user.id === helperId) throw new ConflictException('본인의 심부름에는 지원할 수 없습니다.')
     const isExist = await this.applicationRepository.checkExistApplication(helperId, errandId);
-    if(body.saveAsDefault){
-      return await this.userRepository.updateOpenLink({userId:helperId, openLink:body.openLink})
-    }
     if (isExist) throw new ConflictException('이미 지원한 심부름 입니다.')
+    if (body.saveAsDefault) {
+      await this.userRepository.updateOpenLink({ userId: helperId, openLink: body.openLink })
+    }
     return await this.applicationRepository.createApplication({
       helperId,
       errandId,
@@ -37,9 +37,9 @@ export class ErrandApplicationService {
   }
 
 
-  async getMyApplications(helperId: string) {
-    if (!helperId) throw new NotFoundException("사용자를 찾을 수 없습니다.")
-    return await this.applicationRepository.myApplications(helperId);
+  async getApplications(userId: string) {
+    if (!userId) throw new NotFoundException("사용자를 찾을 수 없습니다.")
+    return await this.applicationRepository.getApplications(userId);
   }
 
 
@@ -59,12 +59,12 @@ export class ErrandApplicationService {
   async completedRequest({
     errandId,
     appliId,
-  }:{errandId:string, appliId:string}){
+  }: { errandId: string, appliId: string }) {
     const errand = await this.errandRepository.findErrandWithApplications(errandId);
-    if(!errand) throw new NotFoundException("심부름을 찾을 수 없습니다.");
-    if(errand.status !== "ACCEPTED") throw new ConflictException("심부름이 진행중이 아닙니다.");
-    if(errand.applications.id !== appliId) throw new ConflictException("지원자와 심부름이 일치하지 않습니다.");
-    return await this.applicationRepository.completedRequest({errandId, appliId});
+    if (!errand) throw new NotFoundException("심부름을 찾을 수 없습니다.");
+    if (errand.status !== "ACCEPTED") throw new ConflictException("심부름이 진행중이 아닙니다.");
+    if (errand.applications.id !== appliId) throw new ConflictException("지원자와 심부름이 일치하지 않습니다.");
+    return await this.applicationRepository.completedRequest({ errandId, appliId });
   }
 
   findOne(id: number) {
