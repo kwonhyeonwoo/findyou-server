@@ -60,6 +60,20 @@ export class ErrandController {
     return this.errandService.findErrandLists({ status, limit, keyword, category });
   }
 
+
+  // 심부름 완료 요청
+  @UseGuards(AuthGuard('jwt'))
+  @Patch(":id")
+  async completeRequest(
+    @Param("id") id:string,
+    @GetUser('userId') userId:string){
+      await this.errandService.completeRequest(id,userId);
+      return {
+        success:true,
+        message:"완료 요청을 보냈습니다."
+      }
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Get(':id/progress')
   findErrandProgress(@Param('id') id: string) {

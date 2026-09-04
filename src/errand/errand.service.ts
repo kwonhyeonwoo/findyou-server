@@ -55,11 +55,25 @@ export class ErrandService {
 
   async findErrandDetail(id: string) {
     if (!id) throw new NotFoundException("심부름이 없습니다.")
-    return await this.errandRepository.findOneErrand(id);
+    return await this.errandRepository.findOneWithUser(id);
+  }
+
+  // 심부름 완료 요청
+  async completeRequest(id:string, userId:string){
+    if(!id) throw new NotFoundException('존재하지 않는 심부름 입니다.');
+    if(!userId) throw new NotFoundException('회원이 존재하지 않습니다.');
+    const errand = await this.errandRepository.findOneWithUser(id);
+    const isRequester = errand.user.id === userId;
+    const isHelper = errand.helper.id === userId;
+    if(!isRequester && !isHelper) throw new ForbiddenException('권한이 없습니다.');
+    if(errand.status !== CustomStatus.IN_PROGRESS){
+      throw new BadRequestException('진행중인 심부름만 요청이 가능 합니다.')
+    }
+    return await this.errandRepository.completeRequest(id,userId)
   }
 
   async completeErrand(id: string, userId: string) {
-    const errand = await this.errandRepository.findOneErrand(id);
+    const errand = await this.errandRepository.findOneWithUser(id);
     if (!errand) {
       throw new NotFoundException('심부름을 찾을 수 없습니다.');
     }

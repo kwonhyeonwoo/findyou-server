@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Errand } from "../../errand/entities/errand.entity";
 import { ErrandApplication } from "../../errand-application/entities/errand-application.entity";
 import { Review } from "src/review/entities/review.entity";
@@ -87,4 +87,5 @@ export class User {
     // 헬퍼신청서 내역들
     @OneToMany(() => HelperApplication, (helperApplications) => helperApplications.client)
     helperApplications: HelperApplication[]
+
 }

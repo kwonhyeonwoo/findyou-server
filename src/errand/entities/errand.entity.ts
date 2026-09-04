@@ -70,6 +70,9 @@ export class Errand {
     @OneToMany(() => ErrandApplication, (application) => application.errand)
     applications: ErrandApplication[];
 
+    @Column({ type: 'uuid', nullable: true })
+    completionRequestedBy: string;
+
     // loadRelationCountAndMap으로 매핑되는 값 (컬럼 아님)
     applicationsCount?: number;
 

@@ -21,7 +21,7 @@ export class ErrandApplicationService {
   }: { body: CreateErrandApplicationDto, helperId: string, errandId: string }) {
     if (!body.message) throw new NotFoundException("메시지를 입력해주세요.");
     if (!body.openLink) throw new NotFoundException("오픈링크를 입력해주세요.");
-    const errand = await this.errandRepository.findOneErrand(errandId);
+    const errand = await this.errandRepository.findOneWithUser(errandId);
     if (errand.user.id === helperId) throw new ConflictException('본인의 심부름에는 지원할 수 없습니다.')
     const isExist = await this.applicationRepository.checkExistApplication(helperId, errandId);
     if (isExist) throw new ConflictException('이미 지원한 심부름 입니다.')
