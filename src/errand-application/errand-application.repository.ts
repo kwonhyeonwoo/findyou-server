@@ -31,6 +31,10 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
         return this.save(newApplication);
     }
 
+    async findOneApplication(id:string){
+        return await this.findOne({where:{id}});
+    }
+
     async findErrandWidthUser(applicationId: string, userId: string) {
         const applicationUser = await this.findOne({
             where: {
@@ -123,5 +127,10 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
                 status: CustomStatus.COMPLETED_REQUEST
             })
         })
+    }
+
+    async removeApplication(id:string){
+        const application = await this.findOneApplication(id);
+        await this.remove(application);
     }
 }

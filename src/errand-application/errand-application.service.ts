@@ -75,7 +75,8 @@ export class ErrandApplicationService {
     return `This action updates a #${id} errandApplication`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} errandApplication`;
+  async removeApplication(id: string) {
+    if(!id) throw new NotFoundException('삭제 할 내역이 없습니다.')
+      return await this.applicationRepository.removeApplication(id)
   }
 }

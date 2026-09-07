@@ -58,7 +58,11 @@ export class ErrandApplicationController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.errandApplicationService.remove(+id);
+  async removeApplication(@Param('id') id: string) {
+    await this.errandApplicationService.removeApplication(id);
+    return{
+      success:true,
+      message:"지원 취소를 하였습니다."
+    }
   }
 }

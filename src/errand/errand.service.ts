@@ -77,11 +77,11 @@ export class ErrandService {
     if (!errand) {
       throw new NotFoundException('심부름을 찾을 수 없습니다.');
     }
-    if (errand.user.id !== userId) {
+    if (!userId) {
       throw new ForbiddenException('심부름 완료 권한이 없습니다.');
     }
-    if (errand.status !== CustomStatus.IN_PROGRESS) {
-      throw new BadRequestException('진행중인 심부름만 완료할 수 있습니다.');
+    if (errand.status !== CustomStatus.COMPLETED_REQUEST) {
+      throw new BadRequestException('완료대기중인 심부름이 아닙니다.');
     }
     return await this.errandRepository.completeErrand(id);
   }

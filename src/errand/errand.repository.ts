@@ -182,14 +182,28 @@ export class ErrandRepository extends Repository<Errand> {
                 createdAt: 'DESC',
             },
         });
-        return errands.map((errand) => ({
-            ...errand,
-            applications: errand.applications.map((application) => ({
+        return errands.map((errand) => {
+            const applications = errand.applications.map((application) => ({
                 ...application,
                 hasWrittenReview: application.reviews.some(
                     (review) => review.reviewer.id === userId,
                 ),
-            })),
-        }));
+            }));
+
+            if (errand.status === CustomStatus.COMPLETED) {
+                const { applications: _applications, ...rest } = errand;
+                return {
+                    ...rest,
+                    application: applications.find(
+                        (application) => application.status === CustomStatus.COMPLETED,
+                    ),
+                };
+            }
+
+            return {
+                ...errand,
+                applications,
+            };
+        });
     }
 }
