@@ -1,15 +1,14 @@
-import { IsNotEmpty, IsString,IsBoolean } from "class-validator";
+import { IsNotEmpty, IsString, IsBoolean } from "class-validator";
 
 export class CreateErrandApplicationDto {
     @IsString()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: "메시지를 입력해주세요." })
     message: string;
 
     @IsString()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: "오픈링크를 입력해주세요." })
     openLink: string;
 
     @IsBoolean()
-    @IsNotEmpty()
     saveAsDefault: boolean;
 }

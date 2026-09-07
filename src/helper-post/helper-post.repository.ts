@@ -93,23 +93,23 @@ export class HelperPostRepository extends Repository<HelperPost> {
                 applications: {
                     client: true,
                     reviews: {
-                        reviewer:true,
-                        reviewee:true
+                        reviewer: true,
+                        reviewee: true
                     }
                 }
             },
-            select:{
-                applications:{
+            select: {
+                applications: {
                     id: true,
                     status: true,
-                    client:{id:true},
-                    reviews:{
-                        id:true,
-                        rating:true,
-                        tags:true,
-                        content:true,
-                        reviewer:{id:true},
-                        reviewee:{id:true}
+                    client: { id: true },
+                    reviews: {
+                        id: true,
+                        rating: true,
+                        tags: true,
+                        content: true,
+                        reviewer: { id: true },
+                        reviewee: { id: true }
                     }
                 }
             }
@@ -118,8 +118,8 @@ export class HelperPostRepository extends Repository<HelperPost> {
             ...post,
             applications: post.applications?.map((application) => ({
                 ...application,
-                hasWrittenReview: application.reviews.some(review=>review.reviewer.id === userId),
-                review:application.reviews.find(review=>review.reviewer.id === application.client.id)
+                hasWrittenReview: application.reviews.some(review => review.reviewer.id === userId),
+                review: application.reviews.find(review => review.reviewer.id === application.client.id)
             }))
         }));
         return helperPost;

@@ -170,15 +170,13 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         })
     }
 
+    // 완료
     async completed(id: string) {
         await this.dataSource.transaction(async (manager) => {
             const application = await manager.findOne(HelperApplication, {
                 where: { id },
                 relations: { helperPosts: true },
             })
-            // const application = await manager.update(HelperApplication,id,{
-            //     status:CustomStatus.COMPLETED
-            // });
             await manager.update(HelperApplication, id, { status: CustomStatus.COMPLETED })
             console.log('여기가?', application)
             await manager.update(HelperPost, application.helperPosts.id, {
@@ -186,7 +184,5 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
             });
 
         })
-        // const application = await this.update(id,{status:CustomStatus.COMPLETED});
-        // return application;
     }
 }

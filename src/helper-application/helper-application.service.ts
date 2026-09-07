@@ -49,8 +49,6 @@ export class HelperApplicationService {
 
   // 완료 요청 (헬퍼가 요청)
   async completedRequest(appliId: string, userId: string) {
-    if (!appliId) throw new BadRequestException('신청 ID가 없습니다.');
-
     const application = await this.applicationRepo.findOneWithHelperPost(appliId);
     if (!application) throw new NotFoundException('내역을 찾을 수 없습니다.');
 

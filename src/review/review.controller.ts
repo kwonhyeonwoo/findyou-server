@@ -17,10 +17,13 @@ export class ReviewController {
     @GetUser('userId') userId: string,
   ) {
 
-    await this.reviewService.createErrandReview(body, userId, errandApplicationId);
+    const application = await this.reviewService.createErrandReview(body, userId, errandApplicationId);
     return {
       success: true,
-      message: '리뷰를 작성하였습니다.'
+      message: '리뷰를 작성하였습니다.',
+      data: {
+
+      }
     }
   };
 

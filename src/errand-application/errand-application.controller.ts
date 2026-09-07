@@ -32,9 +32,8 @@ export class ErrandApplicationController {
     return await this.errandApplicationService.getApplications(userId);
   }
 
-
-  @UseGuards(AuthGuard('jwt'))
-  @Post(':id/status')
+  // 지원자 수락
+  @Post(':id/accepte')
   async accepted(
     @Param('id') id: string,
     @GetUser('userId') userId: string,
@@ -44,6 +43,15 @@ export class ErrandApplicationController {
       success: true,
       message: "지원자를 수락하였습니다."
     }
+  }
+
+  // 심부름 완료 요청
+  @Patch(":id/complete-request")
+  async completeRequest(
+    @Param("id") id: string,
+    @GetUser('userId') userId: string
+  ) {
+    await this.errandApplicationService.completedRequest({ appliId: id, userId })
   }
 
 
@@ -60,9 +68,9 @@ export class ErrandApplicationController {
   @Delete(':id')
   async removeApplication(@Param('id') id: string) {
     await this.errandApplicationService.removeApplication(id);
-    return{
-      success:true,
-      message:"지원 취소를 하였습니다."
+    return {
+      success: true,
+      message: "지원 취소를 하였습니다."
     }
   }
 }

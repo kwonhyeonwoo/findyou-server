@@ -31,9 +31,6 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
         return this.save(newApplication);
     }
 
-    async findOneApplication(id:string){
-        return await this.findOne({where:{id}});
-    }
 
     async findErrandWidthUser(applicationId: string, userId: string) {
         const applicationUser = await this.findOne({
@@ -50,12 +47,16 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
         return applicationUser;
     }
 
-    async checkExistApplication(helperId: string, errandId: string) {
+    async findById(id: string) {
+        return await this.findOne({ where: { id } })
+    }
+
+    async findByErrandAndHelper(helperId: string, errandId: string) {
         return await this.findOne({
             where: {
-                helper: { id: helperId },
                 errand: { id: errandId },
-            }
+                helper: { id: helperId },
+            },
         })
     }
 
@@ -129,8 +130,8 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
         })
     }
 
-    async removeApplication(id:string){
-        const application = await this.findOneApplication(id);
+    async removeApplication(id: string) {
+        const application = await this.findById(id);
         await this.remove(application);
     }
 }
