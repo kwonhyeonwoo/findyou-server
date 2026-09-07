@@ -118,16 +118,16 @@ export class ErrandRepository extends Repository<Errand> {
     async findOneWithUser(id: string) {
         return await this.findOne({
             where: { id },
-            relations: { user: true,helper:true },
+            relations: { user: true, helper: true },
 
         });
     }
 
     // 심부름 완료 요청
-    async completeRequest(id:string,userId:string){
-        await this.update(id,{
-            status:CustomStatus.COMPLETED_REQUEST,
-            completionRequestedBy:userId,
+    async completeRequest(id: string, userId: string) {
+        await this.update(id, {
+            status: CustomStatus.COMPLETED_REQUEST,
+            completionRequestedBy: userId,
         })
     }
 

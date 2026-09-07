@@ -71,7 +71,7 @@ export class Errand {
     applications: ErrandApplication[];
 
     @Column({ type: 'uuid', nullable: true })
-    completionRequestedBy: string;
+    completionRequestedBy: string; // 완료신청 했는 사람
 
     // loadRelationCountAndMap으로 매핑되는 값 (컬럼 아님)
     applicationsCount?: number;

@@ -65,13 +65,13 @@ export class ErrandController {
   @UseGuards(AuthGuard('jwt'))
   @Patch(":id")
   async completeRequest(
-    @Param("id") id:string,
-    @GetUser('userId') userId:string){
-      await this.errandService.completeRequest(id,userId);
-      return {
-        success:true,
-        message:"완료 요청을 보냈습니다."
-      }
+    @Param("id") id: string,
+    @GetUser('userId') userId: string) {
+    await this.errandService.completeRequest(id, userId);
+    return {
+      success: true,
+      message: "완료 요청을 보냈습니다."
+    }
   }
 
   @UseGuards(AuthGuard('jwt'))
