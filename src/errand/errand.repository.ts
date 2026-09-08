@@ -79,7 +79,6 @@ export class ErrandRepository extends Repository<Errand> {
     }
 
     async findErrandWithApplications(errandId: string) {
-        console.log('erid', errandId)
         const errand = await this.findOne({
             where: {
                 id: errandId,
@@ -119,7 +118,6 @@ export class ErrandRepository extends Repository<Errand> {
         return await this.findOne({
             where: { id },
             relations: { user: true, helper: true },
-
         });
     }
 

@@ -49,7 +49,15 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
 
     async findById(id: string) {
         return await this.findOne({ where: { id } })
+    };
+
+    async findByIdErrand(id:string){
+        return await this.findOne({
+            where:{id},
+            relations:{errand:true}
+        })
     }
+
 
     async findByErrandAndHelper(helperId: string, errandId: string) {
         return await this.findOne({
@@ -95,39 +103,6 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
                 helper: { id: application.helper.id }
             })
         });
-    }
-
-
-    // 완료요청
-    async completedRequest({ errandId, appliId }: {
-        errandId: string;
-        appliId: string;
-    }) {
-        return await this.dataSource.transaction(async manager => {
-            const application = await manager.findOne(ErrandApplication, {
-                where: { id: appliId },
-                relations: { errand: { user: true } }
-            });
-            if (!application) throw new NotFoundException("지원 내역을 찾을 수 없습니다.")
-            const errand = await manager.findOne(Errand, {
-                where: { id: errandId },
-                relations: { user: true }
-            })
-            if (!errand) throw new NotFoundException("심부름을 찾을 수 없습니다.")
-            if (errand.user.id !== application.errand.user.id) throw new ForbiddenException("권한이 없습니다.")
-            await manager.update(ErrandApplication, appliId, {
-                status: CustomStatus.COMPLETED,
-            })
-            await manager.update(Errand, errandId, {
-                status: CustomStatus.COMPLETED_REQUEST,
-            })
-            await manager.update(ErrandApplication, {
-                errand: { id: errandId },
-                status: CustomStatus.ACCEPTED,
-            }, {
-                status: CustomStatus.COMPLETED_REQUEST
-            })
-        })
     }
 
     async removeApplication(id: string) {

@@ -45,24 +45,11 @@ export class ErrandApplicationController {
     }
   }
 
-  // 심부름 완료 요청
-  @Patch(":id/complete-request")
-  async completeRequest(
-    @Param("id") id: string,
-    @GetUser('userId') userId: string
-  ) {
-    await this.errandApplicationService.completedRequest({ appliId: id, userId })
-  }
 
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.errandApplicationService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateErrandApplicationDto: UpdateErrandApplicationDto) {
-    return this.errandApplicationService.update(+id, updateErrandApplicationDto);
   }
 
   @Delete(':id')
