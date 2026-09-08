@@ -68,7 +68,7 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
         })
     }
 
-    async getApplications(helperId: string) {
+    async findByErrandWithHelper(helperId: string) {
         return await this.find({
             where: {
                 helper: { id: helperId }
