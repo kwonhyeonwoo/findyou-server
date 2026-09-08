@@ -45,7 +45,6 @@ export class ErrandController {
   @Get("my")
   async findMyErrands(@GetUser('userId') userId: string) {
     const errands = await this.errandService.findMyErrands(userId);
-
     return errands
   }
 
@@ -63,7 +62,7 @@ export class ErrandController {
 
   // 심부름 완료 요청
   @UseGuards(AuthGuard('jwt'))
-  @Patch(":id")
+  @Patch(":id/complete-request")
   async completeRequest(
     @Param("id") id: string,
     @GetUser('userId') userId: string) {

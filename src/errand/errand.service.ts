@@ -60,8 +60,6 @@ export class ErrandService {
 
   // 심부름 완료 요청
   async completeRequest(id: string, userId: string) {
-    if (!id) throw new NotFoundException('존재하지 않는 심부름 입니다.');
-    if (!userId) throw new NotFoundException('회원이 존재하지 않습니다.');
     const errand = await this.errandRepository.findOneWithUser(id);
     const isRequester = errand.user.id === userId;
     const isHelper = errand.helper.id === userId;

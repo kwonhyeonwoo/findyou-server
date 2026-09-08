@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateErrandApplicationDto } from './dto/update-errand-application.dto';
 import { ErrandApplicationRepository } from './errand-application.repository';
 import { ErrandRepository } from 'src/errand/errand.repository';
@@ -37,8 +37,7 @@ export class ErrandApplicationService {
 
 
   async getApplications(userId: string) {
-    if (!userId) throw new NotFoundException("사용자를 찾을 수 없습니다.")
-    return await this.applicationRepository.getApplications(userId);
+    return await this.applicationRepository.findByErrandWithHelper(userId);
   }
 
 
@@ -55,23 +54,11 @@ export class ErrandApplicationService {
     // return await this.applicationRepository.myApplications()
   }
 
-  async completedRequest({
-    appliId,
-    userId,
-  }: { appliId: string, userId: string }) {
-    // 완료요청
-    const application = await this.applicationRepository.findById(appliId);
-    if (application.status !== CustomStatus.ACCEPTED) throw new BadRequestException('수락 된 내역이 아닙니다.');
-
-  }
 
   findOne(id: number) {
     return `This action returns a #${id} errandApplication`;
   }
 
-  update(id: number, updateErrandApplicationDto: UpdateErrandApplicationDto) {
-    return `This action updates a #${id} errandApplication`;
-  }
 
   async removeApplication(id: string) {
     if (!id) throw new NotFoundException('삭제 할 내역이 없습니다.')
