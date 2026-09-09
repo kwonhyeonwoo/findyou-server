@@ -17,13 +17,17 @@ export class HelperApplicationController {
     return this.helperApplicationService.findHistory(userId);
   }
   @Post(":id")
-  create(
+  async create(
     @Body() body: CreateHelperApplicationDto,
     @GetUser('userId') userId: string,
     @Param('id') helperPostId: string
   ) {
     console.log('bodyt', body);
-    return this.helperApplicationService.create(body, userId, helperPostId);
+    await this.helperApplicationService.create(body, userId, helperPostId);
+    return {
+      success: true,
+      message: "헬퍼게시글에 지원을 하였습니다."
+    }
   }
   // 헬퍼 게시글id, 내역id,
   @Patch(":id")

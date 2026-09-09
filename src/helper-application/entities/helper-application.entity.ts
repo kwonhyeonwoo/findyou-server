@@ -26,6 +26,9 @@ export class HelperApplication {
     @Column({ length: 100, nullable: true })
     message: string;
 
+    @Column()
+    openLink: string;
+
     // 리뷰
     @OneToMany(() => Review, (reivew) => reivew.helperApplication)
     reviews: Review[]
