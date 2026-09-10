@@ -52,19 +52,8 @@ export class HelperPostRepository extends Repository<HelperPost> {
             order: { createdAt: "DESC" },
             take,
         });
-        const errands = await this.dataSource.getRepository(Errand).find({
-            where: {
-                helper: {
-                    id: helper.helper.id
-                },
-                status: CustomStatus.COMPLETED,
-            },
-            take,
-            order: { createdAt: "DESC" }
-        })
         return {
             ...helper,
-            errands,
             receivedReviews,
         }
 
@@ -102,7 +91,7 @@ export class HelperPostRepository extends Repository<HelperPost> {
                 applications: {
                     id: true,
                     status: true,
-                    client: { id: true },
+                    client: { id: true ,nickName:true},
                     reviews: {
                         id: true,
                         rating: true,

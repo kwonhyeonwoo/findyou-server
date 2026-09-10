@@ -21,6 +21,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         openLink: string;
         helperId: string
     }) {
+        
         const application = this.create({
             message,
             client: { id: clientId },
