@@ -5,12 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HelperApplication } from './entities/helper-application.entity';
 import { HelperApplicationRepository } from './helper-application.repository';
 import { HelperPostModule } from 'src/helper-post/helper-post.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      HelperApplication,
-    ]),
+    TypeOrmModule.forFeature([HelperApplication]),
+    UserModule,
     HelperPostModule,
   ],
   controllers: [HelperApplicationController],

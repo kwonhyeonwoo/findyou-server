@@ -12,17 +12,21 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
 
     async createApplication({
         message,
+        openLink,
         clientId,
         helperId,
     }: {
         message: string,
         clientId: string,
+        openLink: string;
         helperId: string
     }) {
+        
         const application = this.create({
             message,
             client: { id: clientId },
             helperPosts: { id: helperId },
+            openLink,
         });
         return await this.save(application);
     }
