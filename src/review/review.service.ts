@@ -31,7 +31,7 @@ export class ReviewService {
       throw new BadRequestException('이미 리뷰를 남겼습니다.')
     }
 
-    const role = isHelper ? ReviewRole.HELPER : ReviewRole.CLIENT;
+    const role = isHelper ? ReviewRole.CLIENT :  ReviewRole.HELPER ;
     await this.reviewRepository.createErrandReview({
       rating: body.rating,
       tags: body.tags,
