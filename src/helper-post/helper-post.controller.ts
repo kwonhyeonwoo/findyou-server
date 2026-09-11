@@ -46,6 +46,34 @@ export class HelperPostController {
         return await this.helperPostService.findOne(id, limit);
     }
 
+    // 완료요청
+    @UseGuards(AuthGuard('jwt'))
+    @Patch(':id/complete-request')
+    async completeRequest(
+        @Param('id') id: string,
+        @GetUser('userId') userId: string,
+    ) {
+        await this.helperPostService.completeRequest(id, userId);
+        return {
+            success: true,
+            message: "완료 요청을 하였습니다."
+        }
+    }
+
+    // 완료
+    @UseGuards(AuthGuard('jwt'))
+    @Patch(':id/complete')
+    async complete(
+        @Param('id') id: string,
+        @GetUser('userId') userId: string,
+    ) {
+        await this.helperPostService.completed(id, userId);
+        return {
+            success: true,
+            message: "완료를 확인 하였습니다."
+        }
+    }
+
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateHelperDto: UpdateHelperPostDto) {
         return this.helperPostService.update(+id, updateHelperDto);

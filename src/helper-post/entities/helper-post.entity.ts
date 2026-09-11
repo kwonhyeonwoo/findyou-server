@@ -62,4 +62,7 @@ export class HelperPost {
 
     @OneToMany(() => HelperApplication, (application) => application.helperPosts)
     applications: HelperApplication[];
+
+    @Column({ type: 'uuid', nullable: true })
+    completionRequestedBy: string; // 완료신청 한 사람
 }

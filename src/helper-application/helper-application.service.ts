@@ -1,9 +1,8 @@
-import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateHelperApplicationDto } from './dto/create-helper-application.dto';
 import { UpdateHelperApplicationDto } from './dto/update-helper-application.dto';
 import { HelperApplicationRepository } from './helper-application.repository';
 import { HelperPostRepository } from 'src/helper-post/helper-post.repository';
-import { CustomStatus } from 'src/interfaces/custom-status.enum';
 import { UserRepository } from 'src/user/user.repository';
 
 @Injectable()
@@ -37,8 +36,8 @@ export class HelperApplicationService {
   }
 
   // 받은내역
-  async findReceivedApplications(helperPostId: string) {
-    const applications = await this.applicationRepo.findReceivedApplications(helperPostId);
+  async findReceivedApplications(id: string) {
+    const applications = await this.applicationRepo.findReceivedApplications(id);
     return applications;
   }
 
@@ -50,45 +49,6 @@ export class HelperApplicationService {
 
   async accepted(id: string) {
     await this.applicationRepo.accepted(id);
-  }
-
-  // 완료 요청 (헬퍼가 요청)
-  async completedRequest(appliId: string, userId: string) {
-    const application = await this.applicationRepo.findOneWithHelperPost(appliId);
-    if (!application) throw new NotFoundException('내역을 찾을 수 없습니다.');
-
-    // 완료 요청은 헬퍼만 (신청에 연결된 게시글의 작성자)
-    const helperId = application.helperPosts.helper.id;
-    if (userId !== helperId) {
-      throw new ForbiddenException('완료 요청은 헬퍼만 할 수 있습니다.');
-    }
-
-    if (application.status === CustomStatus.COMPLETED_REQUEST) {
-      throw new BadRequestException('이미 완료 요청된 내역입니다.');
-    }
-
-    return this.applicationRepo.completedRequest(appliId);
-  }
-
-  // 완료 (의뢰인이 확인)
-  async completed(id: string, userId: string) {
-    const application = await this.applicationRepo.findOneWithHelperPost(id);
-
-    if (!application) throw new NotFoundException('내역을 찾을 수 없습니다.');
-
-    if (application.client.id !== userId) {
-      throw new ForbiddenException('의뢰인만 완료할 수 있습니다.');
-    }
-
-    if (application.status === CustomStatus.COMPLETED) {
-      throw new BadRequestException('이미 완료된 내역입니다.');
-    }
-
-    if (application.status !== CustomStatus.COMPLETED_REQUEST) {
-      throw new BadRequestException('헬퍼의 완료 요청 후에 확인할 수 있습니다.');
-    }
-
-    return await this.applicationRepo.completed(id);
   }
 
   // 거절

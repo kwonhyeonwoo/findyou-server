@@ -49,6 +49,7 @@ export class HelperApplicationController {
   async findReceivedApplications(
     @Param("id") id: string
   ) {
+    console.log('id',id )
     return await this.helperApplicationService.findReceivedApplications(id);
   }
 
@@ -59,29 +60,6 @@ export class HelperApplicationController {
     return {
       success: true,
       message: "지원을 거절 하였습니다."
-    }
-  }
-
-  // 완료요청
-  @Post('/:id/completed-request')
-  async completedRequest(
-    @Param('id') id: string,
-    @GetUser('userId') userId: string
-  ) {
-    await this.helperApplicationService.completedRequest(id, userId);
-    return {
-      success: true,
-      message: "완료 요청을 하였습니다."
-    }
-  }
-
-  // 완료
-  @Patch("/:id/completed")
-  async completed(@Param('id') id: string, @GetUser('userId') userId: string) {
-    await this.helperApplicationService.completed(id, userId);
-    return {
-      success: true,
-      message: "승인 요청을 완료 하였습니다."
     }
   }
 

@@ -86,11 +86,11 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         }))
     }
     // 받은내역
-    async findReceivedApplications(helperPostId: string) {
-        console.log('gggg', helperPostId)
+    async findReceivedApplications(id: string) {
+        console.log('gggg', id)
         const applications = await this.find({
             where: {
-                helperPosts: { id: helperPostId }
+                id
             },
             relations: {
                 helperPosts: true,
@@ -165,28 +165,5 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
     async removeApplication(id: string) {
         const application = await this.delete(id);
         return application;
-    }
-
-    // 완료요청 
-    async completedRequest(id: string) {
-        return await this.update(id, {
-            status: CustomStatus.COMPLETED_REQUEST
-        })
-    }
-
-    // 완료
-    async completed(id: string) {
-        await this.dataSource.transaction(async (manager) => {
-            const application = await manager.findOne(HelperApplication, {
-                where: { id },
-                relations: { helperPosts: true },
-            })
-            await manager.update(HelperApplication, id, { status: CustomStatus.COMPLETED })
-            console.log('여기가?', application)
-            await manager.update(HelperPost, application.helperPosts.id, {
-                status: CustomStatus.COMPLETED
-            });
-
-        })
     }
 }
