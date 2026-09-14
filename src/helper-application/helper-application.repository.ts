@@ -45,6 +45,24 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return application;
     };
 
+    async findOneByApplyId(id:string){
+        return await this.findOne({
+            where:{id},
+        })
+    };
+
+    async findOneByWithHelperPost(id:string){
+        const application =  await this.findOne({
+            where:{id},
+            relations:{helperPosts:true},
+        });
+        console.log('application',application);
+        return {
+            ...application,
+            helperPost:application.helperPosts
+        }
+    }
+
     // 헬퍼신청 내역만
     async findOneApplication(id: string) {
         const application = await this.findOne({ where: { id } });
@@ -64,7 +82,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
     }
 
     // 지원내역
-    async findApplicationsHistory(userId: string) {
+    async findByClientWithHelperPost(userId: string) {
         const applications = await this.find({
             where: {
                 client: {
@@ -85,7 +103,8 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
             hasWrittenReview: app.reviews.some((review) => review.reviewer.id === userId) ?? false
         }))
     }
-    // 받은내역
+
+    // 지원받은내역
     async findReceivedApplications(id: string) {
         const applications = await this.find({
             where: {
