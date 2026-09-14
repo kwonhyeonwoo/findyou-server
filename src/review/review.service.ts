@@ -49,14 +49,13 @@ export class ReviewService {
     if (existReview) throw new BadRequestException('이미 리뷰를 남겼습니다.');
 
     // role -> 리뷰받는 대상자로 구분, client면 helper, helper이면 client
-    console.log('helperPostApplication', helperPostApplication)
-    const role = helperPostApplication.client.id === userId ? ReviewRole.HELPER : ReviewRole.CLIENT
+    const role = helperPostApplication.client.id === userId ? ReviewRole.HELPER : ReviewRole.CLIENT;
     await this.reviewRepository.createHelperReview({
       rating: body.rating,
       tags: body.tags,
       content: body.content,
       reviewerId: userId, // 작성자
-      revieweeId: role === ReviewRole.CLIENT ? helperPostApplication.helperPosts.helper.id : helperPostApplication.client.id,
+      revieweeId: role === ReviewRole.CLIENT ?  helperPostApplication.client.id:helperPostApplication.helperPosts.helper.id ,
       role,
       helperApplicationId,
     })
