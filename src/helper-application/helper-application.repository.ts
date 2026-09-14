@@ -51,16 +51,13 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         })
     };
 
-    async findOneByWithHelperPost(id:string){
+    async findOneByWithHelperPostAndClient(id:string){
         const application =  await this.findOne({
             where:{id},
-            relations:{helperPosts:true},
+            relations:{helperPosts:true,client:true},
         });
         console.log('application',application);
-        return {
-            ...application,
-            helperPost:application.helperPosts
-        }
+        return application
     }
 
     // 헬퍼신청 내역만

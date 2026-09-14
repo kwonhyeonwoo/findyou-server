@@ -37,7 +37,7 @@ export class HelperApplicationService {
 
 
   async getDetailApplication(id:string){
-    return await this.applicationRepo.findOneByWithHelperPost(id);
+    return await this.applicationRepo.findOneByWithHelperPostAndClient(id);
   }
 
   // 받은내역

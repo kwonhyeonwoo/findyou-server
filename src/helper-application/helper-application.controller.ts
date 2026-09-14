@@ -18,7 +18,7 @@ export class HelperApplicationController {
     return this.helperApplicationService.getClientDetailApplications(userId);
   }
 
-  @Get("id")
+  @Get(":id")
   async getDetailApplication(@Param('id') id:string){
     return this.helperApplicationService.getDetailApplication(id)
   }
