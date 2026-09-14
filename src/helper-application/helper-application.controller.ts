@@ -49,7 +49,6 @@ export class HelperApplicationController {
   async findReceivedApplications(
     @Param("id") id: string
   ) {
-    console.log('id',id )
     return await this.helperApplicationService.findReceivedApplications(id);
   }
 

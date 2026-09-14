@@ -44,6 +44,9 @@ export class HelperPostRepository extends Repository<HelperPost> {
                 id: helperId,
             },
             relations: {
+                applications: {
+                    client: true,
+                },
                 helper: true,
             },
         });
@@ -59,6 +62,7 @@ export class HelperPostRepository extends Repository<HelperPost> {
         }
 
     }
+
 
     async findOneHelper(helperId: string) {
         const helper = await this.findOne({
@@ -138,7 +142,7 @@ export class HelperPostRepository extends Repository<HelperPost> {
                 applications: {
                     id: true,
                     status: true,
-                    client: { id: true ,nickName:true},
+                    client: { id: true, nickName: true },
                     reviews: {
                         id: true,
                         rating: true,

@@ -31,7 +31,7 @@ export class ReviewService {
       throw new BadRequestException('이미 리뷰를 남겼습니다.')
     }
 
-    const role = isHelper ? ReviewRole.CLIENT :  ReviewRole.HELPER ;
+    const role = isHelper ? ReviewRole.CLIENT : ReviewRole.HELPER;
     await this.reviewRepository.createErrandReview({
       rating: body.rating,
       tags: body.tags,
@@ -44,12 +44,12 @@ export class ReviewService {
   }
 
   async createHelperReview(body: CreateReviewDto, userId: string, helperApplicationId: string) {
-    if (!helperApplicationId) throw new NotFoundException('헬퍼 게시글을 찾을 수 없습니다.')
     const helperPostApplication = await this.helperApplicationRepo.findOneWithHelperPost(helperApplicationId);
     const existReview = await this.reviewRepository.existHelperPostReview(helperApplicationId, userId);
     if (existReview) throw new BadRequestException('이미 리뷰를 남겼습니다.');
 
     // role -> 리뷰받는 대상자로 구분, client면 helper, helper이면 client
+    console.log('helperPostApplication', helperPostApplication)
     const role = helperPostApplication.client.id === userId ? ReviewRole.HELPER : ReviewRole.CLIENT
     await this.reviewRepository.createHelperReview({
       rating: body.rating,

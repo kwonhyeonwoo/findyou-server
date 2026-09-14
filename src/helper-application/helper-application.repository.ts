@@ -21,7 +21,7 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         openLink: string;
         helperId: string
     }) {
-        
+
         const application = this.create({
             message,
             client: { id: clientId },
@@ -87,10 +87,9 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
     }
     // 받은내역
     async findReceivedApplications(id: string) {
-        console.log('gggg', id)
         const applications = await this.find({
             where: {
-                id
+                helperPosts: { id }
             },
             relations: {
                 helperPosts: true,

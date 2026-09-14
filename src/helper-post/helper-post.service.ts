@@ -45,13 +45,13 @@ export class HelperPostService {
         if (!helperPost.helper.id && userId) {
             throw new ForbiddenException('요청 권한이 없습니다.');
         }
-        if(helperPost.status === CustomStatus.COMPLETED_REQUEST){
+        if (helperPost.status === CustomStatus.COMPLETED_REQUEST) {
             throw new BadRequestException('이미 완료요청을 신청하였습니다.')
         }
         if (helperPost.status !== CustomStatus.IN_PROGRESS) {
             throw new BadRequestException('진행중인 내역만 요청이 가능 합니다.');
         }
-    
+
 
         return await this.helperPostRepository.completeRequest(id, userId);
     }
