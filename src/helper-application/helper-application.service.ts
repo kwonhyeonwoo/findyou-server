@@ -31,8 +31,13 @@ export class HelperApplicationService {
   }
 
   // 지원내역
-  async findHistory(userId: string) {
-    return await this.applicationRepo.findApplicationsHistory(userId)
+  async getClientDetailApplications(userId: string) {
+    return await this.applicationRepo.findByClientWithHelperPost(userId)
+  }
+
+
+  async getDetailApplication(id:string){
+    return await this.applicationRepo.findOneByWithHelperPostAndClient(id);
   }
 
   // 받은내역

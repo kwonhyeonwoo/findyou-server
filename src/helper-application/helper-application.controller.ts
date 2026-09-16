@@ -9,25 +9,32 @@ import { GetUser } from 'src/auth/common/user.decorator';
 @Controller('helper-application')
 export class HelperApplicationController {
   constructor(private readonly helperApplicationService: HelperApplicationService) { }
+
   // 지원내역
   @Get()
-  findHistory(
+  getMyApplications(
     @GetUser('userId') userId: string
   ) {
-    return this.helperApplicationService.findHistory(userId);
+    return this.helperApplicationService.getClientDetailApplications(userId);
   }
+
+  @Get(":id")
+  async getDetailApplication(@Param('id') id:string){
+    return this.helperApplicationService.getDetailApplication(id)
+  }
+
   @Post(":id")
   async create(
     @Body() body: CreateHelperApplicationDto,
     @GetUser('userId') userId: string,
     @Param('id') helperPostId: string
   ) {
-    console.log('bodyt', body);
     await this.helperApplicationService.create(body, userId, helperPostId);
     return {
       success: true,
       message: "헬퍼게시글에 지원을 하였습니다."
     }
+
   }
   // 헬퍼 게시글id, 내역id,
   @Patch(":id")
@@ -41,10 +48,10 @@ export class HelperApplicationController {
     }
   }
 
-  @Get(':id')
-  findOne(@Param('id') appliId: string) {
-    return this.helperApplicationService.findOne(appliId);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') appliId: string) {
+  //   return this.helperApplicationService.findOne(appliId);
+  // }
   @Get('/received/:id')
   async findReceivedApplications(
     @Param("id") id: string
