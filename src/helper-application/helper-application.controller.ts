@@ -52,12 +52,12 @@ export class HelperApplicationController {
   // findOne(@Param('id') appliId: string) {
   //   return this.helperApplicationService.findOne(appliId);
   // }
-  // @Get('/received/:id')
-  // async findReceivedApplications(
-  //   @Param("id") id: string
-  // ) {
-  //   return await this.helperApplicationService.findReceivedApplications(id);
-  // }
+  @Get('/received/:id')
+  async findReceivedApplications(
+    @Param("id") id: string
+  ) {
+    return await this.helperApplicationService.findReceivedApplications(id);
+  }
 
   // 거절
   @Patch('/rejected/:id')
