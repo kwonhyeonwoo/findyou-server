@@ -55,7 +55,7 @@ export class ErrandApplicationService {
   }
 
 
-  findOne(id: number) {
+  getProgress(id: number) {
     return `This action returns a #${id} errandApplication`;
   }
 

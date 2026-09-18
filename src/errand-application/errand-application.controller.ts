@@ -10,6 +10,13 @@ import { GetUser } from '../auth/common/user.decorator';
 export class ErrandApplicationController {
   constructor(private readonly errandApplicationService: ErrandApplicationService) { }
 
+  
+
+  @Get()
+  async getApplications(@GetUser('userId') userId: string) {
+    return await this.errandApplicationService.getApplications(userId);
+  }
+
   @Post(":id")
   async create(
     @Param('id') id: string,
@@ -26,12 +33,6 @@ export class ErrandApplicationController {
       message: "심부름을 신청하였습니다."
     }
   }
-
-  @Get()
-  async getApplications(@GetUser('userId') userId: string) {
-    return await this.errandApplicationService.getApplications(userId);
-  }
-
   // 지원자 수락
   @Post(':id/accepte')
   async accepted(
@@ -45,11 +46,9 @@ export class ErrandApplicationController {
     }
   }
 
-
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.errandApplicationService.findOne(+id);
+  @Get(':id/progress')
+  getProgress(@Param('id') id: string) {
+    return this.errandApplicationService.getProgress(+id);
   }
 
   @Delete(':id')
