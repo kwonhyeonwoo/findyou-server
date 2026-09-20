@@ -54,7 +54,7 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
                 errand: {
                     user: true,
                 },
-                helper: true,
+                helper: true
             },
         })
     }

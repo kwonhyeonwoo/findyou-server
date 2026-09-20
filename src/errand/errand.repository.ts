@@ -161,6 +161,7 @@ export class ErrandRepository extends Repository<Errand> {
                         reviewer: true,
                     },
                 },
+                user: true
             },
             select: {
                 applications: {
@@ -174,6 +175,7 @@ export class ErrandRepository extends Repository<Errand> {
                         profile: true,
                     },
                 },
+                user: { id: true }
             },
             order: {
                 createdAt: 'DESC',
@@ -186,7 +188,7 @@ export class ErrandRepository extends Repository<Errand> {
                     (review) => review.reviewer.id === userId,
                 ),
             }));
-
+            console.log('app', applications)
             if (errand.status !== CustomStatus.PENDING) {
                 const { applications: _applications, ...rest } = errand;
                 return {

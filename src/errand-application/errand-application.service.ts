@@ -1,10 +1,8 @@
-import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateErrandApplicationDto } from './dto/update-errand-application.dto';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { ErrandApplicationRepository } from './errand-application.repository';
 import { ErrandRepository } from 'src/errand/errand.repository';
 import { CreateErrandApplicationDto } from './dto/create-errand-application.dto';
 import { UserRepository } from 'src/user/user.repository';
-import { CustomStatus } from 'src/interfaces/custom-status.enum';
 
 @Injectable()
 export class ErrandApplicationService {

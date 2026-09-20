@@ -10,7 +10,7 @@ import { GetUser } from '../auth/common/user.decorator';
 export class ErrandApplicationController {
   constructor(private readonly errandApplicationService: ErrandApplicationService) { }
 
-  
+
 
   @Get()
   async getApplications(@GetUser('userId') userId: string) {

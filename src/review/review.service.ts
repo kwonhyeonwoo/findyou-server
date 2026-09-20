@@ -17,11 +17,10 @@ export class ReviewService {
   ) { }
 
   // role -> 리뷰받는 대상자로 구분, client면 helper, helper이면 client
-
   async createErrandReview(body: CreateReviewDto, userId: string, errandApplicationId: string) {
     const errandApplication = await this.errandApplicationRepo.findByIdErrandWithHelper(errandApplicationId);
     const role = errandApplication.helper.id === userId ? ReviewRole.CLIENT : ReviewRole.HELPER;
-
+    console.log('role:', role)
     await this.reviewRepository.createErrandReview({
       rating: body.rating,
       tags: body.tags,
