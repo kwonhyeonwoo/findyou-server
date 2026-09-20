@@ -5,41 +5,31 @@ import { ReviewRepository } from './review.repository';
 import { ErrandRepository } from 'src/errand/errand.repository';
 import { ReviewRole } from './enum/review-role.enum';
 import { HelperApplicationRepository } from 'src/helper-application/helper-application.repository';
+import { ErrandApplicationRepository } from 'src/errand-application/errand-application.repository';
 
 @Injectable()
 export class ReviewService {
   constructor(
     private readonly reviewRepository: ReviewRepository,
     private readonly errandRepository: ErrandRepository,
+    private readonly errandApplicationRepo: ErrandApplicationRepository,
     private readonly helperApplicationRepo: HelperApplicationRepository,
   ) { }
-  async createErrandReview(body: CreateReviewDto, userId: string, errandApplicationId: string) {
-    const errand = await this.errandRepository.findErrandWithApplications(errandApplicationId);
-    if (!errand) {
-      throw new NotFoundException('심부름을 찾을 수 없습니다.')
-    }
-    if (errand.user.id !== userId) {
-      throw new ForbiddenException('본인 심부름에는 리뷰를 남길 수 없습니다.')
-    }
-    const isHelper = errand.applications.helper.id === userId; // 헬퍼
-    const isRequester = errand.user.id === userId; // 의뢰인
-    if (!isHelper && !isRequester) {
-      throw new ForbiddenException('해당 리뷰는 당사자만 남길 수 있습니다.')
-    }
-    const existReview = await this.reviewRepository.existErrandReview(errandApplicationId, userId);
-    if (existReview) {
-      throw new BadRequestException('이미 리뷰를 남겼습니다.')
-    }
 
-    const role = isHelper ? ReviewRole.CLIENT : ReviewRole.HELPER;
+  // role -> 리뷰받는 대상자로 구분, client면 helper, helper이면 client
+
+  async createErrandReview(body: CreateReviewDto, userId: string, errandApplicationId: string) {
+    const errandApplication = await this.errandApplicationRepo.findByIdErrandWithHelper(errandApplicationId);
+    const role = errandApplication.helper.id === userId ? ReviewRole.CLIENT : ReviewRole.HELPER;
+
     await this.reviewRepository.createErrandReview({
       rating: body.rating,
       tags: body.tags,
       content: body.content,
       reviewerId: userId,
-      revieweeId: errand.applications.helper.id,
-      role: role,
-      errandApplicationId: errandApplicationId,
+      revieweeId: role === ReviewRole.CLIENT ? errandApplication.errand.user.id : errandApplication.helper.id,
+      role,
+      errandApplicationId,
     })
   }
 
@@ -48,14 +38,13 @@ export class ReviewService {
     const existReview = await this.reviewRepository.existHelperPostReview(helperApplicationId, userId);
     if (existReview) throw new BadRequestException('이미 리뷰를 남겼습니다.');
 
-    // role -> 리뷰받는 대상자로 구분, client면 helper, helper이면 client
     const role = helperPostApplication.client.id === userId ? ReviewRole.HELPER : ReviewRole.CLIENT;
     await this.reviewRepository.createHelperReview({
       rating: body.rating,
       tags: body.tags,
       content: body.content,
       reviewerId: userId, // 작성자
-      revieweeId: role === ReviewRole.CLIENT ?  helperPostApplication.client.id:helperPostApplication.helperPosts.helper.id ,
+      revieweeId: role === ReviewRole.CLIENT ? helperPostApplication.client.id : helperPostApplication.helperPosts.helper.id,
       role,
       helperApplicationId,
     })

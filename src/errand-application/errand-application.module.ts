@@ -17,5 +17,6 @@ import { UserModule } from 'src/user/user.module';
   ],
   controllers: [ErrandApplicationController],
   providers: [ErrandApplicationService, ErrandApplicationRepository],
+  exports: [ErrandApplicationRepository]
 })
 export class ErrandApplicationModule { }

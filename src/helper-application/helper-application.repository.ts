@@ -45,18 +45,18 @@ export class HelperApplicationRepository extends Repository<HelperApplication> {
         return application;
     };
 
-    async findOneByApplyId(id:string){
+    async findOneByApplyId(id: string) {
         return await this.findOne({
-            where:{id},
+            where: { id },
         })
     };
 
-    async findOneByWithHelperPostAndClient(id:string){
-        const application =  await this.findOne({
-            where:{id},
-            relations:{helperPosts:true,client:true},
+    async findOneByWithHelperPostAndClient(id: string) {
+        const application = await this.findOne({
+            where: { id },
+            relations: { helperPosts: true, client: true },
         });
-        console.log('application',application);
+        console.log('application', application);
         return application
     }
 

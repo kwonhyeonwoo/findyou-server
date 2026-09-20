@@ -23,8 +23,7 @@ export class ErrandRepository extends Repository<Errand> {
     async findErrandProgress(id: string) {
         const errand = await this.findOne({
             where: {
-                id,
-                applications: { status: CustomStatus.ACCEPTED },
+                applications: { id, status: CustomStatus.ACCEPTED },
             },
             relations: {
                 applications: {
@@ -188,12 +187,14 @@ export class ErrandRepository extends Repository<Errand> {
                 ),
             }));
 
-            if (errand.status === CustomStatus.COMPLETED) {
+            if (errand.status !== CustomStatus.PENDING) {
                 const { applications: _applications, ...rest } = errand;
                 return {
                     ...rest,
                     application: applications.find(
-                        (application) => application.status === CustomStatus.COMPLETED,
+                        (application) =>
+                            application.status === CustomStatus.ACCEPTED ||
+                            application.status === CustomStatus.COMPLETED,
                     ),
                 };
             }

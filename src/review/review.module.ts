@@ -7,12 +7,14 @@ import { ReviewRepository } from './review.repository';
 import { Errand } from 'src/errand/entities/errand.entity';
 import { ErrandModule } from 'src/errand/errand.module';
 import { HelperApplicationModule } from 'src/helper-application/helper-application.module';
+import { ErrandApplicationModule } from 'src/errand-application/errand-application.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Review]),
     ErrandModule,
-    HelperApplicationModule
+    HelperApplicationModule,
+    ErrandApplicationModule
   ],
   controllers: [ReviewController],
   providers: [ReviewService, ReviewRepository,],

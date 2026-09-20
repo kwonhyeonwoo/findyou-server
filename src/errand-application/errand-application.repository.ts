@@ -47,26 +47,26 @@ export class ErrandApplicationRepository extends Repository<ErrandApplication> {
         return applicationUser;
     }
 
-    async findByIdErrandWithHelper(id:string){
+    async findByIdErrandWithHelper(id: string) {
         return this.findOne({
-            where:{id},
-            relations:{
-                errand:{
-                    helper:true
+            where: { id },
+            relations: {
+                errand: {
+                    user: true,
                 },
-                helper:true,
+                helper: true,
             },
         })
-    }   
+    }
 
     async findById(id: string) {
         return await this.findOne({ where: { id } })
     };
 
-    async findByIdErrand(id:string){
+    async findByIdErrand(id: string) {
         return await this.findOne({
-            where:{id},
-            relations:{errand:true}
+            where: { id },
+            relations: { errand: true }
         })
     }
 
